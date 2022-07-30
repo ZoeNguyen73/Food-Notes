@@ -26,7 +26,7 @@ app.use(session({
 // set view engine
 app.set('view-engine', 'ejs');
 
-// app listen to port & connect with DB
+// app listen to port & connect to DB
 app.listen(port, async () => {
   console.log('<----- listening at port 3000 ----->');
 

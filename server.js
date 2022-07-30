@@ -13,6 +13,9 @@ const connStr = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PAS
 
 // require controllers
 
+// require seed
+const seed = require('./seeds/script/seed');
+
 // apply middlewares
 app.use(express.urlencoded({extended: false}));
 app.use(methodOverride('_method'));
@@ -38,3 +41,6 @@ app.listen(port, async () => {
     process.exit(1);
   };
 });
+
+// seed data
+app.get('/seed-all-data', seed.init.bind(seed));

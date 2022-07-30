@@ -12,6 +12,12 @@ const restaurantSchema = new mongoose.Schema({
     required: true,
   },
 
+  slug: {
+    type: String,
+    required: true,
+    unique: true
+  },
+
   display_location: {
     type: Object,
     required: true,
@@ -27,11 +33,11 @@ const restaurantSchema = new mongoose.Schema({
   },
 
   neighborhoods: {
-    type: [Schema.Types.ObjectId]
+    type: [mongoose.ObjectId]
   },
 
   categories: {
-    type: [Schema.Types.ObjectId],
+    type: [mongoose.ObjectId],
     required: true,
   },
 
@@ -44,7 +50,7 @@ const restaurantSchema = new mongoose.Schema({
   },
 
   rating: {
-    type: Schema.Types.Decimal128,
+    type: mongoose.Decimal128,
   },
 
   photos: {
@@ -52,7 +58,7 @@ const restaurantSchema = new mongoose.Schema({
   },
 
   reviews: {
-    type: [Schema.Types.ObjectId]
+    type: [mongoose.ObjectId]
   },
   
 });

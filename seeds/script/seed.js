@@ -17,24 +17,16 @@ const yelpApi = require('../../public/api/yelp_api');
 
 const seed = {
   init: async function() {
+    // check if data has already been seeded befpre
+    const isNotEmpty = (await neighborhoodModel.find({})).length;
 
-    const test = {
-      "Ang Mo Kio": {
-        latitude: 1.369115,
-        longitude: 103.845436,
-      },
-      Bishan: {
-        latitude: 1.352585,
-        longitude: 103.835213,
-      }
-    };
+    if (isNotEmpty) return;
 
     try {
-      // await this.seedNeighborhoods();
-      // await this.seedUsers();
-      // await this.getRestaurantsdata();
+      await this.seedNeighborhoods();
+      await this.seedUsers();
       await this.seedRestaurants();
-      // await this.seedReviews();
+      await this.seedReviews();
       
     } catch(err) {
       console.log(`seeding unsuccessful. err is: ${err}`);
@@ -65,7 +57,7 @@ const seed = {
   seedRestaurants: () => {
     // neighborhoods for testing
     const test = {
-      "Ang Mo Kio": {
+      'Ang Mo Kio': {
         latitude: 1.369115,
         longitude: 103.845436,
       },
@@ -98,9 +90,7 @@ const seed = {
 
           // create categories in database
           const categories = restaurantDetails.categories.map(category => category.title);
-          const categoriesIds = [];
-
-          //create new category if not exist
+          
           for await (const category of categories) {
             let id = null;
             try {
@@ -109,12 +99,21 @@ const seed = {
                 {display_name: category},
                 {upsert: true}
               );
-  
-              id = categoryDoc._id; 
-              categoriesIds.push(id);
 
             } catch(err) {
               console.log(`err in adding categories: ${err}`);
+            };
+          };
+
+          // push current categories to an array
+          const categoriesIDs = [];
+          for await (const category of categories) {
+            try {
+              const doc = await categoryModel.findOne({display_name: category}).exec();
+              const id = await doc._id;
+              categoriesIDs.push(id);
+            } catch(err) {
+              console.log(`err in add categories' id to array: ${err}`);
             };
           };
 
@@ -135,7 +134,7 @@ const seed = {
                 longitude: restaurantDetails.coordinates.longitude
               },
               neighborhood: currentNeighborhood._id,
-              categories: [...categoriesIds],
+              categories: [...categoriesIDs],
               rating: restaurantDetails.rating,
               price: restaurantDetails.price,
               photos: [...restaurantDetails.photos],
@@ -150,6 +149,33 @@ const seed = {
         
     });
 
+  },
+
+  seedReviews: async () => {
+    // get list of restaurants
+    const restaurants = await restaurantModel.find({}, 'yelp_id _id').exec();
+    
+    restaurants.forEach(async (restaurant, i) => {
+
+      setTimeout(async () => {
+        const yelp_id = restaurant.yelp_id;
+        const _id = restaurant._id;
+        const reviews = await yelpApi.getReviews(yelp_id);
+
+        reviews.forEach(async (review) => {
+          await reviewModel.create({
+            user_id: `yelp_${review.user_id}`,
+            restaurant_id: _id,
+            rating: review.rating,
+            content: review.text,
+            time_created: review.time_created,
+            yelp_name: review.user.name,
+            yelp_pic: review.user.image_url
+          });
+        });
+      
+      }, i * 400);
+    });
   },
 
 };

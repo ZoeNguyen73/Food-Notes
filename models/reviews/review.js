@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
   user_id: {
-    type: mongoose.ObjectId,
+    type: String,
     required: true
   },
 
@@ -22,8 +22,16 @@ const reviewSchema = new mongoose.Schema({
     type: String
   },
 
-  date_created: {
-    type: Date
+  time_created: {
+    type: String
+  },
+  
+  yelp_name: {
+    type: String
+  },
+
+  yelp_pic: {
+    type: String
   }
 
 });

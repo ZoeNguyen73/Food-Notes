@@ -21,6 +21,13 @@ const yelpApi = {
     const response = await fetch(url, options);
     const data = await response.json();
     return data;
+  },
+
+  getReviews: async (id) => {
+    const url = `${detailsUrl}${id}/reviews`;
+    const response = await fetch(url, options);
+    const data = await response.json();
+    return data.reviews;
   }
 };
 

@@ -32,8 +32,8 @@ const restaurantSchema = new mongoose.Schema({
     required: true
   },
 
-  neighborhoods: {
-    type: [mongoose.ObjectId]
+  neighborhood: {
+    type: mongoose.ObjectId,
   },
 
   categories: {

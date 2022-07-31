@@ -17,22 +17,29 @@ const yelpApi = require('../../public/api/yelp_api');
 
 const seed = {
   init: async function() {
+
+    const test = {
+      "Ang Mo Kio": {
+        latitude: 1.369115,
+        longitude: 103.845436,
+      },
+      Bishan: {
+        latitude: 1.352585,
+        longitude: 103.835213,
+      }
+    };
+
     try {
       // await this.seedNeighborhoods();
       // await this.seedUsers();
-      this.seedRestaurants();
+      // await this.getRestaurantsdata();
+      await this.seedRestaurants();
       // await this.seedReviews();
-
-      console.log('seeding successful');
       
     } catch(err) {
       console.log(`seeding unsuccessful. err is: ${err}`);
     };
   },
-
-  // init: function () {
-  //   this.seedRestaurants();
-  // },
 
   seedNeighborhoods: () => {
     Object.entries(neighborhoods).forEach(([name, latlong]) => {
@@ -56,83 +63,91 @@ const seed = {
   },
 
   seedRestaurants: () => {
-    // looping through neighborhoods
-    const simplifiedNeighborhoods = {
+    // neighborhoods for testing
+    const test = {
       "Ang Mo Kio": {
         latitude: 1.369115,
         longitude: 103.845436,
       },
+      Bishan: {
+        latitude: 1.352585,
+        longitude: 103.835213,
+      }
     };
-    Object.entries(simplifiedNeighborhoods).forEach(async ([neighborhoodName, latlong]) => {
 
-      // for each neighborhood, call Yelp API to get 50 restaurants
+    // looping through neighborhoods
+    Object.entries(test).forEach(async ([neighborhoodName, latlong]) => {
+
+      // for each neighborhood, call Yelp API to get restaurants
       const data = await yelpApi.searchRestaurants(latlong.latitude, latlong.longitude);
-      const restaurants = data.businesses;
+      const restaurants = await data.businesses;
 
-      restaurants.forEach(async (restaurant) =>  {
+      // get details for each restaurant
+      restaurants.forEach((restaurant, i) =>  {
+
+        // set timeout to not go over QPS limit
+        setTimeout(async () => {
+          const yelp_id = restaurant.id;
+
+          // get restaurant details from details api
+          const restaurantDetails = await yelpApi.getRestaurantDetails(yelp_id);
+          console.log(`current neighborhood is ${neighborhoodName} and current restaurant is: ${restaurantDetails.name}`);
         
-        const yelp_id = restaurant.id;
+          // get neighborhood id
+          const currentNeighborhood = await neighborhoodModel.findOne({name: neighborhoodName}).exec();
 
-        // get restaurant details from details api
-        const restaurantDetails = await yelpApi.getRestaurantDetails(yelp_id);
+          // create categories in database
+          const categories = restaurantDetails.categories.map(category => category.title);
+          const categoriesIds = [];
 
-        const categoriesWithAsync = await restaurantDetails.categories;
-        console.log(`
-          current yelp_id is ${yelp_id} and
-          restaurant is ${restaurantDetails.name} and
-          categories are ${restaurantDetails.categories} and
-          categories with async is ${categoriesWithAsync}`);
+          //create new category if not exist
+          for await (const category of categories) {
+            let id = null;
+            try {
+              const categoryDoc = await categoryModel.findOneAndUpdate(
+                {display_name: category},
+                {display_name: category},
+                {upsert: true}
+              );
+  
+              id = categoryDoc._id; 
+              categoriesIds.push(id);
 
-        // get restaurant from database - return null if not exist yet
-        const restaurantInDb = await restaurantModel.findOne({yelp_id}).exec();
+            } catch(err) {
+              console.log(`err in adding categories: ${err}`);
+            };
+          };
 
-        // get neighborhood id
-        const currentNeighborhood = await neighborhoodModel.findOne({name: neighborhoodName,}).exec();
+          // create new restaurant in database if not exist
+          await restaurantModel.findOneAndUpdate(
+            // filter by yelp_id
+            {yelp_id: restaurant.id},
 
-        // if restaurant already exists in DB, add neighborhood to neighborhoods
-        if (restaurantInDb) {
-          restaurantModel.updateOne(
-            { yelp_id },
-            { $push: {neighborhoods: currentNeighborhood._id}}
-          );
-
-        } else {
-          // if restaurant has not existed in DB, create a new restaurant
-
-          // first, add categories to categories collection
-          restaurantDetails.categories.forEach(async (category) => {
-            await categoryModel.create({display_name: category.title});
-          });
-
-          // then put categories ID into an array
-          const categoriesArr = categories.map(async (category) => {
-            (await categoryModel.findOne({display_name: category.title}).exec())._id;
-          });
-
-          // Todo: then get opening hrs
-
-          // finally, create the restaurant
-          restaurantModel.create({
-            yelp_id,
-            name: restaurantDetails.name,
-            slug: restaurantDetails.url.split('?')[0].split('/').pop(),
-            display_location: restaurantDetails.location.display_address.join(','),
-            display_phone: restaurantDetails.phone,
-            coordinates: {
-              latitude: restaurantDetails.coordinates.latitude,
-              longitude: restaurantDetails.coordinates.longitude
+            // restaurant details
+            {
+              yelp_id: restaurant.id,
+              name: restaurantDetails.name,
+              slug: restaurantDetails.url.split('?')[0].split('/').pop(),
+              display_location: restaurantDetails.location.display_address.join(','),
+              display_phone: restaurantDetails.phone,
+              coordinates: {
+                latitude: restaurantDetails.coordinates.latitude,
+                longitude: restaurantDetails.coordinates.longitude
+              },
+              neighborhood: currentNeighborhood._id,
+              categories: [...categoriesIds],
+              rating: restaurantDetails.rating,
+              price: restaurantDetails.price,
+              photos: [...restaurantDetails.photos],
+              opening_hours: [...restaurantDetails.hours[0].open],
             },
-            neighborhoods: [currentNeighborhood._id],
-            categories: categoriesArr,
-            rating: restaurantDetails.rating,
-            price: restaurantDetails.price,
-            photos: [...restaurantDetails.photos],
-            opening_hours: {},
 
-          });
-        };
-        
+            // option: to upsert
+            {upsert: true}
+          );
+        }, i * 400);
       });
+        
     });
 
   },

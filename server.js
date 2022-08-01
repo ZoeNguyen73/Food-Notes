@@ -20,6 +20,7 @@ const seed = require('./seeds/script/seed');
 
 // apply middlewares
 app.use(express.urlencoded({extended: false}));
+app.use(express.static('public'));
 app.use(methodOverride('_method'));
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -29,7 +30,7 @@ app.use(session({
 }));
 
 // set view engine
-app.set('view-engine', 'ejs');
+app.set('view engine', 'ejs');
 
 // app listen to port & connect to DB
 app.listen(port, async () => {
@@ -45,5 +46,7 @@ app.listen(port, async () => {
 });
 
 // seed data
-app.get('/seed-all-data', seed.init.bind(seed));
+app.get('/seed-all-data', seed.init.bind(seed)); // let this run til restaurants complete
+app.get('/seed-reviews', seed.seedReviews.bind(seed)); // let this run til restaurants complete
+
 

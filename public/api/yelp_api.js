@@ -31,4 +31,4 @@ const yelpApi = {
   }
 };
 
-module.exports = yelpApi;
+module.exports = {searchLimit, yelpApi};

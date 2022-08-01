@@ -1,0 +1,107 @@
+<%- include('../partials/header'); %>
+
+<div class="container restaurant-page">
+  <div class="row restaurant-photos">
+    <% restaurant.photos.forEach(url => { %>
+      <img class="restaurant-photos" src="<%= url %>" alt="<%= restaurant.slug %> photo" />
+    <% }) %>
+  </div>
+
+  <div class="row">
+    <div class="col-7 business-summary">
+      <h1 class="align-left name"><%= restaurant.name %></h1>
+
+      <div class="stars-rating">
+        <% const stars = Math.round(restaurant.rating * 2)/2 %>
+        <% const imgUrl = `/img/rating-${stars}.png` %>
+        <img class="stars-rating" src="/img/rating-<%= stars %>.png" />
+      </div>
+
+      <div class="categories">
+        <% for (let i = 0; i < restaurant.categories.length && i < 5; i++) { %>
+          <div class="category-tag pointer-on-hover">
+            <%= categories.filter(category => category._id.equals(restaurant.categories[i]))[0].display_name %>
+          </div>
+
+        <% } %>
+      </div>
+
+      <div class="require-auth">
+        <div class="pin-section">
+          <!-- TODO: add logic to list boards that restaurant is currently pinned in with hyperlink to board -->
+          <p class="bold emphasis">Currently pinned in: 
+            <a href="">To Try</a>
+            <!-- //TODO: add something to trigger a modal allow users to edit the board -->
+            <a href="" class="placeholders">Edit</a>
+          </p>
+          <form class="pin-form" method="POST" action="/">
+            <p>Pin in another board:</p>
+            <button class="btn dropdown-toggle boards-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Pick a personal board
+            </button>
+            <ul class="dropdown-menu">
+              <!-- TODO: list users personal boards -->
+              <!-- TODO: users authentication here, if not logged in, users cannot pin -->
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+                      
+            <!-- TODO: update pin action route -->
+            <button class="btn btn-outline-danger"  type="submit">Pin 📌</button>
+          </form>
+        </div>
+
+        <div class="tag-section">
+          <!-- TODO: add logic to list boards that restaurant is currently pinned in with hyperlink to board -->
+          <p class="bold emphasis">Your private tags: <a href="">To Try</a></p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col business-info">
+      <!-- TODO: add map -->
+      <div class="details">
+        <div>
+          <p class="bold">Adress:</p>
+          <!-- FIXME: remove the last "Singapore" in address -->
+          <p><%= restaurant.display_location %></p>
+        </div>
+
+        <div>
+          <p><span class=bold>Contact no:</span> <%= restaurant.display_phone %></p>
+        </div>
+
+        <div>
+          <p class="bold">Opening Hours:</p>
+          <% const days = ['Mon','Tues','Wed','Thurs','Fri','Sat','Sun']; %>
+          
+          <ul>
+            <% days.forEach((day, idx) => { %>
+              <% const timings = restaurant.opening_hours.filter(timing => timing.day === idx) %>
+              <li>
+                <span class="bold"><%= day %></span>
+
+                <% for (let i = 0, j = timings.length; i < j; i++) { %>
+                  <% const timing = timings[i] %>
+                  <% const start = timing.start %>
+                  <% const end = timing.end %>
+                  <%= start.slice(0,2) %>:<%= start.slice(2,4) %> to <%= end.slice(0,2) %>:<%= end.slice(2,4) %>
+                  <% if (i < j - 1) { %>
+                    ;
+                  <% } %>
+                <% } %>
+                
+              </li>
+            <% }) %>
+          </ul>
+        </div>  
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<%- include('../partials/footer'); %>

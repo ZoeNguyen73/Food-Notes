@@ -1,0 +1,243 @@
+body {
+  font-family: "Quattrocento Sans", sans-serif;
+  background-color: F9F5EB;
+}
+
+.placeholders {
+  color: lightgrey;
+  font-style: italic;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Quattrocento", serif;
+  text-align: center;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+.emphasis {
+  font-size: 1.2em;
+}
+
+.restaurants-list a {
+  text-decoration: none;
+  color: black;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.navbar {
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+.nav-bar-logo {
+  height: 60px;
+  width: auto;
+}
+
+.navbar .container-fluid {
+  gap: 8em;
+}
+
+.nav-bar-search-form {
+  flex-grow: 1;
+}
+
+footer {
+  padding: 4em 0 1em 0;
+  font-size: 0.8em;
+  text-align: center;
+}
+
+footer p {
+  margin: 0;
+}
+
+/* .col, .col-10 {
+  border: solid red 1px;
+} */
+
+header {
+  padding-bottom: 4em;
+}
+
+.pointer-on-hover:hover {
+  cursor: pointer;
+}
+
+.align-left {
+  text-align: left;
+}
+
+.card-img-top {
+  height: 180px;
+  vertical-align: middle;
+  object-fit: cover;
+  background: no-repeat fixed center;
+}
+
+.card-body .list-group-item {
+  border: none;
+}
+
+.restaurants-list .title {
+  margin-bottom: 3em;
+}
+
+.card-title {
+  display: flex;
+  height: 2.5em;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.card-subtitle {
+  text-align: center;
+}
+
+.card-title:hover {
+  color: #F78501;
+}
+
+.card-categories, .categories {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 0.2em
+}
+
+.category-tag {
+  background-color: #D3C1F8;
+  border-radius: 0.5em;
+  padding: 0.4em 0.4em 0 0.4em;
+  color: black;
+  text-decoration: italic;
+  font-size: 0.9em;
+}
+
+.category-tag:hover {
+  background-color: #5218c5;
+  color: white;
+}
+
+.neighborhood-name {
+  color: #F78501;
+  font-weight: bold;
+}
+
+.neighborhood-name:hover {
+  color: #b35f00;
+}
+
+.price-reviews {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  font-weight: bold;
+  align-items: center;
+}
+
+.snippet {
+  flex-grow: 1;
+  font-size: 0.9em;
+  color: grey;
+}
+
+.snippet p {
+  margin: 0;
+}
+
+.card-body .list-group {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+}
+
+.stars-rating {
+  height: 1em;
+}
+
+.restaurants-list .pin-form {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+}
+
+.boards-options {
+  display: flex;
+  flex-flow: row nowrap;
+  flex-grow: 1;
+}
+
+.boards-dropdown {
+  flex-grow: 1;
+  background-color: white;
+  border: 1px solid lightgrey;
+}
+
+.restaurant-photos {
+  display: flex;
+  flex-flow: row nowrap;
+  margin-bottom: 2em;
+}
+
+.restaurant-photos > img {
+  max-width: calc(100% / 3);
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.restaurant-page .name {
+  color: #E25A25;
+  font-weight: bold;
+}
+
+.business-info {
+  border: 1px solid lightgrey;
+  border-radius: 1em;
+  padding: 2em;
+}
+
+.business-info .details {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1em;
+}
+
+.business-info .details p {
+  margin: 0;
+}
+
+.business-summary {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 2em;
+}
+
+.restaurant-page .require-auth {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1.5em;
+}
+
+.restaurant-page .pin-section {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.5em;
+}
+
+.restaurant-page .pin-form {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+}

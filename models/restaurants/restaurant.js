@@ -57,6 +57,11 @@ const restaurantSchema = new mongoose.Schema({
     type: [String]
   },
 
+  main_photo_id: {
+    type: Number,
+    required: true
+  }
+,
   reviews: {
     type: [mongoose.ObjectId]
   },

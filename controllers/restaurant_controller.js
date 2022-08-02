@@ -32,7 +32,10 @@ const controller = {
     // get all categories
     const categories = await categoryModel.find().exec();
 
-    res.render('restaurants/show', {restaurant, categories});
+    // get all reviews from the restaurant
+    const reviews = await reviewModel.find({restaurant_id: restaurant._id}).exec();
+
+    res.render('restaurants/show', {restaurant, categories, reviews});
   }
 };
 

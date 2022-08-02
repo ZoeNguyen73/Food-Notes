@@ -8,6 +8,22 @@ body {
   font-style: italic;
 }
 
+.divider {
+  height: 1px;
+  border-bottom: 3px solid lightgrey;
+  width: 100%;
+}
+
+.btn-outline-secondary {
+  border: none;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #fff;
+  color: #6c757d;
+  text-decoration: underline;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: "Quattrocento", serif;
   text-align: center;
@@ -115,10 +131,13 @@ header {
 .category-tag {
   background-color: #D3C1F8;
   border-radius: 0.5em;
-  padding: 0.4em 0.4em 0 0.4em;
+  padding: 0.4em 0.4em 0.2em 0.4em;
   color: black;
-  text-decoration: italic;
+}
+
+.restaurants-list .category-tag {
   font-size: 0.9em;
+  padding: 0.4em 0.4em 0.1em 0.4em;
 }
 
 .category-tag:hover {
@@ -186,7 +205,6 @@ header {
 .restaurant-photos {
   display: flex;
   flex-flow: row nowrap;
-  margin-bottom: 2em;
 }
 
 .restaurant-photos > img {
@@ -216,7 +234,17 @@ header {
   margin: 0;
 }
 
-.business-summary {
+.restaurant-page {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 3em;
+}
+
+.restaurant-page .top-row {
+  gap: 3em
+}
+
+.restaurant-page .business-summary {
   display: flex;
   flex-flow: column nowrap;
   gap: 2em;
@@ -225,7 +253,32 @@ header {
 .restaurant-page .require-auth {
   display: flex;
   flex-flow: column nowrap;
-  gap: 1.5em;
+  gap: 2em;
+}
+
+.restaurant-page .require-auth button {
+  width: 6em;
+}
+
+.current-pins {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.5em;
+  align-items: center;
+}
+
+.current-pins a {
+  text-decoration: none;
+  color: #E25A25;
+}
+
+.current-pins a:hover {
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.require-auth .edit-btn {
+  margin-left: auto;
 }
 
 .restaurant-page .pin-section {
@@ -240,4 +293,88 @@ header {
   justify-content: space-between;
   align-items: center;
   gap: 1em;
+}
+
+.private-tag-section {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 0.5em;
+  align-items: center;
+}
+
+.private-tag {
+  background-color: #F7B501;
+  border-radius: 0.5em;
+  padding: 0.4em 0.4em 0.2em 0.4em;
+  color: black;
+  align-items: center;
+}
+
+.private-note-section {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.5em;
+}
+
+.private-note-section .header {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.private-note-section .notes {
+  border: 1px solid lightgrey;
+  padding: 1em;
+  border-radius: 0.5em;
+}
+
+.write-review > div {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.5em;
+}
+
+.write-review form {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.5em;
+}
+
+.write-review .review-text {
+  line-height: 5;
+  width: 100%;
+  border: 1px solid lightgrey;
+  padding: 1em;
+  border-radius: 0.5em;
+}
+
+.review-rating {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.5em;
+}
+
+.reviews-list {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1.5em;
+}
+
+.reviews-list .user-profile img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.reviews-list .review {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 1em;
+}
+
+.review .time-created {
+  margin-top: 0.5em;
+  font-size: 0.8em;
+  font-style: italic;
+  color: grey;
 }

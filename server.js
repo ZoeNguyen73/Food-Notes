@@ -11,15 +11,11 @@ const port = 3000;
 
 const connStr = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@cluster0.xeoex.mongodb.net/?retryWrites=true&w=majority`
 
-// require routers
-const restaurantsRouter = require('./routes/restaurants');
-app.use('/restaurants', restaurantsRouter);
-
 // require seed
 const seed = require('./seeds/script/seed');
 
 // apply middlewares
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
 app.use(methodOverride('_method'));
 app.use(session({
@@ -45,8 +41,13 @@ app.listen(port, async () => {
   };
 });
 
+// require routers
+const restaurantsRouter = require('./routes/restaurants');
+app.use('/restaurants', restaurantsRouter);
+
+const usersRouter = require('./routes/users');
+app.use('/users', usersRouter);
+
 // seed data
 app.get('/seed-all-data', seed.init.bind(seed)); // let this run til restaurants complete
 app.get('/seed-reviews', seed.seedReviews.bind(seed)); // let this run til restaurants complete
-
-

@@ -38,6 +38,11 @@ p {
   font-size: 1.2em;
 }
 
+.error-message {
+  font-style: italic;
+  color: #E25A25;
+}
+
 .restaurants-list a {
   text-decoration: none;
   color: black;
@@ -80,7 +85,11 @@ footer p {
 } */
 
 header {
-  padding-bottom: 4em;
+  padding-bottom: 3em;
+}
+
+.breadcrumb {
+  margin-bottom: 0;
 }
 
 .pointer-on-hover:hover {
@@ -89,6 +98,10 @@ header {
 
 .align-left {
   text-align: left;
+}
+
+.align-center {
+  text-align: center;
 }
 
 .card-img-top {
@@ -222,6 +235,12 @@ header {
   border: 1px solid lightgrey;
   border-radius: 1em;
   padding: 2em;
+}
+
+.business-info {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1em;
 }
 
 .business-info .details {
@@ -377,4 +396,21 @@ header {
   font-size: 0.8em;
   font-style: italic;
   color: grey;
+}
+
+#map {
+  height: 200px
+}
+
+.register-page {
+  max-width: 600px;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 2em;
+}
+
+.register-page form {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1em;
 }

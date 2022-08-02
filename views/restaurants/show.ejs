@@ -1,204 +1,218 @@
 <%- include('../partials/header'); %>
 
 <div class="container restaurant-page">
-  <div class="row restaurant-photos">
-    <% restaurant.photos.forEach(url => { %>
-      <img class="restaurant-photos" src="<%= url %>" alt="<%= restaurant.slug %> photo" />
-    <% }) %>
-  </div>
+  <% if (!restaurant) { %>
+    <p class="align-center emphasis">Oops... nothing is found here</p>
+    <a href="/restaurants"><p class="align-center">View all Restaurants</p></a>
+  <% } else { %>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/restaurants">Restaurants</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><%= restaurant.name %></li>
+      </ol>
+    </nav>
 
-  <div class="row top-row">
-    <div class="col-7 business-summary">
-      <h1 class="align-left name"><%= restaurant.name %></h1>
+    <div class="row restaurant-photos">
+      <% restaurant.photos.forEach(url => { %>
+        <img class="restaurant-photos" src="<%= url %>" alt="<%= restaurant.slug %> photo" />
+      <% }) %>
+    </div>
 
-      <div class="stars-rating">
-        <% const stars = Math.round(restaurant.rating * 2)/2 %>
-        <% const imgUrl = `/img/rating-${stars}.png` %>
-        <img class="stars-rating" src="/img/rating-<%= stars %>.png" />
-      </div>
+    <div class="row top-row">
+      <div class="col-7 business-summary">
+        <h1 class="align-left name"><%= restaurant.name %></h1>
 
-      <!-- TODO: add whether restaurant is open now -->
+        <div class="stars-rating">
+          <% const stars = Math.round(restaurant.rating * 2)/2 %>
+          <% const imgUrl = `/img/rating-${stars}.png` %>
+          <img class="stars-rating" src="/img/rating-<%= stars %>.png" />
+        </div>
 
-      <div class="categories">
-        <% for (let i = 0; i < restaurant.categories.length && i < 5; i++) { %>
-          <div class="category-tag pointer-on-hover">
-            <%= categories.filter(category => category._id.equals(restaurant.categories[i]))[0].display_name %>
+        <!-- TODO: add whether restaurant is open now -->
+
+        <div class="categories">
+          <% for (let i = 0; i < restaurant.categories.length && i < 5; i++) { %>
+            <div class="category-tag pointer-on-hover">
+              <%= categories.filter(category => category._id.equals(restaurant.categories[i]))[0].display_name %>
+            </div>
+
+          <% } %>
+        </div>
+
+        <div class="require-auth">
+          <div class="pin-section">
+            <!-- TODO: add logic to list boards that restaurant is currently pinned in with hyperlink to board -->
+            <div class="current-pins">
+              <p class="bold emphasis">Currently pinned in:</p>
+              <a class="board" href="">To Try</a>
+              <!-- //TODO: add something to trigger a modal allow users to edit the board -->
+              <button class="btn btn-outline-secondary edit-btn" type="submit">Edit</button>
+            </div>
+            
+            <form class="pin-form" method="POST" action="/">
+              <p>Pin in another board:</p>
+              <button class="btn dropdown-toggle boards-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Pick a personal board
+              </button>
+              <ul class="dropdown-menu">
+                <!-- TODO: list users personal boards -->
+                <!-- TODO: users authentication here, if not logged in, users cannot pin -->
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+              </ul>
+                        
+              <!-- TODO: update pin action route -->
+              <button class="btn btn-danger" type="submit">Pin 📌</button>
+            </form>
           </div>
 
-        <% } %>
-      </div>
-
-      <div class="require-auth">
-        <div class="pin-section">
-          <!-- TODO: add logic to list boards that restaurant is currently pinned in with hyperlink to board -->
-          <div class="current-pins">
-            <p class="bold emphasis">Currently pinned in:</p>
-            <a class="board" href="">To Try</a>
-            <!-- //TODO: add something to trigger a modal allow users to edit the board -->
+          <div class="private-tag-section">
+            <!-- TODO: add logic to list boards that restaurant is currently pinned in with hyperlink to board -->
+            <p class="bold emphasis">Your private tags:</p>
+            <div class="private-tag pointer-on-hover">
+              Mom's fav
+            </div>
+            <div class="private-tag pointer-on-hover">
+              Big portion
+            </div>
+            <div class="private-tag pointer-on-hover">
+              Go before 6pm
+            </div>
             <button class="btn btn-outline-secondary edit-btn" type="submit">Edit</button>
           </div>
-          
-          <form class="pin-form" method="POST" action="/">
-            <p>Pin in another board:</p>
-            <button class="btn dropdown-toggle boards-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Pick a personal board
-            </button>
-            <ul class="dropdown-menu">
-              <!-- TODO: list users personal boards -->
-              <!-- TODO: users authentication here, if not logged in, users cannot pin -->
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-                      
-            <!-- TODO: update pin action route -->
-            <button class="btn btn-danger" type="submit">Pin 📌</button>
-          </form>
+
+          <div class="private-note-section">
+            <!-- TODO: add logic to list boards that restaurant is currently pinned in with hyperlink to board -->
+            <div class="header">
+              <p class="bold emphasis">Your private notes:</p>
+            <button class="btn btn-outline-secondary edit-btn" type="submit">Edit</button>
+            </div>
+            
+            <div class="notes">
+              Favourite dishes: McSpicy, McNuggets <br/>
+              Promotions: can use ShopBack <br/>
+              Other: not so good for date night... <br/>
+            </div>
+          </div>
         </div>
 
-        <div class="private-tag-section">
-          <!-- TODO: add logic to list boards that restaurant is currently pinned in with hyperlink to board -->
-          <p class="bold emphasis">Your private tags:</p>
-          <div class="private-tag pointer-on-hover">
-            Mom's fav
-          </div>
-          <div class="private-tag pointer-on-hover">
-            Big portion
-          </div>
-          <div class="private-tag pointer-on-hover">
-            Go before 6pm
-          </div>
-          <button class="btn btn-outline-secondary edit-btn" type="submit">Edit</button>
-        </div>
-
-        <div class="private-note-section">
-          <!-- TODO: add logic to list boards that restaurant is currently pinned in with hyperlink to board -->
-          <div class="header">
-            <p class="bold emphasis">Your private notes:</p>
-           <button class="btn btn-outline-secondary edit-btn" type="submit">Edit</button>
-          </div>
-          
-          <div class="notes">
-            Favourite dishes: McSpicy, McNuggets <br/>
-            Promotions: can use ShopBack <br/>
-            Other: not so good for date night... <br/>
-          </div>
-        </div>
       </div>
 
-    </div>
+      <div class="col business-info">
+        <!-- TODO: add map -->
+        
+        <div id="map"></div>
+        <div class="details">
+          <div>
+            <p class="bold">Adress:</p>
+            <!-- TODO: better UI for address -->
+            <p><%= restaurant.display_location %></p>
+          </div>
 
-    <div class="col business-info">
-      <!-- TODO: add map -->
-      <div class="details">
-        <div>
-          <p class="bold">Adress:</p>
-          <!-- TODO: better UI for address -->
-          <p><%= restaurant.display_location %></p>
-        </div>
+          <div>
+            <p><span class=bold>Contact no:</span> <%= restaurant.display_phone %></p>
+          </div>
 
-        <div>
-          <p><span class=bold>Contact no:</span> <%= restaurant.display_phone %></p>
-        </div>
-
-        <div>
-          <p class="bold">Opening Hours:</p>
-          <% const days = ['Mon','Tues','Wed','Thurs','Fri','Sat','Sun']; %>
-          
-          <ul>
-            <% days.forEach((day, idx) => { %>
-              <% const timings = restaurant.opening_hours.filter(timing => timing.day === idx) %>
-              <li>
-                <span class="bold"><%= day %>:</span>
-                <% if (timings.length === 0) { %>
-                  Closed
-                <% } else { %>
-                  <!-- TODO: better UI for hours -->
-                  <% for (let i = 0, j = timings.length; i < j; i++) { %>
-                    <% const timing = timings[i] %>
-                    <% const start = timing.start %>
-                    <% const end = timing.end %>
-                    <%= start.slice(0,2) %>:<%= start.slice(2,4) %> to <%= end.slice(0,2) %>:<%= end.slice(2,4) %>
-                    <% if (i < j - 1) { %>
-                      ;
+          <div>
+            <p class="bold">Opening Hours:</p>
+            <% const days = ['Mon','Tues','Wed','Thurs','Fri','Sat','Sun'] %>
+            
+            <ul>
+              <% days.forEach((day, idx) => { %>
+                <% const timings = restaurant.opening_hours.filter(timing => timing.day === idx) %>
+                <li>
+                  <span class="bold"><%= day %>:</span>
+                  <% if (timings.length === 0) { %>
+                    Closed
+                  <% } else { %>
+                    <!-- TODO: better UI for hours -->
+                    <% for (let i = 0, j = timings.length; i < j; i++) { %>
+                      <% const timing = timings[i] %>
+                      <% const start = timing.start %>
+                      <% const end = timing.end %>
+                      <%= start.slice(0,2) %>:<%= start.slice(2,4) %> to <%= end.slice(0,2) %>:<%= end.slice(2,4) %>
+                      <% if (i < j - 1) { %>
+                        ;
+                      <% } %>
                     <% } %>
                   <% } %>
-                <% } %>
-                
-              </li>
-            <% }) %>
-          </ul>
-        </div>  
-      </div>
-
-    </div>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="row write-review">
-    <div>
-      <h5 class="align-left">Write a review</h5>
-      <!-- TODO: add post review action -->
-      <form method="POST" action="">
-        <div class="review-rating">
-          <div>Your rating (out of 5):</div>
-          <div class="rating-options">
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="rating" id="rating-1" value="1">
-              <label class="form-check-label" for="rating-1">1</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="rating" id="rating-2" value="2">
-              <label class="form-check-label" for="rating-2">2</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="rating" id="rating-3" value="3">
-              <label class="form-check-label" for="rating-3">3</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="rating" id="rating-4" value="4">
-              <label class="form-check-label" for="rating-4">4</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="rating" id="rating-5" value="5">
-              <label class="form-check-label" for="rating-5">5</label>
-            </div>
-          </div>
-        </div> 
-        <input type="text" class="review-text">
-        <button type="submit" class="btn btn-warning">Submit</button>
-      </form>
-    </div>
-  </div>
-
-  <div class="row reviews-list">
-    <div>
-      <h5 class="align-left">Reviews</h5>
-    </div>
-
-    <% reviews.forEach(review => { %>
-      <div class="review">
-        <div class="user-profile">
-          <!-- TODO: add fallback logic for when there is no pic url -->
-          <img src="<%= review.yelp_pic %>" />
+                  
+                </li>
+              <% }) %>
+            </ul>
+          </div>  
         </div>
 
-        <div class="content">
-          <p><%= review.yelp_name %></p>
-          <div class="stars-rating">
-            <% const stars = Math.round(review.rating * 2)/2 %>
-            <% const imgUrl = `/img/rating-${stars}.png` %>
-            <img class="stars-rating" src="/img/rating-<%= stars %>.png" />
-          </div>
-          <p class="time-created"><%= review.time_created %></p>
-          <p><%= review.content %></p>
-        </div>
-        
       </div>
-    <% }) %>
-  </div>
+    </div>
 
+    <div class="divider"></div>
+
+    <div class="row write-review">
+      <div>
+        <h5 class="align-left">Write a review</h5>
+        <!-- TODO: add post review action -->
+        <form method="POST" action="">
+          <div class="review-rating">
+            <div>Your rating (out of 5):</div>
+            <div class="rating-options">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="rating" id="rating-1" value="1">
+                <label class="form-check-label" for="rating-1">1</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="rating" id="rating-2" value="2">
+                <label class="form-check-label" for="rating-2">2</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="rating" id="rating-3" value="3">
+                <label class="form-check-label" for="rating-3">3</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="rating" id="rating-4" value="4">
+                <label class="form-check-label" for="rating-4">4</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="rating" id="rating-5" value="5">
+                <label class="form-check-label" for="rating-5">5</label>
+              </div>
+            </div>
+          </div> 
+          <input type="text" class="review-text">
+          <button type="submit" class="btn btn-warning">Submit</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="row reviews-list">
+      <div>
+        <h5 class="align-left">Reviews</h5>
+      </div>
+
+      <% reviews.forEach(review => { %>
+        <div class="review">
+          <div class="user-profile">
+            <!-- TODO: add fallback logic for when there is no pic url -->
+            <img src="<%= review.yelp_pic %>" />
+          </div>
+
+          <div class="content">
+            <p><%= review.yelp_name %></p>
+            <div class="stars-rating">
+              <% const stars = Math.round(review.rating * 2)/2 %>
+              <% const imgUrl = `/img/rating-${stars}.png` %>
+              <img class="stars-rating" src="/img/rating-<%= stars %>.png" />
+            </div>
+            <p class="time-created"><%= review.time_created %></p>
+            <p><%= review.content %></p>
+          </div>
+          
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
 </div>
 
 <%- include('../partials/footer'); %>

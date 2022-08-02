@@ -1,5 +1,5 @@
 const restaurantModel = require('../models/restaurants/restaurant');
-const neighborhoodModel = require('../models/restaurants/neighborhood');
+const neighborhoodModel = require('../models/neighborhoods/neighborhood');
 const categoryModel = require('../models/categories/category');
 const reviewModel = require('../models/reviews/review');
 

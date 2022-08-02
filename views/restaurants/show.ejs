@@ -180,6 +180,7 @@
     <% reviews.forEach(review => { %>
       <div class="review">
         <div class="user-profile">
+          <!-- TODO: add fallback logic for when there is no pic url -->
           <img src="<%= review.yelp_pic %>" />
         </div>
 

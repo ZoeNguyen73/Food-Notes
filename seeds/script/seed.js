@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 // importing models
 const restaurantModel = require('../../models/restaurants/restaurant');
 const categoryModel = require('../../models/categories/category');
-const neighborhoodModel = require('../../models/restaurants/neighborhood');
+const neighborhoodModel = require('../../models/neighborhoods/neighborhood');
 const reviewModel = require('../../models/reviews/review');
 const userModel = require('../../models/users/user');
 

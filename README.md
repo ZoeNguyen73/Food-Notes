@@ -1,4 +1,4 @@
-# Desk Buddy
+# Food-Notes
 
 ## About **Food-Notes**
 

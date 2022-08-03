@@ -3,6 +3,26 @@ body {
   background-color: F9F5EB;
 }
 
+.red {
+  color: #E25A25;
+}
+
+.yellow {
+  color: #F7B501;
+}
+
+.background-yellow {
+  background-color: #F7B501;
+}
+
+.purple {
+  color: #D3C1f8;
+}
+
+.background-purple {
+  background-color: #D3C1f8;
+}
+
 .placeholders {
   color: lightgrey;
   font-style: italic;
@@ -14,11 +34,11 @@ body {
   width: 100%;
 }
 
-.btn-outline-secondary {
+.restaurant-page .btn-outline-secondary {
   border: none;
 }
 
-.btn-outline-secondary:hover {
+.restaurant-page .btn-outline-secondary:hover {
   background-color: #fff;
   color: #6c757d;
   text-decoration: underline;
@@ -40,7 +60,6 @@ p {
 
 .error-message {
   font-style: italic;
-  color: #E25A25;
 }
 
 .restaurants-list a {
@@ -190,7 +209,6 @@ header {
 }
 
 .category-tag {
-  background-color: #D3C1F8;
   border-radius: 0.5em;
   padding: 0.4em 0.4em 0.2em 0.4em;
   color: black;
@@ -207,7 +225,6 @@ header {
 }
 
 .neighborhood-name {
-  color: #F78501;
   font-weight: bold;
 }
 
@@ -275,7 +292,6 @@ header {
 }
 
 .restaurant-page .name {
-  color: #E25A25;
   font-weight: bold;
 }
 
@@ -336,12 +352,12 @@ header {
 
 .current-pins a {
   text-decoration: none;
-  color: #E25A25;
 }
 
 .current-pins a:hover {
   text-decoration: underline;
   font-weight: bold;
+  color: #bb2d3b;
 }
 
 .require-auth .edit-btn {
@@ -370,7 +386,6 @@ header {
 }
 
 .private-tag {
-  background-color: #F7B501;
   border-radius: 0.5em;
   padding: 0.4em 0.4em 0.2em 0.4em;
   color: black;
@@ -450,14 +465,14 @@ header {
   height: 200px
 }
 
-.register-page {
+.register-page, .login-page, .board-create-page {
   max-width: 600px;
   display: flex;
   flex-flow: column nowrap;
   gap: 2em;
 }
 
-.register-page form {
+.register-page form, .login-page form, .board-create-page form {
   display: flex;
   flex-flow: column nowrap;
   gap: 1em;
@@ -473,4 +488,35 @@ header {
 .restricted {
   color: grey;
   font-style: italic;
+}
+
+.user-dashboard {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 2em;
+}
+
+.user-dashboard .user-pic img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.user-dashboard .user-info {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.5em;
+}
+
+.user-dashboard .content {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 2em;
+}
+
+.user-dashboard .content .header {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 1em;
 }

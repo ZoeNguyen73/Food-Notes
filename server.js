@@ -45,13 +45,15 @@ app.listen(port, async () => {
   };
 });
 
+// seed data
+app.get('/seed-all-data', seed.init.bind(seed)); // let this run til restaurants complete
+app.get('/seed-reviews', seed.seedReviews.bind(seed)); // let this run til restaurants complete
+
 // require routers
 const restaurantsRouter = require('./routes/restaurants');
 app.use('/restaurants', restaurantsRouter);
 
 const usersRouter = require('./routes/users');
-app.use('/users', usersRouter);
+app.use('/', usersRouter);
 
-// seed data
-app.get('/seed-all-data', seed.init.bind(seed)); // let this run til restaurants complete
-app.get('/seed-reviews', seed.seedReviews.bind(seed)); // let this run til restaurants complete
+

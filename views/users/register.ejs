@@ -4,10 +4,10 @@
   <h2>Register an account</h2>
 
   <% if (errMsg) { %>
-    <p class="error-message align-center"><%= errMsg %></p>
+    <p class="error-message red align-center"><%= errMsg %></p>
   <% } %>
   
-  <form method="POST" action="/users/register?redirect=<%= redirect %>">
+  <form method="POST" action="/register?redirect=<%= redirect %>">
     <div class="form-group">
       <label for="username">Username</label>
       <input type="text" class="form-control" id="username" name="username" placeholder="HungryForMcSpicy (min 3 characters)">
@@ -31,7 +31,7 @@
     <button type="submit" class="btn btn-danger">Sign Up</button>
   </form>
 
-  <p class="align-center">Already have an account? <a href="/users/login?redirect=<%= redirect %>">Log in</a> instead!</p>
+  <p class="align-center">Already have an account? <a href="/login?redirect=<%= redirect %>">Log in</a> instead!</p>
 </div>
 
 <%- include('../partials/footer'); %>

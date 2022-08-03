@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 
 const userModel = require('../models/users/user');
+const boardModel = require('../models/boards/board');
 const validator = require('../validators/users');
 
 const controller = {
@@ -50,11 +51,11 @@ const controller = {
           };
 
           if (redirect) {
-            res.redirect(`/${redirect}`);
+            res.redirect(`${redirect}`);
             return;
           };
 
-          res.redirect(`/users/${user.username}`);
+          res.redirect(`/${user.username}/dashboard`);
           return;
         });
       });
@@ -118,26 +119,30 @@ const controller = {
         };
 
         if (redirect) {
-          res.redirect(`/${redirect}`);
+          res.redirect(`${redirect}`);
           return
         };
-        res.redirect(`/users/${user.username}`);
+        res.redirect(`/${user.username}/dashboard`);
       })
     });
 
   },
 
-  showProfile: async (req, res) => {
+  showDashboard: async (req, res) => {
     let user = null;
 
     try {
-      user = await userModel.findOne({username: req.session.username}).exec();
-      
+      user = await userModel.findOne({username: req.session.user}).exec();
+      // TODO:find user boards
+      const boards = await boardModel.find({user_id: user._id});
+      res.render('users/dashboard', {user, boards});
+      return;
+
     } catch(err) {
       console.log(`Error getting user for show route: ${err}`);
     };
     
-    res.render('users/profile', {user});
+    res.render('users/login', {errMsg:`User not found. Please try again!`});
   },
 
   logout: async (req, res) => {
@@ -145,7 +150,7 @@ const controller = {
 
     req.session.save(function (err) {
       if (err) {
-        res.redirect('/users/login')
+        res.render('users/login', {errMsg:`Please try again`});
         return
       };
 
@@ -153,7 +158,7 @@ const controller = {
       // guard against forms of session fixation
       req.session.regenerate(function (err) {
         if (err) {
-          res.redirect('/users/login')
+          res.render('users/login', {errMsg:`Please try again`});
           return
         };
                 
@@ -161,6 +166,10 @@ const controller = {
       });
     });
   },
+
+  show: async (req, res) => {
+    
+  }
 };
 
 module.exports = controller;

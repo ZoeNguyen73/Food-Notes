@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Quattrocento+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Quattrocento:wght@400;700&display=swap" rel="stylesheet">
-  <title>Happy Foodie 🍜</title>
+  <title>Food-Notes 🍜</title>
 </head>
 <body>
 
@@ -43,21 +43,24 @@
               <li class="nav-item">
                 <a class="nav-link" href="/about">About</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/restaurants">See All</a>
+              </li>
               <% if (authUser) { %>
                 <li class="nav-item">
-                  <a class="nav-link" href="/users/<%= authUser %>">Profile</a>
+                  <a class="nav-link" href="/<%= authUser %>">Profile</a>
                 </li>
                 <li class="nav-item">
-                  <form method="POST" action="/users/logout">
+                  <form method="POST" action="/logout">
                     <input id="logout-btn" type="submit" value="Log out">
                   </form>
                 </li>
               <% } else { %>
                 <li class="nav-item">
-                  <a class="nav-link" href="/users/login">Login</a>
+                  <a class="nav-link" href="/login">Login</a>
                 </li>
                 <li class="nav-item">
-                  <a href="/users/register">
+                  <a href="/register">
                     <button type="button" class="btn btn-outline-danger">
                       Sign Up
                     </button>

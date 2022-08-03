@@ -21,7 +21,7 @@
 
     <div class="row top-row">
       <div class="col-7 business-summary">
-        <h1 class="align-left name"><%= restaurant.name %></h1>
+        <h1 class="align-left name red"><%= restaurant.name %></h1>
 
         <div class="stars-rating">
           <% const stars = Math.round(restaurant.rating * 2)/2 %>
@@ -33,7 +33,7 @@
 
         <div class="categories">
           <% for (let i = 0; i < restaurant.categories.length && i < 5; i++) { %>
-            <div class="category-tag pointer-on-hover">
+            <div class="category-tag pointer-on-hover background-purple">
               <%= categories.filter(category => category._id.equals(restaurant.categories[i]))[0].display_name %>
             </div>
 
@@ -43,7 +43,7 @@
         <% if (!authUser) { %>
           <div class="login-prompt">
             <p class="restricted emphasis">
-              <a href="/users/login?redirect=restaurants/<%= restaurant.slug %>">Log in</a> or <a href="/users/register?redirect=restaurants/<%= restaurant.slug %>">Register</a> to start pinning, tagging, saving personal notes & writing reviews!
+              <a href="/login?redirect=/restaurants/<%= restaurant.slug %>">Log in</a> or <a href="/register?redirect=/restaurants/<%= restaurant.slug %>">Register</a> to start pinning, tagging, saving personal notes & writing reviews!
             </p>
           </div>
           
@@ -53,7 +53,7 @@
               <!-- TODO: add logic to list boards that restaurant is currently pinned in with hyperlink to board -->
               <div class="current-pins">
                 <p class="bold emphasis">Currently pinned in:</p>
-                <a class="board" href="">To Try</a>
+                <a class="board red" href="">To Try</a>
                 <!-- //TODO: add something to trigger a modal allow users to edit the board -->
                 <button class="btn btn-outline-secondary edit-btn" type="submit">Edit</button>
               </div>
@@ -79,13 +79,13 @@
             <div class="private-tag-section">
               <!-- TODO: add logic to list boards that restaurant is currently pinned in with hyperlink to board -->
               <p class="bold emphasis">Your private tags:</p>
-              <div class="private-tag pointer-on-hover">
+              <div class="private-tag pointer-on-hover background-yellow">
                 Mom's fav
               </div>
-              <div class="private-tag pointer-on-hover">
+              <div class="private-tag pointer-on-hover background-yellow">
                 Big portion
               </div>
-              <div class="private-tag pointer-on-hover">
+              <div class="private-tag pointer-on-hover background-yellow">
                 Go before 6pm
               </div>
               <button class="btn btn-outline-secondary edit-btn" type="submit">Edit</button>

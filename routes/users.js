@@ -1,24 +1,32 @@
 const router = require('express').Router();
-const userController = require('../controllers/user_controller');
+const controller = require('../controllers/user_controller');
 const userAuth = require('../middlewares/user_auth');
+const boardRouter = require('./boards');
+
 
 
 // register
-router.get('/register', userController.showRegisterForm);
+router.get('/register', controller.showRegisterForm);
 
 // create new account
-router.post('/register', userController.register);
+router.post('/register', controller.register);
 
 // log in form
-router.get('/login', userController.showLoginForm);
+router.get('/login', controller.showLoginForm);
 
 // log in
-router.post('/login', userController.login);
+router.post('/login', controller.login);
 
 // logout
-router.post('/logout', userController.logout);
+router.post('/logout', controller.logout);
 
-// show-profile action
-router.get('/:username', userAuth.isAuthenticated, userController.showProfile);
+// show-profile action - will be visbile to other users
+router.get('/:username', controller.show);
+
+// show dashboard
+router.get('/:username/dashboard', userAuth.isAuthenticated, userAuth.isAuthorised, controller.showDashboard);
+
+// use board router
+router.use('/:username/boards', boardRouter);
 
 module.exports = router;

@@ -35,7 +35,7 @@
                       <ul class="list-group list-group-flush">
                         <li class="list-group-item p-1 card-subtitle">
                           <!-- TODO: make neighborhood clickable, leading to index page with filter applied -->
-                          <span class="neighborhood-name pointer-on-hover">
+                          <span class="neighborhood-name red pointer-on-hover">
                             <%= neighborhoods.filter(neighborhood => neighborhood._id.equals(restaurant.neighborhood))[0].name %>
                           </span> 
   
@@ -55,7 +55,7 @@
                         <li class="list-group-item p-1 card-categories">
                           <!-- TODO: make categories clickable, leading to index page with filter applied -->
                           <% for (let i = 0; i < restaurant.categories.length && i < 5; i++) { %>
-                            <div class="category-tag pointer-on-hover">
+                            <div class="category-tag background-purple pointer-on-hover">
                               <%= categories.filter(category => category._id.equals(restaurant.categories[i]))[0].display_name %>
                             </div>
   
@@ -87,7 +87,7 @@
   
                     <div class="card-footer p-3">
                       <% if (!authUser) { %>
-                        <a class="restricted" href="/users/login?redirect=restaurants">Log in to pin restaurant to your board 📌</a>
+                        <a class="restricted" href="/login?redirect=/restaurants">Log in to pin restaurant to your board 📌</a>
                       <% } else { %>
                         <form class="pin-form" method="POST" action="/">
                           <button class="btn dropdown-toggle boards-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">

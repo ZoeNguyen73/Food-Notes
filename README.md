@@ -3,7 +3,7 @@
 ## About **Food-Notes**
 
 **Note** 
-* _Yes, it's supposed to be pun on "footnotes"_
+* _Yes, it's supposed to be a pun on "footnotes"_
 
 ### Project description
 A tool to help you keep track of your favourite eateries, but with **personalisation**. Want to take _note_ if a restaurant is great for date night, is pet-friend, gives generous portion, or is simply your mom's favourite? You can easily record all these meaningful, and truly _personal_ information through **boards**, **tags** and **notes** features.

@@ -1,13 +1,13 @@
 <%- include('../partials/header'); %>
 
-<div class="container register-page">
+<div class="container login-page">
   <h2>Log In</h2>
 
   <% if (errMsg) { %>
     <p class="error-message align-center"><%= errMsg %></p>
   <% } %>
   
-  <form method="POST" action="/users/login?redirect=<%= redirect %>">
+  <form method="POST" action="/login?redirect=<%= redirect %>">
     <div class="form-group">
       <label for="username">Username</label>
       <input type="text" class="form-control" id="username" name="username" placeholder="">
@@ -21,7 +21,7 @@
     <button type="submit" class="btn btn-danger">Log In</button>
   </form>
 
-  <p class="align-center">Don't have an account? <a href="/users/register?redirect=<%= redirect %>">Sign up</a> for one instead!</p>
+  <p class="align-center">Don't have an account? <a href="/register?redirect=<%= redirect %>">Sign up</a> for one instead!</p>
 </div>
 
 <%- include('../partials/footer'); %>

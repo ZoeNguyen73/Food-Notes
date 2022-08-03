@@ -110,6 +110,28 @@ const controller = {
     
     res.render('users/profile', {user});
   },
+
+  logout: async (req, res) => {
+    req.session.user = null;
+
+    req.session.save(function (err) {
+      if (err) {
+        res.redirect('/users/login')
+        return
+      };
+
+      // regenerate the session, which is good practice to help
+      // guard against forms of session fixation
+      req.session.regenerate(function (err) {
+        if (err) {
+          res.redirect('/users/login')
+          return
+        };
+                
+        res.redirect('/restaurants');
+      });
+    });
+  },
 };
 
 module.exports = controller;

@@ -15,6 +15,9 @@ router.get('/login', userController.showLoginForm);
 // log in
 router.post('/login', userController.login);
 
+// logout
+router.post('/logout', userController.logout);
+
 // show-profile action
 router.get('/:username', userAuth.isAuthenticated, userController.showProfile);
 

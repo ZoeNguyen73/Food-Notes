@@ -139,6 +139,20 @@ header {
   --bs-gradient: none;
 }
 
+
+#logout-btn {
+  background: none;
+  border: none;
+  display: block;
+  padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+  padding-left: var(--bs-nav-link-padding-y);
+  font-size: var(--bs-nav-link-font-size);
+  font-weight: var(--bs-nav-link-font-weight);
+  color: var(--bs-nav-link-color);
+  text-decoration: none;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
+
 .card-img-top {
   height: 180px;
   vertical-align: middle;

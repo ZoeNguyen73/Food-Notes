@@ -34,8 +34,12 @@
       <div class="header">
         <h3 class="align-left red">Let's get <strike>cooking</strike> eating</h3>
         <!-- TODO: add routes for these board buttons -->
-        <button type="button" class="btn btn-outline-danger">View All Boards</button>
-        <button type="button" class="btn btn-danger">Create a New Board</button>
+        <a href="/<%= user.username %>/boards">
+          <button type="button" class="btn btn-outline-danger">View All Boards</button>
+        </a>
+        <a href="/<%= user.username %>/boards/create">
+          <button type="button" class="btn btn-danger">Create a New Board</button>
+        </a>
       </div>
   
       

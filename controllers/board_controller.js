@@ -7,8 +7,6 @@ const controller = {
     const username = req.params.username;
     let user = null;
 
-    console.log(`username is ${username}`);
-
     // get userID
     try {
       user = await userModel.findOne({username});
@@ -35,32 +33,47 @@ const controller = {
   },
 
   showCreateForm: (req, res) => {
-    console.log(`request reached board controller`)
     const username = req.session.user;
     res.render('boards/create', {errMsg: null, username});
   },
 
   create: async (req, res) => {
-    console.log(`submission from board create form: ${JSON.stringify(req.body)}`);
-    const validationsResults = validator.create.validate(req.body);
+    const username = req.params.username;
+    const validationResults = validator.create.validate(req.body);
 
     if (validationResults.error) {
-      res.render(`boards/create`, {errMsg: `Please follow our requirements while filing in the form`});
+      res.render(`boards/create`, {errMsg: `Please follow our requirements while filing in the form`, username});
       return;
     };
 
     const validatedResults = validationResults.value;
 
+    // check if user already has a board with the same name
+    const user = await userModel.findOne({username});
+    const existingBoard = await boardModel.findOne({user_id: user._id, name: validatedResults.name});
+
+    if (existingBoard) {
+      res.render(`boards/create`, {errMsg: `There is already a board with the same name`, username});
+      return;
+    };
+
     try {
-      const user = await userModel.findOne({username: req.params.username});
       const board = await boardModel.create({
+        user_id: user._id,
+        name: validatedResults.name,
+        description: validatedResults.description,
+        isPublic: validatedResults.is_public === 1
+      });
 
-      })
+      res.redirect(`/${username}/boards`);
+      return;
+
     } catch(err) {
-
-    }
+      console.log(`Error creating new board: ${err}`);
+      res.render('boards/create', {errMsg: 'Sorry, please try again', username});
+      return;
+    };
   },
-
 
 };
 

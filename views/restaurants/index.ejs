@@ -87,9 +87,7 @@
   
                     <div class="card-footer p-3">
                       <% if (!authUser) { %>
-                        <form method="GET" action="/users/login">
-                          <button class="btn restricted">Log in to pin restaurant to your board</button>
-                        </form>
+                        <a class="restricted" href="/users/login?redirect=restaurants">Log in to pin restaurant to your board 📌</a>
                       <% } else { %>
                         <form class="pin-form" method="POST" action="/">
                           <button class="btn dropdown-toggle boards-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">

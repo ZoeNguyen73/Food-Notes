@@ -43,7 +43,7 @@
         <% if (!authUser) { %>
           <div class="login-prompt">
             <p class="restricted emphasis">
-              <a href="/users/login">Log in</a> or <a href="/users/register">Register</a> to start pinning, tagging, saving personal notes & writing reviews!
+              <a href="/users/login?redirect=restaurants/<%= restaurant.slug %>">Log in</a> or <a href="/users/register?redirect=restaurants/<%= restaurant.slug %>">Register</a> to start pinning, tagging, saving personal notes & writing reviews!
             </p>
           </div>
           

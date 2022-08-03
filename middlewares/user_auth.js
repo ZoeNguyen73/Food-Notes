@@ -1,7 +1,9 @@
 const userAuth = {
   isAuthenticated: (req, res, next) => {
     if (!req.session.user) {
-      res.redirect('/users/login');
+      const url = req.originalUrl;
+      console.log(`original url is ${url}`);
+      res.redirect(`/users/login/?redirect=${url}`);
       return;
     };
     

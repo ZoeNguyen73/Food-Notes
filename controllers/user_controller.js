@@ -6,14 +6,15 @@ const validator = require('../validators/users');
 const controller = {
 
   showRegisterForm: (req, res) => {
-    res.render('users/register', {errMsg:null});
+    res.render('users/register', {errMsg: null, redirect: req.query.redirect});
   },
 
   register: async (req, res) => {
+    const redirect = req.query.redirect || null;
     const validationResults = validator.register.validate(req.body);
 
     if (validationResults.error) {
-      res.render('users/register', {errMsg:`Please follow our requirements while filing in the form`});
+      res.render('users/register', {errMsg: `Please follow our requirements while filing in the form`, redirect});
       return;
     };
 
@@ -28,22 +29,47 @@ const controller = {
         hashed_password: hash
       });
 
-      res.render('users/profile', {user});
-      return;
+      // log the user in by creating a session
+      req.session.regenerate(function (err) {
+        if (err) {
+          console.log(`error generating session after registration: ${err}`);
+          res.render('users/login', {errMsg:`Authentication failed. Please try again!`, redirect});
+          return;
+        };
+  
+        // store user information in session, typically a user id
+        req.session.user = user.username;
+  
+        // save the session before redirection to ensure page
+        // load does not happen before session is saved
+        req.session.save(function (err) {
+          if (err) {
+            console.log(`error saving session after registration: ${err}`);
+            res.render('users/login', {errMsg:`Authentication failed. Please try again!`, redirect});
+            return;
+          };
 
+          if (redirect) {
+            res.redirect(`/${redirect}`);
+            return;
+          };
+
+          res.redirect(`/users/${user.username}`);
+          return;
+        });
+      });
     } catch(err) {
       console.log(`Error creating a new users (register flow): ${err}`);
     };
-
-    res.render('users/register',{errMsg:`Oops... Please try again with a different username/email`});
   },
 
   showLoginForm: (req, res) => {
-    res.render('users/login', {errMsg:null});
+    res.render('users/login', {errMsg: null, redirect: req.query.redirect});
   },
 
   login: async (req, res) => {
-    console.log(`login request body: ${JSON.stringify(req.body)}`);
+
+    const redirect = req.query.redirect || null;
     const validationResults = validator.login.validate(req.body);
 
     if (validationResults.error) {
@@ -52,7 +78,6 @@ const controller = {
     };
 
     const validatedResults = validationResults.value;
-    console.log(`validatedResults: ${JSON.stringify(validatedResults)}`);
     let user = null;
 
     try {
@@ -92,9 +117,13 @@ const controller = {
           return;
         };
 
+        if (redirect) {
+          res.redirect(`/${redirect}`);
+          return
+        };
         res.redirect(`/users/${user.username}`);
       })
-    })
+    });
 
   },
 

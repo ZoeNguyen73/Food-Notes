@@ -8,6 +8,8 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+const authMiddleware = require('./middlewares/user_auth');
+
 
 const connStr = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@cluster0.xeoex.mongodb.net/?retryWrites=true&w=majority`
 
@@ -22,8 +24,10 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  // cookie: { secure: false, httpOnly: false, maxAge: 7200000 }
+  //TODO: change maxAge to longer duration before publishingb
+  cookie: { secure: false, httpOnly: false, maxAge: 2*60*60*1000 } // 2 hours
 }));
+app.use(authMiddleware.setAuthUser);
 
 // set view engine
 app.set('view engine', 'ejs');

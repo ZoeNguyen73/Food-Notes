@@ -13,9 +13,9 @@ router.post('/register', userController.register);
 router.get('/login', userController.showLoginForm);
 
 // log in
-router.post('/register', userController.login);
+router.post('/login', userController.login);
 
 // show-profile action
-router.get('/:username', userController.show);
+router.get('/:username', userAuth.isAuthenticated, userController.showProfile);
 
 module.exports = router;

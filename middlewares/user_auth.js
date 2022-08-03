@@ -8,7 +8,7 @@ const userAuth = {
     next();
   },
 
-  setAuthUserVar: (req, res, next) => {
+  setAuthUser: (req, res, next) => {
     res.locals.authUser = null;
     
     if (req.session.user) {

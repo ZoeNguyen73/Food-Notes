@@ -10,8 +10,6 @@ const controller = {
   },
 
   register: async (req, res) => {
-    console.log(`posted successfully`);
-    console.log(`received form: ${JSON.stringify(req.body)}`);
     const validationResults = validator.register.validate(req.body);
 
     if (validationResults.error) {
@@ -30,7 +28,7 @@ const controller = {
         hashed_password: hash
       });
 
-      res.render('users/show', {user});
+      res.render('users/profile', {user});
       return;
 
     } catch(err) {
@@ -41,23 +39,76 @@ const controller = {
   },
 
   showLoginForm: (req, res) => {
-
+    res.render('users/login', {errMsg:null});
   },
 
-  login: (req, res) => {
+  login: async (req, res) => {
+    console.log(`login request body: ${JSON.stringify(req.body)}`);
+    const validationResults = validator.login.validate(req.body);
 
-  },
+    if (validationResults.error) {
+      res.render('users/login', {errMsg:`Please try again`});
+      return;
+    };
 
-  show: async (req, res) => {
+    const validatedResults = validationResults.value;
+    console.log(`validatedResults: ${JSON.stringify(validatedResults)}`);
     let user = null;
-    
+
+    try {
+      user = await userModel.findOne({username: validatedResults.username});
+    } catch (err) {
+      res.render('users/login', {errMsg:`User not found. Please try again!`});
+      return;
+    };
+
+    if (!user) {
+      res.render('users/login', {errMsg:`User not found. Please try again!`});
+      return;
+    };
+
+    const passwordMatches = await bcrypt.compare(validatedResults.password, user.hashed_password);
+
+    if (!passwordMatches) {
+      res.render('users/login', {errMsg:`Authentication failed. Please try again!`});
+      return;
+    };
+
+    // log the user in by creating a session
+    req.session.regenerate(function (err) {
+      if (err) {
+        res.render('users/login', {errMsg:`Authentication failed. Please try again!`});
+        return;
+      };
+  
+      // store user information in session, typically a user id
+      req.session.user = user.username;
+  
+      // save the session before redirection to ensure page
+      // load does not happen before session is saved
+      req.session.save(function (err) {
+        if (err) {
+          res.render('users/login', {errMsg:`Authentication failed. Please try again!`});
+          return;
+        };
+
+        res.redirect(`/users/${user.username}`);
+      })
+    })
+
+  },
+
+  showProfile: async (req, res) => {
+    let user = null;
+
     try {
       user = await userModel.findOne({username: req.session.username}).exec();
+      
     } catch(err) {
       console.log(`Error getting user for show route: ${err}`);
     };
     
-    res.render('users/show', {user});
+    res.render('users/profile', {user});
   },
 };
 

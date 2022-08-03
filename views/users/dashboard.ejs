@@ -28,7 +28,7 @@
           <button type="button" class="btn btn-danger">Create a New Board</button>
         </a>
         
-        <p>or browse restaurants for inspirations</p>
+        <p>or browse <a href="/restaurants">restaurants</a> for inspirations</p>
       </div>
     <% } else { %>
       <div class="header">
@@ -48,7 +48,7 @@
         <p>Gotta check these out one day</p>
         <div>
           <span class="placeholders">(20 restaurants)</span>
-          <a href="">See All</a>
+          <a href="/<%= user.username %>/boards/">See All</a>
         </div>
   
         <div class="restaurants-list">

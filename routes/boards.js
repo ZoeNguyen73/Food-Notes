@@ -5,9 +5,6 @@ const userAuth = require('../middlewares/user_auth');
 // all boards
 router.get('/', controller.list);
 
-// show board
-
-
 // create form
 router.get('/create', userAuth.isAuthenticated, userAuth.isAuthorised, controller.showCreateForm);
 
@@ -15,6 +12,6 @@ router.get('/create', userAuth.isAuthenticated, userAuth.isAuthorised, controlle
 router.post('/create', userAuth.isAuthenticated, userAuth.isAuthorised, controller.create);
 
 // show board
-router.get('/:boardName', controller.show);
+router.get('/:board_slug', controller.show);
 
 module.exports = router;

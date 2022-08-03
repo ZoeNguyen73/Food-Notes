@@ -22,14 +22,24 @@ const controller = {
       res.render('boards/index',{boards});
     } catch(err) {
       console.log(`Error finding boards under username ${username}: ${err}`);
-      res.render('boards/index', {board:[]});
+      res.render('boards/index', {board: [], errMsg: `Oops, we could not find any boards`});
       return;
     };
     
   },
 
-  show: (req, res) => {
-
+  show: async (req, res) => {
+    const slug = req.params.board_slug;
+    const username = req.params.username;
+    try {
+      const board = await boardModel.findOne({username, slug});
+      //TODO: add validation if board is public or private
+      res.render('boards/show', {board, errMsg: null});
+    } catch(err) {
+      console.log(`Error finding board: ${err}`);
+      res.render('boards/index', {board:[], errMsg: `Oops, the board cannot be found`});
+      return
+    };
   },
 
   showCreateForm: (req, res) => {
@@ -62,10 +72,10 @@ const controller = {
         user_id: user._id,
         name: validatedResults.name,
         description: validatedResults.description,
-        isPublic: validatedResults.is_public === 1
+        isPublic: validatedResults.is_public === 1,
       });
 
-      res.redirect(`/${username}/boards`);
+      res.redirect(`/${username}/boards/${board.slug}`);
       return;
 
     } catch(err) {

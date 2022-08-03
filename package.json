@@ -25,6 +25,7 @@
     "express-session": "^1.17.3",
     "joi": "^17.6.0",
     "method-override": "^3.0.0",
-    "mongoose": "^6.5.0"
+    "mongoose": "^6.5.0",
+    "mongoose-slug-generator": "^1.0.4"
   }
 }

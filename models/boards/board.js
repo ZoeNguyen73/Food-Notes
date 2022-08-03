@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const slug = require('mongoose-slug-generator');
+mongoose.plugin(slug);
 
 const boardSchema = new mongoose.Schema({
   user_id: {
@@ -18,6 +20,11 @@ const boardSchema = new mongoose.Schema({
   isPublic: {
     type: Boolean,
     required: true
+  },
+
+  slug: {
+    type: String,
+    slug: "name",
   },
 
   restaurants: {

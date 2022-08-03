@@ -2,6 +2,9 @@
 
 <div class="container">
   <h2>Board index</h2>
+  <% if (errMsg) { %>
+    <p class="error-message red align-center"><%= errMsg %></p>
+  <% } %>
 </div>
 
 <%- include('../partials/footer'); %>

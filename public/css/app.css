@@ -121,6 +121,10 @@ header {
   --bs-btn-disabled-border-color: #E25A25;
 }
 
+.restricted {
+  color: grey;
+  font-style: italic;
+}
 
 .btn-outline-danger {
   --bs-btn-color: #E25A25;
@@ -462,4 +466,11 @@ header {
   display: flex;
   flex-flow: column nowrap;
   gap: 1em;
+}
+
+.login-prompt {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 1em;
+  align-items: center;
 }

@@ -1,9 +1,14 @@
 <%- include('../partials/header'); %>
 
 <div class="container board-page">
-  <h2><%= board.name %></h2>
+  <% if (errMsg) { %>
+    <p class="error-message red align-center"><%= errMsg %></p>
+  <% } else { %>
+    <h2><%= board.name %></h2>
 
   <!-- TODO: edit / add function only available if user is authorized -->
+  <% } %>
+  
 </div>
 
 <%- include('../partials/footer'); %>

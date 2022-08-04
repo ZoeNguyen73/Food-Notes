@@ -31,15 +31,22 @@ const controller = {
   show: async (req, res) => {
     const slug = req.params.board_slug;
     const username = req.params.username;
+    let board = null;
+    let errMsg = null;
+ 
     try {
-      const board = await boardModel.findOne({username, slug});
-      //TODO: add validation if board is public or private
-      res.render('boards/show', {board, errMsg: null});
+      board = await boardModel.findOne({username, slug});
+
+      if (!board.is_public && req.session.user !== username) {
+        errMsg = `Opps, this board is private`;
+      };
+
     } catch(err) {
       console.log(`Error finding board: ${err}`);
-      res.render('boards/index', {board:[], errMsg: `Oops, the board cannot be found`});
-      return
+      errMsg = `Oops, the board cannot be found`;
     };
+
+    res.render('boards/show', {board, errMsg});
   },
 
   showCreateForm: (req, res) => {
@@ -72,7 +79,7 @@ const controller = {
         user_id: user._id,
         name: validatedResults.name,
         description: validatedResults.description,
-        isPublic: validatedResults.is_public === 1,
+        is_public: validatedResults.public_setting === '1',
       });
 
       res.redirect(`/${username}/boards/${board.slug}`);

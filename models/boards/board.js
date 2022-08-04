@@ -4,7 +4,7 @@ mongoose.plugin(slug);
 
 const boardSchema = new mongoose.Schema({
   user_id: {
-    type: [mongoose.ObjectId],
+    type: mongoose.ObjectId,
     required: true
   },
 
@@ -17,7 +17,7 @@ const boardSchema = new mongoose.Schema({
     type: String,
   },
 
-  isPublic: {
+  is_public: {
     type: Boolean,
     required: true
   },

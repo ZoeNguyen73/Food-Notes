@@ -25,6 +25,9 @@ const controller = {
       // get today day
       const day = new Date().getDay().toLocaleString('sg-SG');
 
+      // const [restaurants, neighborhoods, categories, reviews, day] 
+      // = await restaurantModel.getDataForList({});
+
       res.render('restaurants/index', {restaurants, neighborhoods, categories, reviews, day});
       return;
 

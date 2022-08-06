@@ -46,7 +46,7 @@ const controller = {
       errMsg = `Oops, the board cannot be found`;
     };
 
-    res.render('boards/show', {board, errMsg});
+    res.render('boards/show', {board, username, errMsg});
   },
 
   showCreateForm: (req, res) => {

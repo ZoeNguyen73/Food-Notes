@@ -39,16 +39,23 @@
                             <%= neighborhoods.filter(neighborhood => neighborhood._id.equals(restaurant.neighborhood))[0].name %>
                           </span> 
   
-                          - Open til
+                          
                           <span>
-                            <% let endTime = Number(restaurant.opening_hours[day].end) %>
-                            <% const session = endTime > 1200 ? "PM" : "AM" %>
-                            <% let displayTime = ''%>
-                            <% if (endTime > 1200) {endTime -= 1200} %>
-                            <% const endTimeStr = endTime.toString().padStart(4, '0') %>
-                            <% displayTime += `${endTimeStr.slice(0,2)}:${endTimeStr.slice(2,4)}` %>
+                            <% const todayTimings = restaurant.opening_hours.filter(timing => timing["day"] == day) %>
+
+                            <% if (todayTimings.length === 0) { %>
+                              - Closed today
+                            <% } else { %>
+                              <% endTime = Number(todayTimings[todayTimings.length - 1].end) %>
+                              <% const session = endTime > 1200 ? "PM" : "AM" %>
+                              <% let displayTime = ''%>
+                              <% if (endTime > 1200) {endTime -= 1200} %>
+                              <% const endTimeStr = endTime.toString().padStart(4, '0') %>
+                              <% displayTime += `${endTimeStr.slice(0,2)}:${endTimeStr.slice(2,4)}` %>
                             
-                            <%= `${displayTime} ${session}` %>
+                              - Open til <%= `${displayTime} ${session}` %>
+                            <% } %>
+                            
                           </span>
                         </li>
   

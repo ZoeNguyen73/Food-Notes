@@ -1,4 +1,8 @@
 const mongoose = require('mongoose');
+const neighborhoodModel = require('../neighborhoods/neighborhood');
+const categoryModel = require('../categories/category');
+const reviewModel = require('../reviews/review');
+const filterList = require('../filter_list');
 
 const restaurantSchema = new mongoose.Schema({
   yelp_id: {
@@ -68,5 +72,47 @@ const restaurantSchema = new mongoose.Schema({
 });
 
 const Restaurant= mongoose.model('Restaurant', restaurantSchema);
+
+//should return restaurants, neighborhoods, categories, 1st review of each restaurant, current day
+//filters should be an object. eg. {neighborhood:["Bishan"], category:["Dim sum", "Seafood"]}
+
+restaurantSchema.statics.getDataForList = async function getDataForList(filters) {
+  // get today day
+  const day = new Date().getDay().toLocaleString('sg-SG');
+  // const validFilters = filterList.restaurants;
+
+  // get all neighborhoods
+  const neighborhoods = await neighborhoodModel.find().exec();
+
+  // get all categories
+  const categories = await categoryModel.find().exec();
+
+  let restaurants = null;
+
+  // get all restaurants if no filters
+  if (Object.keys(filters).length === 0) {
+    restaurants = await restaurantModel.find().exec();
+  } else {
+  // get restaurants based on filters
+    restaurants = await restaurantModel.find({
+      neighborhood: {
+        $in: filters.neighborhood
+      },
+      categories: {
+        $in: filters.categories
+      }
+    }).exec();
+  };
+
+  // get first review of every restaurant
+  const reviews = [];
+  for await (const restaurant of restaurants) {
+    const firstReview = await reviewModel.findOne({restaurant_id: restaurant._id});
+    reviews.push(firstReview);
+  };
+
+  return [restaurants, neighborhoods, categories, reviews, day];
+
+};
 
 module.exports = Restaurant;

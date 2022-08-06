@@ -4,7 +4,8 @@
   <% if (errMsg) { %>
     <p class="error-message red align-center"><%= errMsg %></p>
   <% } else { %>
-    <h2><%= board.name %></h2>
+    <h1 class="red"><%= board.name %></h1>
+    <h5>Created by <span class="yellow"><%= username %></span></h5>
 
   <!-- TODO: edit / add function only available if user is authorized -->
   <% } %>

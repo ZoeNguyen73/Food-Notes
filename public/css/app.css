@@ -241,7 +241,6 @@ header {
 }
 
 .snippet {
-  flex-grow: 1;
   font-size: 0.9em;
   color: grey;
 }

@@ -71,12 +71,11 @@ const restaurantSchema = new mongoose.Schema({
   
 });
 
-const Restaurant= mongoose.model('Restaurant', restaurantSchema);
-
 //should return restaurants, neighborhoods, categories, 1st review of each restaurant, current day
 //filters should be an object. eg. {neighborhood:["Bishan"], category:["Dim sum", "Seafood"]}
 
-restaurantSchema.statics.getDataForList = async function getDataForList(filters) {
+restaurantSchema.statics.getDataForList = async function(filters) {
+  
   // get today day
   const day = new Date().getDay().toLocaleString('sg-SG');
   // const validFilters = filterList.restaurants;
@@ -91,10 +90,10 @@ restaurantSchema.statics.getDataForList = async function getDataForList(filters)
 
   // get all restaurants if no filters
   if (Object.keys(filters).length === 0) {
-    restaurants = await restaurantModel.find().exec();
+    restaurants = await this.find().exec();
   } else {
-  // get restaurants based on filters
-    restaurants = await restaurantModel.find({
+  // TODO: make filters work - note: need to filter by objectId not string
+    restaurants = await this.find({
       neighborhood: {
         $in: filters.neighborhood
       },
@@ -114,5 +113,7 @@ restaurantSchema.statics.getDataForList = async function getDataForList(filters)
   return [restaurants, neighborhoods, categories, reviews, day];
 
 };
+
+const Restaurant = mongoose.model('Restaurant', restaurantSchema);
 
 module.exports = Restaurant;

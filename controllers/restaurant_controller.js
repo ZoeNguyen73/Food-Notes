@@ -7,26 +7,8 @@ const controller = {
   list: async (req, res) => {
     
     try {
-      const restaurants = await restaurantModel.find().exec();
-
-      // get all neighborhoods
-      const neighborhoods = await neighborhoodModel.find().exec();
-
-      // get all categories
-      const categories = await categoryModel.find().exec();
-
-      // get only the first reviews of each restaurants
-      const reviews = [];
-      for await (const restaurant of restaurants) {
-        const firstReview = await reviewModel.findOne({restaurant_id: restaurant._id});
-        reviews.push(firstReview);
-      };
-
-      // get today day
-      const day = new Date().getDay().toLocaleString('sg-SG');
-
-      // const [restaurants, neighborhoods, categories, reviews, day] 
-      // = await restaurantModel.getDataForList({});
+      const [restaurants, neighborhoods, categories, reviews, day] 
+      = await restaurantModel.getDataForList({});
 
       res.render('restaurants/index', {restaurants, neighborhoods, categories, reviews, day});
       return;

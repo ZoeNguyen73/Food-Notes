@@ -44,16 +44,22 @@
   
       
       <div class="boards-list">
-        <h1 class="align-left bold yellow">To Try</h1>
-        <p>Gotta check these out one day</p>
-        <div>
-          <span class="placeholders">(20 restaurants)</span>
-          <a href="/<%= user.username %>/boards/">See All</a>
-        </div>
+        <% boards.forEach(board => { %>
+          <h1 class="align-left bold yellow"><%= board.name %></h1>
+          <!-- TODO: add icon to indicate if board is public or private -->
+          <p><%= board.description %></p>
+          <div>
+            <span class="placeholders">
+              (<%= board.restaurants.length %> restaurants)
+            </span>
+            <a href="/<%= user.username %>/boards/<%= board.slug %>">See All</a>
+          </div>
   
         <div class="restaurants-list">
   
         </div>
+        <% }) %>
+        
   
       </div>
     <% } %>

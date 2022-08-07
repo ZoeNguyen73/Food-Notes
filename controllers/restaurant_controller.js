@@ -2,6 +2,8 @@ const restaurantModel = require('../models/restaurants/restaurant');
 const neighborhoodModel = require('../models/neighborhoods/neighborhood');
 const categoryModel = require('../models/categories/category');
 const reviewModel = require('../models/reviews/review');
+const userModel = require('../models/users/user');
+const boardModel = require('../models/boards/board');
 
 const controller = {
   list: async (req, res) => {
@@ -10,7 +12,15 @@ const controller = {
       const [restaurants, neighborhoods, categories, reviews, day] 
       = await restaurantModel.getDataForList({});
 
-      res.render('restaurants/index', {restaurants, neighborhoods, categories, reviews, day});
+      // return current users' boards
+      let boards = null;
+      if (req.session.user) {
+        const user = await userModel.findOne({username: req.session.user}).exec();
+        const user_id = user._id;
+        boards = await boardModel.find({user_id}).exec();
+      };
+
+      res.render('restaurants/index', {restaurants, neighborhoods, categories, reviews, day, boards});
       return;
 
     } catch(err) {

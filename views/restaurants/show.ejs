@@ -72,26 +72,27 @@
                 <% } %>
               </div>
               
-              <form class="pin-form" method="POST" action="/">
+              <form class="pin-form" method="POST" action="/restaurants/<%= restaurant.slug %>/<%= authUser %>/pin?_method=PUT&redirect=/restaurants/<%= restaurant.slug %>">
                 <p>Pin in another board:</p>
-                <button class="btn dropdown-toggle boards-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Pick a personal board
-                </button>
-                <ul class="dropdown-menu">
-                  <!-- TODO: list users personal boards -->
-                  <!-- TODO: users authentication here, if not logged in, users cannot pin -->
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-                          
-                <!-- TODO: update pin action route -->
+                
+                <div class="boards-dropdown">
+                  <select class="custom-select" id="board_id" name="board_id")">
+                    <option value="" disabled selected>Choose a board to pin</option>
+                    <% boards.forEach(board => { %>
+                      <option value="<%= board._id %>" <%= board.restaurants.includes(restaurant._id) ? 'disabled' : '' %>>
+                        <%= board.name %> <%= board.restaurants.includes(restaurant._id) ? '📌' : '' %>
+                      </option>
+                    <% }) %>
+                      
+                  </select>
+                </div>
                 <button class="btn btn-danger" type="submit">Pin 📌</button>
+                        
               </form>
             </div>
   
             <div class="private-tag-section">
-              <!-- TODO: add logic to list boards that restaurant is currently pinned in with hyperlink to board -->
+              <!-- TODO: add logic to list privat tags that restaurant currently has -->
               <p class="bold emphasis">Your private tags:</p>
               <div class="private-tag pointer-on-hover background-yellow">
                 Mom's fav

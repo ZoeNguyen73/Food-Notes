@@ -389,8 +389,12 @@ header {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-  align-items: center;
   gap: 1em;
+  align-items: stretch;
+}
+
+.restaurant-page .pin-form p {
+  align-self: center;
 }
 
 .private-tag-section {

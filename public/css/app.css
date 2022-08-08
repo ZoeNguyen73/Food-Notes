@@ -273,6 +273,10 @@ header {
   font-style: italic;
 }
 
+.restaurants-list .pin-form button {
+  flex-shrink: 0;
+}
+
 .boards-options {
   display: flex;
   flex-flow: row nowrap;
@@ -288,7 +292,7 @@ header {
   height: 100%;
   border: 1px solid lightgrey;
   border-radius: 0.3em;
-  padding-left: 0.8em;
+  padding: 0 0.5em;
 }
 
 .restaurant-photos {

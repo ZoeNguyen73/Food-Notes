@@ -52,10 +52,24 @@
             <div class="pin-section">
               <!-- TODO: add logic to list boards that restaurant is currently pinned in with hyperlink to board -->
               <div class="current-pins">
-                <p class="bold emphasis">Currently pinned in:</p>
-                <a class="board red" href="">To Try</a>
-                <!-- //TODO: add something to trigger a modal allow users to edit the board -->
-                <button class="btn btn-outline-secondary edit-btn" type="submit">Edit</button>
+                <% if (restaurantBoards.length === 0) { %>
+                  <p class="bold emphasis">Currently not pinned in any boards</p>
+                <% } else { %>
+                  <p class="bold emphasis">Currently pinned in:</p>
+                  <p>
+                    <% restaurantBoards.forEach((board, idx) => { %>
+                      <span>
+                        <a class="board red" href="/<%= authUser %>/boards/<%= board.slug %>"><%= board.name %></a>
+                        <% if (idx < restaurantBoards.length -1) { %>
+                          ,
+                        <% } %>
+                      </span>
+                    <% }) %>
+                  </p>
+
+                  <!-- //TODO: add something to trigger a modal allow users to edit the board -->
+                  <button class="btn btn-outline-secondary edit-btn" type="submit">Edit</button>
+                <% } %>
               </div>
               
               <form class="pin-form" method="POST" action="/">

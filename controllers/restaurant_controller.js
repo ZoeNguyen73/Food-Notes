@@ -25,27 +25,18 @@ const controller = {
 
   show: async (req, res) => {
     let restaurant = null;
+    const authUser = req.session.user || null;
     try {
       restaurant = await restaurantModel.findOne({slug: req.params.restaurant_slug}).exec();
 
-      // get all categories
-      const categories = await categoryModel.find().exec();
+      const [restaurantBoards, boards, categories, reviews] 
+      = await restaurant.getRestaurantInfo(authUser);
 
-      // get all reviews from the restaurant
-      const reviews = await reviewModel.find({restaurant_id: restaurant._id}).exec();
-
-      // create map
-      // const map = L.map('map').setView([restaurant.coordinates.latitude, restaurant.coordinates.longitude, ], 13);
-      // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      //   maxZoom: 19,
-      //   attribution: '© OpenStreetMap'
-      // }).addTo(map);
-
-      res.render('restaurants/show', {restaurant, categories, reviews});
+      res.render('restaurants/show', {restaurant, categories, reviews, restaurantBoards, boards});
       return;
 
     } catch(err) {
-      console.log(`Error getting restaurant lists: ${err}`);
+      console.log(`Error getting restaurant details: ${err}`);
     };
     
     res.render('restaurants/show', {restaurant});
@@ -55,7 +46,7 @@ const controller = {
   addToBoard: async (req, res) => {
     let board = null;
     const redirect = req.query.redirect || null;
-    console.log(`redirect url is ${redirect}`);
+
     try {
       const restaurant = await restaurantModel.findOne({slug: req.params.restaurant_slug}).exec();
       const restaurant_id = await restaurant._id;
@@ -68,6 +59,12 @@ const controller = {
       };
     } catch(err) {
       console.log(`Error adding restaurant to board: ${err}`);
+    };
+
+    if (redirect) {
+      // TODO: figure out how to not reload restaurants page
+      res.redirect(`${redirect}`);
+      return;
     };
 
     res.redirect(`/${req.session.user}/boards/${board.slug}`);

@@ -90,7 +90,6 @@ restaurantSchema.statics.getDataForList = async function(authUser, filters) {
 
   let restaurants = null;
 
-  
   // return current users' boards
   let boards = null;
 
@@ -136,6 +135,40 @@ restaurantSchema.statics.getDataForList = async function(authUser, filters) {
   return [restaurants, neighborhoods, categories, reviews, day, boards];
 
 };
+
+restaurantSchema.methods.getRestaurantInfo = async function(authUser) {
+
+  // get all categories
+  const categories = await categoryModel.find().exec();
+  
+  // get all reviews from the restaurant
+  const reviews = await reviewModel.find({restaurant_id: this._id}).exec();
+
+  let boards = null;
+  const restaurantBoards = [];
+
+  if (authUser !== null) {
+    const user = await userModel.findOne({username: authUser}).exec();
+    const user_id = user._id;
+    boards = await boardModel.find({user_id}).exec();
+
+    boards.forEach(board => {
+      if (board.restaurants.includes(this._id)) {
+        restaurantBoards.push(board);
+      };
+    });
+  };
+
+  // TODO: get map info
+  // create map
+  // const map = L.map('map').setView([restaurant.coordinates.latitude, restaurant.coordinates.longitude, ], 13);
+  // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  //   maxZoom: 19,
+  //   attribution: '© OpenStreetMap'
+  // }).addTo(map);
+
+  return [restaurantBoards, boards, categories, reviews];
+}
 
 const Restaurant = mongoose.model('Restaurant', restaurantSchema);
 

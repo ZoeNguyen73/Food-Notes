@@ -2,7 +2,7 @@ const userAuth = {
   isAuthenticated: (req, res, next) => {
     if (!req.session.user) {
       const url = req.originalUrl;
-      res.redirect(`/login/?redirect=${url}`);
+      res.redirect(`/login?redirect=${url}`);
       return;
     };
     

@@ -7,18 +7,11 @@ const boardModel = require('../models/boards/board');
 
 const controller = {
   list: async (req, res) => {
-    
-    try {
-      const [restaurants, neighborhoods, categories, reviews, day] 
-      = await restaurantModel.getDataForList({});
+    const authUser = req.session.user || null;
 
-      // return current users' boards
-      let boards = null;
-      if (req.session.user) {
-        const user = await userModel.findOne({username: req.session.user}).exec();
-        const user_id = user._id;
-        boards = await boardModel.find({user_id}).exec();
-      };
+    try {
+      const [restaurants, neighborhoods, categories, reviews, day, boards] 
+      = await restaurantModel.getDataForList(authUser, {});
 
       res.render('restaurants/index', {restaurants, neighborhoods, categories, reviews, day, boards});
       return;
@@ -57,7 +50,28 @@ const controller = {
     
     res.render('restaurants/show', {restaurant});
   
-  }
+  },
+
+  addToBoard: async (req, res) => {
+    let board = null;
+    const redirect = req.query.redirect || null;
+    console.log(`redirect url is ${redirect}`);
+    try {
+      const restaurant = await restaurantModel.findOne({slug: req.params.restaurant_slug}).exec();
+      const restaurant_id = await restaurant._id;
+
+      board = await boardModel.findOne({_id: req.body.board_id}).exec();
+      const boardRestaurants = board.restaurants;
+
+      if (!boardRestaurants.includes(restaurant_id)) {
+        await boardModel.findOneAndUpdate({_id: req.body.board_id}, {$push: {restaurants: restaurant_id}});
+      };
+    } catch(err) {
+      console.log(`Error adding restaurant to board: ${err}`);
+    };
+
+    res.redirect(`/${req.session.user}/boards/${board.slug}`);
+  },
 };
 
 module.exports = controller;

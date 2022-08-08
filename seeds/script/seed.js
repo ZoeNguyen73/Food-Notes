@@ -120,8 +120,8 @@ const seed = {
               let id = null;
               try {
                 await categoryModel.findOneAndUpdate(
-                  { display_name: category },
-                  { display_name: category },
+                  { name: category },
+                  { name: category },
                   { upsert: true }
                 );
 
@@ -134,7 +134,7 @@ const seed = {
             const categoriesIDs = [];
             for await (const category of categories) {
               try {
-                const doc = await categoryModel.findOne({ display_name: category }).exec();
+                const doc = await categoryModel.findOne({ name: category }).exec();
                 const id = await doc._id;
                 categoriesIDs.push(id);
               } catch (err) {
@@ -189,6 +189,7 @@ const seed = {
   //FIXME: fix issue with seed reviews need to run separately after restaurants are seeded
   seedReviews: async () => {
     // get list of restaurants
+    console.log(`reviews seeding started.....`);
     try {
       const restaurants = await restaurantModel.find({}, 'yelp_id _id').exec();
     

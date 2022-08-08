@@ -74,7 +74,7 @@ const controller = {
     const validationResults = validator.login.validate(req.body);
 
     if (validationResults.error) {
-      res.render('users/login', {errMsg:`Please try again`});
+      res.render('users/login', {errMsg:`Please try again`, redirect});
       return;
     };
 
@@ -84,26 +84,26 @@ const controller = {
     try {
       user = await userModel.findOne({username: validatedResults.username});
     } catch (err) {
-      res.render('users/login', {errMsg:`User not found. Please try again!`});
+      res.render('users/login', {errMsg:`User not found. Please try again!`, redirect});
       return;
     };
 
     if (!user) {
-      res.render('users/login', {errMsg:`User not found. Please try again!`});
+      res.render('users/login', {errMsg:`User not found. Please try again!`, redirect});
       return;
     };
 
     const passwordMatches = await bcrypt.compare(validatedResults.password, user.hashed_password);
 
     if (!passwordMatches) {
-      res.render('users/login', {errMsg:`Authentication failed. Please try again!`});
+      res.render('users/login', {errMsg:`Authentication failed. Please try again!`, redirect});
       return;
     };
 
     // log the user in by creating a session
     req.session.regenerate(function (err) {
       if (err) {
-        res.render('users/login', {errMsg:`Authentication failed. Please try again!`});
+        res.render('users/login', {errMsg:`Authentication failed. Please try again!`, redirect});
         return;
       };
   
@@ -114,7 +114,7 @@ const controller = {
       // load does not happen before session is saved
       req.session.save(function (err) {
         if (err) {
-          res.render('users/login', {errMsg:`Authentication failed. Please try again!`});
+          res.render('users/login', {errMsg:`Authentication failed. Please try again!`, redirect});
           return;
         };
 

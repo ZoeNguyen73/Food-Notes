@@ -48,7 +48,7 @@
                     <!-- TODO: make categories clickable, leading to index page with filter applied -->
                     <% for (let i = 0; i < restaurant.categories.length && i < 5; i++) { %>
                       <div class="category-tag background-purple pointer-on-hover">
-                        <%= categories.filter(category => category._id.equals(restaurant.categories[i]))[0].display_name %>
+                        <%= categories.filter(category => category._id.equals(restaurant.categories[i]))[0].name %>
                       </div>
                     <% } %>
                   </li>
@@ -80,17 +80,19 @@
               <% } else if (!boards || boards.length === 0) { %>
                 <a class="restricted" href="/<%= authUser %>/boards/create">Create a board to pin this restaurant 📌</a>
               <% } else { %>
-                <form class="pin-form" method="POST" action="/">
+                <form class="pin-form" method="POST" action="/restaurants/<%= restaurant.slug %>/<%= authUser %>/pin?_method=PUT">
                   <div class="boards-dropdown">
-                    <select class="custom-select" id="board_id">
+                    <select class="custom-select" id="board_id" name="board_id")">
                       <% boards.forEach(board => { %>
-                        <option value="<%= board._id %>"><%= board.name %></option>
+                        <option value="<%= board._id %>" <%= board.restaurants.includes(restaurant._id) ? 'disabled' : '' %>>
+                          <!-- TODO: add logic to disable pin button if the restaurant alrd pinned in the board -->
+                          <%= board.name %> <span class="placeholders"><%= board.restaurants.includes(restaurant._id) ? '(already pinned)' : '' %></span>
+                        </option>
                       <% }) %>
                       
                     </select>
                   </div>
-                  <!-- TODO: update pin action route -->
-                  <button class="btn btn-danger"  type="submit">Pin 📌</button>
+                  <button id="submitButton" class="btn btn-danger" type="submit">Pin 📌</button>
                 </form>
               <% } %> 
             </div>

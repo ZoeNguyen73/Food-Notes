@@ -34,7 +34,7 @@
         <div class="categories">
           <% for (let i = 0; i < restaurant.categories.length && i < 5; i++) { %>
             <div class="category-tag pointer-on-hover background-purple">
-              <%= categories.filter(category => category._id.equals(restaurant.categories[i]))[0].display_name %>
+              <%= categories.filter(category => category._id.equals(restaurant.categories[i]))[0].name %>
             </div>
 
           <% } %>

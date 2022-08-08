@@ -37,7 +37,8 @@ app.listen(port, async () => {
   console.log('<----- listening at port 3000 ----->');
 
   try {
-    await mongoose.connect(connStr, {dbName: 'Happy-Foodie'});
+    // FIX: change DB name to foot-note
+    await mongoose.connect(connStr, {dbName: 'Food-Notes'});
     console.log('<----- connected to DB successfully ----->');
   } catch(err) {
     console.log('Failed to connect to DB');

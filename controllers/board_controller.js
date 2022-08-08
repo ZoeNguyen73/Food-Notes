@@ -1,4 +1,6 @@
 const boardModel = require('../models/boards/board');
+const neighborhoodModel = require('../models/neighborhoods/neighborhood');
+const restaurantModel = require('../models/restaurants/restaurant');
 const userModel = require('../models/users/user')
 const validator = require('../validators/boards');
 
@@ -33,6 +35,11 @@ const controller = {
     const username = req.params.username;
     let board = null;
     let errMsg = null;
+    let restaurants = null;
+    let neighborhoods = null;
+    let categories = null;
+    let reviews = null;
+    let day = null
  
     try {
       board = await boardModel.findOne({username, slug});
@@ -41,12 +48,15 @@ const controller = {
         errMsg = `Opps, this board is private`;
       };
 
+      [restaurants, neighborhoods, categories, reviews, day, boards] 
+      = await restaurantModel.getDataForList(username, {board_slug: [slug]});
+
     } catch(err) {
       console.log(`Error finding board: ${err}`);
       errMsg = `Oops, the board cannot be found`;
     };
 
-    res.render('boards/show', {board, username, errMsg});
+    res.render('boards/show', {board, username, errMsg, restaurants, neighborhoods, categories, reviews, day});
   },
 
   showCreateForm: (req, res) => {
@@ -91,6 +101,14 @@ const controller = {
       return;
     };
   },
+
+  addRestaurant: (req, res) => {
+
+  },
+
+  removeRestaurant: (req, res) => {
+
+  }
 
 };
 

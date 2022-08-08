@@ -4,12 +4,26 @@
   <% if (errMsg) { %>
     <p class="error-message red align-center"><%= errMsg %></p>
   <% } else { %>
-    <h1 class="red"><%= board.name %></h1>
-    <h5>Created by <span class="yellow"><%= username %></span></h5>
 
-  <!-- TODO: edit / add function only available if user is authorized -->
+    <div class="row">
+
+      <div class="col filter-sidebar">
+        Filters here
+      </div>
+
+      <div class="col-10 restaurants-list">
+        <div class="title">
+          <h1 class="red"><%= board.name %></h1>
+          <h5>Created by <span class="yellow"><%= username %></span></h5>
+          <p><%= board.description %></p>
+          <!-- TODO: edit / add function only available if user is authorized -->
+        </div>
+
+        <%- include('../partials/restaurants/restaurants_list'); %>
+        
+      </div>
+    </div>
   <% } %>
-  
 </div>
 
 <%- include('../partials/footer'); %>

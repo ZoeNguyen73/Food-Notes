@@ -10,6 +10,7 @@ const getSlug = require('speakingurl');
 const controller = {
   list: async (req, res) => {
     const username = req.params.username;
+    let imgUrls = [];
     let errMsg = null;
     let boards = null;
 
@@ -24,13 +25,25 @@ const controller = {
 
       const user_id = user._id;
       boards = await boardModel.find({user_id}).exec();
+
+      // get first restaurant img 
+      for await (const board of boards) {
+        let imgUrl = null;
+        if (board.restaurants.length === 0) {
+          imgUrl = '/img/placeholder-restaurant.jpg';
+        } else {
+          const restaurant = await restaurantModel.findOne({_id: board.restaurants[0]}).exec();
+          imgUrl = restaurant.photos[restaurant.main_photo_id];
+        };
+        imgUrls.push(imgUrl);
+      };
       
     } catch(err) {
-      console.log(`Error finding username: ${err}`);
+      console.log(`Error finding boards: ${err}`);
       errMsg = 'Oops, we could not find any boards';
     };
 
-    res.render('boards/index',{boards, errMsg});
+    res.render('boards/index',{boards, username, imgUrls, errMsg});
   },
 
   show: async (req, res) => {

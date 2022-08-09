@@ -62,7 +62,7 @@ p {
   font-style: italic;
 }
 
-.restaurants-list a {
+.restaurants-list a, .boards-list a {
   text-decoration: none;
   color: black;
 }
@@ -182,7 +182,7 @@ header {
   border: none;
 }
 
-.restaurants-list {
+.restaurants-list, .boards-list {
   display: flex;
   flex-flow: column nowrap;
   gap: 2em;
@@ -563,4 +563,16 @@ header {
   border: none;
   background: none;
   font-size: 1.5em;
+}
+
+.boards-list .card-footer {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+}
+
+.boards-list .header {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
 }

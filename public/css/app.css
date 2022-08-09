@@ -558,3 +558,9 @@ header {
 #description {
   line-height: 5;
 }
+
+.close {
+  border: none;
+  background: none;
+  font-size: 1.5em;
+}

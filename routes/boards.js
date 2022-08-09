@@ -17,6 +17,9 @@ router.get('/:board_slug/edit', userAuth.isAuthenticated, userAuth.isAuthorised,
 // edit a board
 router.put('/:board_slug/edit', userAuth.isAuthenticated, userAuth.isAuthorised, controller.edit);
 
+// delete a board
+router.delete('/:board_slug/delete', userAuth.isAuthenticated, userAuth.isAuthorised, controller.delete);
+
 // show board
 router.get('/:board_slug', controller.show);
 

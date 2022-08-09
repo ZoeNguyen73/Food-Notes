@@ -10,27 +10,27 @@ const getSlug = require('speakingurl');
 const controller = {
   list: async (req, res) => {
     const username = req.params.username;
-    let user = null;
+    let errMsg = null;
+    let boards = null;
 
     // get userID
     try {
-      user = await userModel.findOne({username}).exec();
+      const user = await userModel.findOne({username}).exec();
+      
+      if (!user) {
+        res.render('pages/error', {errMsg: "User cannot be found." });
+        return;
+      };
+
+      const user_id = user._id;
+      boards = await boardModel.find({user_id}).exec();
+      
     } catch(err) {
       console.log(`Error finding username: ${err}`);
-      res.render('boards/index', {board:[]});
-      return;
+      errMsg = 'Oops, we could not find any boards';
     };
-    
-    const user_id = user._id;
-    try {
-      const boards = await boardModel.find({user_id}).exec();
-      res.render('boards/index',{boards});
-    } catch(err) {
-      console.log(`Error finding boards under username ${username}: ${err}`);
-      res.render('boards/index', {board: [], errMsg: `Oops, we could not find any boards`});
-      return;
-    };
-    
+
+    res.render('boards/index',{boards, errMsg});
   },
 
   show: async (req, res) => {
@@ -171,6 +171,28 @@ const controller = {
 
     res.redirect(`/${username}/boards/${slug}`);
   },
+
+  delete: async (req, res) => {
+    const slug = req.params.board_slug;
+    const username = req.params.username;
+
+    try {
+      // validate that board exists
+      const board = await boardModel.findOne({username, slug}).exec();
+
+      if (!board) {
+        res.render('pages/error', {errMsg: "Board cannot be found." });
+        return;
+      };
+
+      await boardModel.findOneAndDelete({username, slug});
+
+    } catch(err) {
+      console.log(`Error deleting board: ${err}`);
+    };
+
+    res.redirect(`/${username}/boards`);
+  }
 
 };
 

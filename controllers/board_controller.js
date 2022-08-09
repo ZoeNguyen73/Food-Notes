@@ -47,9 +47,11 @@ const controller = {
   },
 
   show: async (req, res) => {
+    res.locals.page = 'board-show';
     const slug = req.params.board_slug;
     const username = req.params.username;
     const redirect = req.originalUrl;
+    const currentUser = req.session.user || null;
     let board = null;
     let errMsg = null;
     let restaurants = null;
@@ -61,12 +63,12 @@ const controller = {
     try {
       board = await boardModel.findOne({username, slug}).exec();
 
-      if (!board.is_public && req.session.user !== username) {
+      if (!board.is_public && currentUser !== username) {
         errMsg = `Opps, this board is private`;
       };
 
       [restaurants, neighborhoods, categories, reviews, day, boards] 
-      = await restaurantModel.getDataForList(username, {board_slug: [slug]});
+      = await restaurantModel.getDataForList(currentUser, {board_slug: [slug]});
 
     } catch(err) {
       console.log(`Error finding board: ${err}`);

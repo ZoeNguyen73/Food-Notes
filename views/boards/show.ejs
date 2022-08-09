@@ -1,11 +1,11 @@
 <%- include('../partials/header'); %>
-<%- include('../partials/restaurants/confirm_delete'); %>
+
 
 <div class="container board-page">
   <% if (errMsg) { %>
     <p class="error-message red align-center"><%= errMsg %></p>
   <% } else { %>
-
+    <%- include('../partials/restaurants/confirm_delete'); %>
     <div class="row">
 
       <div class="col filter-sidebar">

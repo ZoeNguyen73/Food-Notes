@@ -34,12 +34,12 @@ body {
   width: 100%;
 }
 
-.restaurant-page .btn-outline-secondary {
+.restaurant-page .btn-outline-secondary, .remove-form .btn-outline-secondary {
   border: none;
 }
 
-.restaurant-page .btn-outline-secondary:hover {
-  background-color: #fff;
+.restaurant-page .btn-outline-secondary:hover, .remove-form .btn-outline-secondary:hover {
+  background: none;
   color: #6c757d;
   text-decoration: underline;
 }
@@ -156,7 +156,6 @@ header {
   --bs-btn-disabled-border-color: #E25A25;
   --bs-gradient: none;
 }
-
 
 #logout-btn {
   background: none;
@@ -377,7 +376,7 @@ header {
   color: #bb2d3b;
 }
 
-.require-auth .edit-btn {
+.edit-btn {
   margin-left: auto;
 }
 
@@ -575,4 +574,15 @@ header {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
+}
+
+.card-footer {
+  text-align: center;
+}
+
+.modal-body form {
+  padding: 0.5em 1em;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1em;
 }

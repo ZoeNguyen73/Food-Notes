@@ -12,4 +12,7 @@ router.get('/:restaurant_slug', restaurantController.show);
 // pin to board
 router.put('/:restaurant_slug/:username/pin', userAuth.isAuthenticated, userAuth.isAuthorised, restaurantController.addToBoard);
 
+// remove from board
+router.put('/:restaurant_slug/:username/remove', userAuth.isAuthenticated, userAuth.isAuthorised, restaurantController.removeFromBoard);
+
 module.exports = router;

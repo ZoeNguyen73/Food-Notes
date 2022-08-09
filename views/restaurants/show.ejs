@@ -1,4 +1,5 @@
 <%- include('../partials/header'); %>
+<%- include('../partials/restaurants/remove_from_board'); %>
 
 <div class="container restaurant-page">
   <% if (!restaurant) { %>
@@ -55,7 +56,7 @@
                 <% if (restaurantBoards.length === 0) { %>
                   <p class="bold emphasis">Currently not pinned in any boards</p>
                 <% } else { %>
-                  <p class="bold emphasis">Currently pinned in:</p>
+                  <p class="bold emphasis">Pinned in:</p>
                   <p>
                     <% restaurantBoards.forEach((board, idx) => { %>
                       <span>
@@ -68,7 +69,9 @@
                   </p>
 
                   <!-- //TODO: add something to trigger a modal allow users to edit the board -->
-                  <button class="btn btn-outline-secondary edit-btn" type="submit">Edit</button>
+                  <button class="btn btn-outline-secondary edit-btn" type="button" data-bs-toggle="modal" data-bs-target="#remove-from-board-modal">
+                    Edit
+                  </button>
                 <% } %>
               </div>
               
@@ -219,26 +222,30 @@
         <h5 class="align-left">Reviews</h5>
       </div>
 
-      <% reviews.forEach(review => { %>
-        <div class="review">
-          <div class="user-profile">
-            <!-- TODO: add fallback logic for when there is no pic url -->
-            <img src="<%= review.yelp_pic %>" />
-          </div>
-
-          <div class="content">
-            <p><%= review.yelp_name %></p>
-            <div class="stars-rating">
-              <% const stars = Math.round(review.rating * 2)/2 %>
-              <% const imgUrl = `/img/rating-${stars}.png` %>
-              <img class="stars-rating" src="/img/rating-<%= stars %>.png" />
+      <% if (reviews.length === 0) { %>
+        <p>No reviews yet</p>
+      <% } else { %>
+        <% reviews.forEach(review => { %>
+          <div class="review">
+            <div class="user-profile">
+              <!-- TODO: add fallback logic for when there is no pic url -->
+              <img src="<%= review.yelp_pic %>" />
             </div>
-            <p class="time-created"><%= review.time_created %></p>
-            <p><%= review.content %></p>
+  
+            <div class="content">
+              <p><%= review.yelp_name %></p>
+              <div class="stars-rating">
+                <% const stars = Math.round(review.rating * 2)/2 %>
+                <% const imgUrl = `/img/rating-${stars}.png` %>
+                <img class="stars-rating" src="/img/rating-<%= stars %>.png" />
+              </div>
+              <p class="time-created"><%= review.time_created %></p>
+              <p><%= review.content %></p>
+            </div>
+            
           </div>
-          
-        </div>
-      <% }) %>
+        <% }) %>
+      <% } %>
     </div>
   <% } %>
 </div>

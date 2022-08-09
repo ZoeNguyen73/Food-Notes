@@ -7,6 +7,7 @@ const boardModel = require('../models/boards/board');
 
 const controller = {
   list: async (req, res) => {
+    res.locals.page = 'restaurants-index';
     const authUser = req.session.user || null;
     const redirect = req.originalUrl;
     let restaurants = null;
@@ -77,6 +78,37 @@ const controller = {
 
     res.redirect(`/${req.session.user}/boards/${board.slug}`);
   },
+
+  removeFromBoard: async (req, res) => {
+    const boardSlugs = Object.keys(req.body);
+    let board = null;
+    const redirect = req.query.redirect || null;
+
+    try {
+      const restaurant = await restaurantModel.findOne({slug: req.params.restaurant_slug}).exec();
+      const restaurant_id = await restaurant._id;;
+
+      for await (const slug of boardSlugs) {
+        board = await boardModel.findOne({slug}).exec();
+        const boardRestaurants = board.restaurants;
+
+        if (boardRestaurants.includes(restaurant_id)) {
+          await boardModel.updateOne({slug}, {$pull: {restaurants: restaurant_id}});
+        };
+      };
+
+    } catch(err) {
+      console.log(`Error removing restaurant from board: ${err}`);
+    };
+
+    if (redirect) {
+      // TODO: figure out how to not reload restaurants page
+      res.redirect(`${redirect}`);
+      return;
+    };
+
+    res.redirect(`/${req.session.user}/boards/${board.slug}`);
+  }
 };
 
 module.exports = controller;

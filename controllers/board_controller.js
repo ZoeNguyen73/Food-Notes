@@ -159,12 +159,14 @@ const controller = {
       const validatedResults = validationResults.value;
 
       // check if user already has a board with the same name
-      const user = await userModel.findOne({username}).exec();
-      const existingBoard = await boardModel.findOne({user_id: user._id, name: validatedResults.name}).exec();
+      if (board.name !== validatedResults.name) {
+        const user = await userModel.findOne({username}).exec();
+        const existingBoard = await boardModel.findOne({user_id: user._id, name: validatedResults.name}).exec();
 
-      if (existingBoard) {
-        res.render('boards/edit', {board, errMsg: `There is already a board with the same name`});
-        return;
+        if (existingBoard) {
+          res.render('boards/edit', {board, errMsg: `There is already a board with the same name`});
+          return;
+        };
       };
 
       const updatedBoard = await boardModel.findOneAndUpdate(

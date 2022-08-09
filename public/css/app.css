@@ -549,7 +549,6 @@ header {
 }
 
 .board-description {
-  padding: 0.5em 0;
   color: grey;
   font-style: italic;
 }
@@ -574,6 +573,7 @@ header {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
+  gap: 0.8em;
 }
 
 .card-footer {
@@ -585,4 +585,15 @@ header {
   display: flex;
   flex-flow: column nowrap;
   gap: 1em;
+}
+
+.board-page .restaurants-list .title {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.8em;
+}
+
+.private-icon {
+  height: 1em;
+  width: auto;
 }

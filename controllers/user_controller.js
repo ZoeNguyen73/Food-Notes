@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 
 const userModel = require('../models/users/user');
 const boardModel = require('../models/boards/board');
+const restaurantModel = require('../models/restaurants/restaurant');
 const validator = require('../validators/users');
 
 const controller = {
@@ -68,6 +69,7 @@ const controller = {
 
   showLoginForm: (req, res) => {
     const redirect = res.locals.redirect || req.query.redirect || null;
+    console.log(`redirect is ${redirect}`);
     res.render('users/login', {errMsg: null, redirect});
   },
 
@@ -136,16 +138,31 @@ const controller = {
 
     try {
       user = await userModel.findOne({username: req.session.user}).exec();
-      // TODO:find user boards
+
       const boards = await boardModel.find({user_id: user._id});
-      res.render('users/dashboard', {user, boards});
+
+      // get first 3 boards
+      const topBoards = boards.slice(0,3);
+
+      // get first 4 restaurants for each board
+      const restaurantsArr = [];
+      for await (const board of topBoards) {
+        const restaurantIDs = board.restaurants.slice(0,4);
+        const restaurants = await restaurantModel.find({_id: {$in: restaurantIDs}}).exec();
+        restaurantsArr.push(restaurants);
+      };
+
+      // TODO: get restaurants data based on the list of restaurants above
+
+      res.render('users/dashboard', {user, boards: topBoards, restaurantsArr});
+
       return;
 
     } catch(err) {
       console.log(`Error getting user for show route: ${err}`);
     };
     
-    res.render('users/login', {errMsg:`User not found. Please try again!`});
+    res.render('users/login', {errMsg:`User not found. Please try again!`, redirect: null});
   },
 
   logout: async (req, res) => {
@@ -153,7 +170,7 @@ const controller = {
 
     req.session.save(function (err) {
       if (err) {
-        res.render('users/login', {errMsg:`Please try again`});
+        res.render('users/login', {errMsg:`Please try again`, redirect: null});
         return
       };
 
@@ -161,7 +178,7 @@ const controller = {
       // guard against forms of session fixation
       req.session.regenerate(function (err) {
         if (err) {
-          res.render('users/login', {errMsg:`Please try again`});
+          res.render('users/login', {errMsg:`Please try again`, redirect: null});
           return
         };
                 

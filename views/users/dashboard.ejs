@@ -8,6 +8,7 @@
     <div class="col user-info">
       <h2 class="align-left"><%= user.username %></h2>
       <p>info here</p>
+      <!-- TODO: add edit profile route -->
       <a href="">
         <button type="button" class="btn btn-outline-secondary">
           Edit Profile
@@ -42,22 +43,32 @@
         </a>
       </div>
   
-      
       <div class="boards-list">
         <% boards.forEach(board => { %>
-          <h1 class="align-left bold yellow"><%= board.name %></h1>
-          <!-- TODO: add icon to indicate if board is public or private -->
-          <p><%= board.description %></p>
           <div>
-            <span class="placeholders">
-              (<%= board.restaurants.length %> restaurants)
-            </span>
-            <a href="/<%= user.username %>/boards/<%= board.slug %>">See All</a>
+            <a href="/<%= authUser %>/boards/<%= board.slug %>">
+              <h1 class="align-left bold yellow">
+                <%= board.name %>
+              </h1>
+            </a>
+            
+            <!-- TODO: add icon to indicate if board is public or private -->
+            <p><%= board.description %></p>
+            <div>
+              <% if (!board.is_public) { %>
+                <img class="private-icon" src="/img/private-icon.png" alt="private board" />
+              <% } %>
+              <span class="placeholders">
+                (<%= board.restaurants.length %> restaurants)
+              </span>
+              <a href="/<%= user.username %>/boards/<%= board.slug %>">See All</a>
+            </div>
+            <div class="restaurants-list">
+  
+            </div>
           </div>
   
-        <div class="restaurants-list">
-  
-        </div>
+          
         <% }) %>
         
   

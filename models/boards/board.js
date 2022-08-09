@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const slug = require('mongoose-slug-generator');
-mongoose.plugin(slug);
 
 const boardSchema = new mongoose.Schema({
   user_id: {
@@ -24,7 +23,6 @@ const boardSchema = new mongoose.Schema({
 
   slug: {
     type: String,
-    slug: "name",
   },
 
   restaurants: {

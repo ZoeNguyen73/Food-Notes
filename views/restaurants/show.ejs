@@ -43,14 +43,14 @@
         <% if (!authUser) { %>
           <div class="login-prompt">
             <p class="restricted emphasis">
-              <a href="/login?redirect=/restaurants/<%= restaurant.slug %>">Log in</a> or <a href="/register?redirect=/restaurants/<%= restaurant.slug %>">Register</a> to start pinning, tagging, saving personal notes & writing reviews!
+              <a href="/login?redirect=<%= redirect %>">Log in</a> or <a href="/register?redirect=<%= redirect %>">Register</a> to start pinning, tagging, saving personal notes & writing reviews!
             </p>
           </div>
           
         <% } else { %>
           <div class="require-auth">
             <div class="pin-section">
-              <!-- TODO: add logic to list boards that restaurant is currently pinned in with hyperlink to board -->
+
               <div class="current-pins">
                 <% if (restaurantBoards.length === 0) { %>
                   <p class="bold emphasis">Currently not pinned in any boards</p>
@@ -72,7 +72,8 @@
                 <% } %>
               </div>
               
-              <form class="pin-form" method="POST" action="/restaurants/<%= restaurant.slug %>/<%= authUser %>/pin?_method=PUT&redirect=/restaurants/<%= restaurant.slug %>">
+              <!-- TODO: button to create a board if users do not have any boards -->
+              <form class="pin-form" method="POST" action="/restaurants/<%= restaurant.slug %>/<%= authUser %>/pin?_method=PUT&redirect=<%= redirect %>">
                 <p>Pin in another board:</p>
                 
                 <div class="boards-dropdown">

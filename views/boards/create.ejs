@@ -7,7 +7,7 @@
     <p class="error-message red align-center"><%= errMsg %></p>
   <% } %>
   
-  <form method="POST" action="/<%= username %>/boards/create">
+  <form method="POST" action="/<%= authUser %>/boards/create">
     <div class="form-group">
       <label for="name">Name</label>
       <input type="text" class="form-control" id="name" name="name" placeholder="To try">
@@ -15,7 +15,7 @@
 
     <div class="form-group">
       <label for="description">Description</label>
-      <input type="text" line-height=5 class="form-control" id="description" name="description" placeholder="Gotta visit 'em all">
+      <input type="text" class="form-control" id="description" name="description" placeholder="Gotta visit 'em all">
     </div>
 
     <div class="public-options">
@@ -28,8 +28,10 @@
         <label class="form-check-label" for="is_private">Private</label>
       </div>
     </div>
-
-    <button type="submit" class="btn btn-danger">Create</button>
+    <div class="buttons">
+      <button class="btn btn-outline-secondary">Cancel</button>
+      <button type="submit" class="btn btn-danger">Create</button>
+    </div>
   </form>
 </div>
 

@@ -15,11 +15,27 @@
         <div class="title">
           <h1 class="red"><%= board.name %></h1>
           <h5>Created by <span class="yellow"><%= username %></span></h5>
-          <p><%= board.description %></p>
-          <!-- TODO: edit / add function only available if user is authorized -->
+          <p class="board-description align-center"><%= board.description %></p>
         </div>
 
-        <%- include('../partials/restaurants/restaurants_list'); %>
+        <% if (authUser === username) { %>
+          <div class="buttons">
+            <a href="/<%= username %>/boards/<%= board.slug %>/edit">
+              <button type="button" class="btn btn-outline-secondary">
+                Edit
+              </button>
+            </a>
+            <a href="/<%= username %>/boards/<%= board.slug %>/delete">
+              <button type="button" class="btn btn-outline-secondary">
+                Delete
+              </button>
+            </a>
+          </div>
+        <% } %>
+
+        <div>
+          <%- include('../partials/restaurants/restaurants_list'); %>
+        </div>
         
       </div>
     </div>

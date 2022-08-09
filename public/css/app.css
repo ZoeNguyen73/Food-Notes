@@ -182,8 +182,10 @@ header {
   border: none;
 }
 
-.restaurants-list .title {
-  margin-bottom: 3em;
+.restaurants-list {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 2em;
 }
 
 .card-title {
@@ -484,16 +486,23 @@ header {
   height: 200px
 }
 
-.register-page, .login-page, .board-create-page {
+.register-page, .login-page, .board-create-page, .board-edit-page {
   max-width: 600px;
   display: flex;
   flex-flow: column nowrap;
   gap: 2em;
 }
 
-.register-page form, .login-page form, .board-create-page form {
+.register-page form, .login-page form, .board-create-page form, .board-edit-page form {
   display: flex;
   flex-flow: column nowrap;
+  gap: 1em;
+}
+
+.buttons{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
   gap: 1em;
 }
 
@@ -538,4 +547,14 @@ header {
   display: flex;
   flex-flow: row nowrap;
   gap: 1em;
+}
+
+.board-description {
+  padding: 0.5em 0;
+  color: grey;
+  font-style: italic;
+}
+
+#description {
+  line-height: 5;
 }

@@ -11,6 +11,12 @@ router.get('/create', userAuth.isAuthenticated, userAuth.isAuthorised, controlle
 // create new board
 router.post('/create', userAuth.isAuthenticated, userAuth.isAuthorised, controller.create);
 
+// show edit form
+router.get('/:board_slug/edit', userAuth.isAuthenticated, userAuth.isAuthorised, controller.showEditForm);
+
+// edit a board
+router.put('/:board_slug/edit', userAuth.isAuthenticated, userAuth.isAuthorised, controller.edit);
+
 // show board
 router.get('/:board_slug', controller.show);
 

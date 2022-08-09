@@ -76,7 +76,7 @@
 
             <div class="card-footer p-3">
               <% if (!authUser) { %>
-                <a class="restricted" href="/login?redirect=/restaurants">Log in to pin restaurant to your board 📌</a>
+                <a class="restricted" href="/login?redirect=<%= redirect %>">Log in to pin restaurant to your board 📌</a>
               <% } else if (!boards || boards.length === 0) { %>
                 <a class="restricted" href="/<%= authUser %>/boards/create">Create a board to pin this restaurant 📌</a>
               <% } else { %>

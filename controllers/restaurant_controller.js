@@ -8,38 +8,46 @@ const boardModel = require('../models/boards/board');
 const controller = {
   list: async (req, res) => {
     const authUser = req.session.user || null;
+    const redirect = req.originalUrl;
+    let restaurants = null;
+    let neighborhoods = null;
+    let categories = null;
+    let reviews = null;
+    let day = null;
+    let boards = null;
 
     try {
-      const [restaurants, neighborhoods, categories, reviews, day, boards] 
+      [restaurants, neighborhoods, categories, reviews, day, boards] 
       = await restaurantModel.getDataForList(authUser, {});
-
-      res.render('restaurants/index', {restaurants, neighborhoods, categories, reviews, day, boards});
-      return;
 
     } catch(err) {
       console.log(`Error getting restaurant lists: ${err}`);
     };
     
-    res.render('restaurants/index', {restaurants:[]});
+    res.render('restaurants/index', {restaurants, neighborhoods, categories, reviews, day, boards, redirect});
+
   },
 
   show: async (req, res) => {
-    let restaurant = null;
     const authUser = req.session.user || null;
+    const redirect = req.originalUrl;
+    let restaurant = null;
+    let restaurantBoards = null;
+    let boards = null;
+    let categories = null;
+    let reviews = null;
+
     try {
       restaurant = await restaurantModel.findOne({slug: req.params.restaurant_slug}).exec();
 
-      const [restaurantBoards, boards, categories, reviews] 
+      [restaurantBoards, boards, categories, reviews] 
       = await restaurant.getRestaurantInfo(authUser);
-
-      res.render('restaurants/show', {restaurant, categories, reviews, restaurantBoards, boards});
-      return;
 
     } catch(err) {
       console.log(`Error getting restaurant details: ${err}`);
     };
     
-    res.render('restaurants/show', {restaurant});
+    res.render('restaurants/show', {restaurant, categories, reviews, restaurantBoards, boards, redirect});
   
   },
 

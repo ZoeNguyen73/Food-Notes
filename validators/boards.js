@@ -6,6 +6,12 @@ const validators = {
     description: Joi.string().empty('').default(''),
     public_setting: Joi.string().required(),
   }),
+
+  edit: Joi.object({
+    name: Joi.string().required(),
+    description: Joi.string().empty('').default(''),
+    public_setting: Joi.string().required(),
+  }),
     
 };
 

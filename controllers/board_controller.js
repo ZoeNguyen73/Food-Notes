@@ -58,7 +58,9 @@ const controller = {
     let neighborhoods = null;
     let categories = null;
     let reviews = null;
-    let day = null
+    let day = null;
+    const { page = 1, limit = 36 } = req.query;
+    let totalPages = 1;
  
     try {
       board = await boardModel.findOne({username, slug}).exec();
@@ -67,15 +69,28 @@ const controller = {
         errMsg = `Opps, this board is private`;
       };
 
-      [restaurants, neighborhoods, categories, reviews, day, boards] 
-      = await restaurantModel.getDataForList(currentUser, {board_slug: [slug]});
+      [restaurants, neighborhoods, categories, reviews, day, boards, totalPages] 
+      = await restaurantModel.getDataForList(currentUser, {board_slug: [slug]}, page, limit);
 
     } catch(err) {
       console.log(`Error finding board: ${err}`);
       errMsg = 'Oops, the board cannot be found';
     };
 
-    res.render('boards/show', {board, username, errMsg, restaurants, neighborhoods, categories, reviews, day, redirect});
+    res.render('boards/show', {
+      board, 
+      username, 
+      errMsg, 
+      restaurants, 
+      neighborhoods, 
+      categories, 
+      reviews, 
+      day, 
+      redirect,
+      totalPages,
+      currentPage: page,
+      pageUrl: `${req.baseUrl}${req.path}`
+    });
   },
 
   showCreateForm: (req, res) => {

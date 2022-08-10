@@ -16,17 +16,29 @@ const controller = {
     let reviews = null;
     let day = null;
     let boards = null;
+    let totalPages = 1;
+    const { page = 1, limit = 36 } = req.query;
 
     try {
-      [restaurants, neighborhoods, categories, reviews, day, boards] 
-      = await restaurantModel.getDataForList(authUser, {});
+      [restaurants, neighborhoods, categories, reviews, day, boards, totalPages] 
+      = await restaurantModel.getDataForList(authUser, {}, page, limit);
 
     } catch(err) {
       console.log(`Error getting restaurant lists: ${err}`);
     };
     
-    res.render('restaurants/index', {restaurants, neighborhoods, categories, reviews, day, boards, redirect});
-
+    res.render('restaurants/index', {
+      restaurants, 
+      neighborhoods, 
+      categories, 
+      reviews, 
+      day, 
+      boards, 
+      redirect,
+      totalPages,
+      currentPage: page,
+      pageUrl: '/restaurants'
+    });
   },
 
   show: async (req, res) => {

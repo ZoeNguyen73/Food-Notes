@@ -597,3 +597,14 @@ header {
   height: 1em;
   width: auto;
 }
+
+.restaurants-index .list, .board-page .list {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1em;
+}
+
+.active > .page-link {
+  background-color:#F7B501;
+  border-color: #F7B501;
+}

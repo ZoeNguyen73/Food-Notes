@@ -6,11 +6,11 @@ const options = {
     Authorization: `Bearer ${process.env.YELP_API_KEY}`,
   }
 };
-const searchLimit = 10;
+const searchLimit = 45;
 
 const yelpApi = {
   searchRestaurants: async (lat, long) => {
-    const url = `${searchUrl}&limit=${searchLimit}&latitude=${lat}&longitude=${long}`;
+    const url = `${searchUrl}&limit=${searchLimit}&latitude=${lat}&longitude=${long}&offset=25`;
     const response = await fetch(url, options);
     const data = await response.json();
     return data;

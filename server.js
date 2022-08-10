@@ -47,6 +47,8 @@ app.listen(port, async () => {
 });
 
 // seed data
+app.get('/seed-neighborhoods', seed.seedNeighborhoods.bind(seed));
+app.get('/seed-restaurants', seed.seedRestaurants.bind(seed));
 app.get('/seed-all-data', seed.init.bind(seed)); // let this run til restaurants complete
 app.get('/seed-reviews', seed.seedReviews.bind(seed)); // let this run til restaurants complete
 

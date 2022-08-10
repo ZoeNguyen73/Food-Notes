@@ -69,7 +69,6 @@ const controller = {
 
   showLoginForm: (req, res) => {
     const redirect = res.locals.redirect || req.query.redirect || null;
-    console.log(`redirect is ${redirect}`);
     res.render('users/login', {errMsg: null, redirect});
   },
 

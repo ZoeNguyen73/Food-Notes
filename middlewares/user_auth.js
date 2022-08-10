@@ -1,12 +1,18 @@
 const userAuth = {
   isAuthenticated: (req, res, next) => {
     if (!req.session.user) {
-      const url = req.originalUrl;
-      console.log(`original url is ${url}`);
-      res.redirect(`/users/login/?redirect=${url}`);
+      res.render('users/login', {redirect: req.originalUrl, errMsg: 'Please log in to continue'});
       return;
     };
     
+    next();
+  },
+
+  isAuthorised: (req, res, next) => {
+    if (req.session.user !== req.params.username) {
+      res.render('users/login', {errMsg:`Sorry, you are not authorized to see this page`});
+      return;
+    };
     next();
   },
 

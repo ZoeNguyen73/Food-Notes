@@ -1,4 +1,5 @@
 <%- include('../partials/header'); %>
+<%- include('../partials/restaurants/remove_from_board'); %>
 
 <div class="container restaurant-page">
   <% if (!restaurant) { %>
@@ -21,7 +22,7 @@
 
     <div class="row top-row">
       <div class="col-7 business-summary">
-        <h1 class="align-left name"><%= restaurant.name %></h1>
+        <h1 class="align-left name red"><%= restaurant.name %></h1>
 
         <div class="stars-rating">
           <% const stars = Math.round(restaurant.rating * 2)/2 %>
@@ -33,8 +34,8 @@
 
         <div class="categories">
           <% for (let i = 0; i < restaurant.categories.length && i < 5; i++) { %>
-            <div class="category-tag pointer-on-hover">
-              <%= categories.filter(category => category._id.equals(restaurant.categories[i]))[0].display_name %>
+            <div class="category-tag pointer-on-hover background-purple">
+              <%= categories.filter(category => category._id.equals(restaurant.categories[i]))[0].name %>
             </div>
 
           <% } %>
@@ -43,49 +44,67 @@
         <% if (!authUser) { %>
           <div class="login-prompt">
             <p class="restricted emphasis">
-              <a href="/users/login?redirect=restaurants/<%= restaurant.slug %>">Log in</a> or <a href="/users/register?redirect=restaurants/<%= restaurant.slug %>">Register</a> to start pinning, tagging, saving personal notes & writing reviews!
+              <a href="/login?redirect=<%= redirect %>">Log in</a> or <a href="/register?redirect=<%= redirect %>">Register</a> to start pinning, tagging, saving personal notes & writing reviews!
             </p>
           </div>
           
         <% } else { %>
           <div class="require-auth">
             <div class="pin-section">
-              <!-- TODO: add logic to list boards that restaurant is currently pinned in with hyperlink to board -->
+
               <div class="current-pins">
-                <p class="bold emphasis">Currently pinned in:</p>
-                <a class="board" href="">To Try</a>
-                <!-- //TODO: add something to trigger a modal allow users to edit the board -->
-                <button class="btn btn-outline-secondary edit-btn" type="submit">Edit</button>
+                <% if (restaurantBoards.length === 0) { %>
+                  <p class="bold emphasis">Currently not pinned in any boards</p>
+                <% } else { %>
+                  <p class="bold emphasis">Pinned in:</p>
+                  <p>
+                    <% restaurantBoards.forEach((board, idx) => { %>
+                      <span>
+                        <a class="board red" href="/<%= authUser %>/boards/<%= board.slug %>"><%= board.name %></a>
+                        <% if (idx < restaurantBoards.length -1) { %>
+                          ,
+                        <% } %>
+                      </span>
+                    <% }) %>
+                  </p>
+
+                  <!-- //TODO: add something to trigger a modal allow users to edit the board -->
+                  <button class="btn btn-outline-secondary edit-btn" type="button" data-bs-toggle="modal" data-bs-target="#remove-from-board-modal">
+                    Edit
+                  </button>
+                <% } %>
               </div>
               
-              <form class="pin-form" method="POST" action="/">
+              <!-- TODO: button to create a board if users do not have any boards -->
+              <form class="pin-form" method="POST" action="/restaurants/<%= restaurant.slug %>/<%= authUser %>/pin?_method=PUT&redirect=<%= redirect %>">
                 <p>Pin in another board:</p>
-                <button class="btn dropdown-toggle boards-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Pick a personal board
-                </button>
-                <ul class="dropdown-menu">
-                  <!-- TODO: list users personal boards -->
-                  <!-- TODO: users authentication here, if not logged in, users cannot pin -->
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-                          
-                <!-- TODO: update pin action route -->
+                
+                <div class="boards-dropdown">
+                  <select class="custom-select" id="board_id" name="board_id")">
+                    <option value="" disabled selected>Choose a board to pin</option>
+                    <% boards.forEach(board => { %>
+                      <option value="<%= board._id %>" <%= board.restaurants.includes(restaurant._id) ? 'disabled' : '' %>>
+                        <%= board.name %> <%= board.restaurants.includes(restaurant._id) ? '📌' : '' %>
+                      </option>
+                    <% }) %>
+                      
+                  </select>
+                </div>
                 <button class="btn btn-danger" type="submit">Pin 📌</button>
+                        
               </form>
             </div>
   
             <div class="private-tag-section">
-              <!-- TODO: add logic to list boards that restaurant is currently pinned in with hyperlink to board -->
+              <!-- TODO: add logic to list privat tags that restaurant currently has -->
               <p class="bold emphasis">Your private tags:</p>
-              <div class="private-tag pointer-on-hover">
+              <div class="private-tag pointer-on-hover background-yellow">
                 Mom's fav
               </div>
-              <div class="private-tag pointer-on-hover">
+              <div class="private-tag pointer-on-hover background-yellow">
                 Big portion
               </div>
-              <div class="private-tag pointer-on-hover">
+              <div class="private-tag pointer-on-hover background-yellow">
                 Go before 6pm
               </div>
               <button class="btn btn-outline-secondary edit-btn" type="submit">Edit</button>
@@ -203,26 +222,30 @@
         <h5 class="align-left">Reviews</h5>
       </div>
 
-      <% reviews.forEach(review => { %>
-        <div class="review">
-          <div class="user-profile">
-            <!-- TODO: add fallback logic for when there is no pic url -->
-            <img src="<%= review.yelp_pic %>" />
-          </div>
-
-          <div class="content">
-            <p><%= review.yelp_name %></p>
-            <div class="stars-rating">
-              <% const stars = Math.round(review.rating * 2)/2 %>
-              <% const imgUrl = `/img/rating-${stars}.png` %>
-              <img class="stars-rating" src="/img/rating-<%= stars %>.png" />
+      <% if (reviews.length === 0) { %>
+        <p>No reviews yet</p>
+      <% } else { %>
+        <% reviews.forEach(review => { %>
+          <div class="review">
+            <div class="user-profile">
+              <!-- TODO: add fallback logic for when there is no pic url -->
+              <img src="<%= review.yelp_pic %>" />
             </div>
-            <p class="time-created"><%= review.time_created %></p>
-            <p><%= review.content %></p>
+  
+            <div class="content">
+              <p><%= review.yelp_name %></p>
+              <div class="stars-rating">
+                <% const stars = Math.round(review.rating * 2)/2 %>
+                <% const imgUrl = `/img/rating-${stars}.png` %>
+                <img class="stars-rating" src="/img/rating-<%= stars %>.png" />
+              </div>
+              <p class="time-created"><%= review.time_created %></p>
+              <p><%= review.content %></p>
+            </div>
+            
           </div>
-          
-        </div>
-      <% }) %>
+        <% }) %>
+      <% } %>
     </div>
   <% } %>
 </div>

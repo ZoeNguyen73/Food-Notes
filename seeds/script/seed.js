@@ -15,17 +15,16 @@ const users = require('../seed_data/users');
 // import yelp api script
 const {searchLimit, yelpApi} = require('../../public/api/yelp_api');
 
-const queryInterval = 400;
+const queryInterval = 500;
 
 const seed = {
   init: async function() {
     // check if data has already been seeded befpre
-    const isNotEmpty = (await neighborhoodModel.find({})).length;
+    const isNotEmpty = (await restaurantModel.find({})).length;
 
     if (isNotEmpty) return;
 
     try {
-      await this.seedNeighborhoods();
       await this.seedUsers();
       await this.seedRestaurants();
     } catch(err) {
@@ -35,18 +34,16 @@ const seed = {
 
   seedNeighborhoods: async () => {
     try {
-      await Object.entries(neighborhoods).forEach(async([name, latlong]) => {
-        try {
-          await neighborhoodModel.create({
-            name,
-            latitude: latlong.latitude,
-            longitude: latlong.longitude
-          });
-          
-        } catch(err) {
-          console.log(`err in creating new neighborhood in DB: ${err}`);
-        }
-      });
+
+      for await (const neighborhood of neighborhoods) {
+        const name = Object.keys(neighborhood)[0];
+        const latLong = neighborhood[name];
+        await neighborhoodModel.create({
+          name,
+          latitude: latLong.latitude,
+          longitude: latLong.longitude
+        });
+      };
       console.log(`<---- seeding neighborhoods: DONE ---->`);
     } catch(err) {
       console.log(`err in seeding neighborhoods: ${err}`)
@@ -78,18 +75,47 @@ const seed = {
     // neighborhoods for testing
     const test = [
       {
-        'Ang Mo Kio': {
-          latitude: 1.369115,
-          longitude: 103.845436,
+        "Tiong Bahru": {
+          latitude: 1.283850,
+          longitude: 103.831460,
         },
       },
+    
       {
-        Bishan: {
-          latitude: 1.352585,
-          longitude: 103.835213,
-        }
-      }
-    ]
+        "Toa Payoh": {
+          latitude: 1.331460,
+          longitude: 103.849500,
+        },
+      },
+    
+      {
+        "Upper Bukit Timah": {
+          latitude: 1.358540,
+          longitude: 103.767800,
+        },
+      },
+    
+      {
+        "West Coast": {
+          latitude: 1.316230,
+          longitude: 103.755074,
+        },
+      },
+    
+      {
+        Woodlands: {
+          latitude: 1.436050,
+          longitude: 103.786057,
+        },
+      },
+    
+      {
+        Yishun: {
+          latitude: 1.429720,
+          longitude: 103.835907,
+        },
+      }  
+    ];
 
     try {
       // looping through neighborhood
@@ -120,8 +146,8 @@ const seed = {
               let id = null;
               try {
                 await categoryModel.findOneAndUpdate(
-                  { display_name: category },
-                  { display_name: category },
+                  { name: category },
+                  { name: category },
                   { upsert: true }
                 );
 
@@ -134,7 +160,7 @@ const seed = {
             const categoriesIDs = [];
             for await (const category of categories) {
               try {
-                const doc = await categoryModel.findOne({ display_name: category }).exec();
+                const doc = await categoryModel.findOne({ name: category }).exec();
                 const id = await doc._id;
                 categoriesIDs.push(id);
               } catch (err) {
@@ -164,7 +190,7 @@ const seed = {
                 price: restaurantDetails.price,
                 photos: [...restaurantDetails.photos],
                 main_photo_id: 0,
-                opening_hours: [...restaurantDetails.hours[0].open],
+                opening_hours: !restaurantDetails.hours ? [] : [...restaurantDetails.hours[0].open],
               },
 
               // option: to upsert
@@ -178,7 +204,7 @@ const seed = {
       setTimeout(() => {
         console.log(`<---- seeding restaurants: DONE ---->`);
         console.log(`<---- go to "/seed-reviews" to complete seeding process ---->`);
-      }, test.length * searchLimit * queryInterval)
+      }, (test.length/4) * searchLimit * queryInterval)
 
     } catch(err) {
       console.log(`err in seeding restaurants: ${err}`);
@@ -186,11 +212,12 @@ const seed = {
 
   },
 
-  //FIXME: fix issue with seed reviews need to run separately after restaurants are seeded
   seedReviews: async () => {
     // get list of restaurants
+    console.log(`reviews seeding started.....`);
     try {
-      const restaurants = await restaurantModel.find({}, 'yelp_id _id').exec();
+      const restaurants = await restaurantModel.find({}, 'name yelp_id _id').exec();
+      console.log(`restaurants are: ${restaurants}`);
     
       restaurants.forEach(async (restaurant, i) => {
 
@@ -198,18 +225,22 @@ const seed = {
           const yelp_id = restaurant.yelp_id;
           const _id = restaurant._id;
           const reviews = await yelpApi.getReviews(yelp_id);
+          console.log(`restaurant is ${restaurant.name}`);
+          console.log(`reviews are ${reviews}`);
 
-          reviews.forEach(async (review) => {
-            await reviewModel.create({
-              user_id: `yelp_${review.user_id}`,
-              restaurant_id: _id,
-              rating: review.rating,
-              content: review.text,
-              time_created: review.time_created,
-              yelp_name: review.user.name,
-              yelp_pic: review.user.image_url
+          if (reviews) {
+            reviews.forEach(async (review) => {
+              await reviewModel.create({
+                user_id: `yelp_${review.user_id}`,
+                restaurant_id: _id,
+                rating: review.rating,
+                content: review.text,
+                time_created: review.time_created,
+                yelp_name: review.user.name,
+                yelp_pic: review.user.image_url
+              });
             });
-          });
+          };
         
         }, i * queryInterval);
       });
@@ -218,7 +249,6 @@ const seed = {
         console.log(`<---- seeding reviews: DONE ---->`);
       }, restaurants.length * 3 * queryInterval );
       
-
     } catch(err) {
       console.log(`error seeding reviews: ${err}`);
     }

@@ -1,4 +1,10 @@
 const mongoose = require('mongoose');
+const neighborhoodModel = require('../neighborhoods/neighborhood');
+const categoryModel = require('../categories/category');
+const reviewModel = require('../reviews/review');
+const boardModel = require('../boards/board');
+const userModel = require('../users/user');
+const filterList = require('../filter_list');
 
 const restaurantSchema = new mongoose.Schema({
   yelp_id: {
@@ -67,6 +73,115 @@ const restaurantSchema = new mongoose.Schema({
   
 });
 
-const Restaurant= mongoose.model('Restaurant', restaurantSchema);
+//should return restaurants, neighborhoods, categories, 1st review of each restaurant, current day
+//filters should be an object. eg. {neighborhood:["Bishan"], category:["Dim sum", "Seafood"]}
+
+restaurantSchema.statics.getDataForList = async function(authUser, filters, page, limit) {
+  
+  // get today day
+  const day = new Date().getDay().toLocaleString('sg-SG');
+  // const validFilters = filterList.restaurants;
+
+  // get all neighborhoods
+  const neighborhoods = await neighborhoodModel.find().exec();
+
+  // get all categories
+  const categories = await categoryModel.find().exec();
+
+  let restaurants = null;
+
+  // return current users' boards
+  let boards = null;
+
+  if (authUser !== null) {
+    const user = await userModel.findOne({username: authUser}).exec();
+    const user_id = user._id;
+    boards = await boardModel.find({user_id}).exec();
+  };
+
+  let totalPages = null;
+
+  // get all restaurants if no filters
+  if (Object.keys(filters).length === 0) {
+    const count = await this.countDocuments();
+    totalPages = Math.ceil(count / limit);
+    restaurants = await this.find()
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .exec();
+  } else {
+  // TODO: make filters work - note: need to filter by objectId not string
+    // restaurants = await this.find({
+    //   neighborhood: {
+    //     $in: filters.neighborhood
+    //   },
+    //   categories: {
+    //     $in: filters.categories
+    //   }
+    // }).exec();
+
+    // get restaurants based on board slug
+    const board = await boardModel.findOne({slug: filters.board_slug}).exec();
+    const boardRestaurants = board.restaurants;
+    totalPages = Math.ceil(boardRestaurants.length / limit);
+    restaurants = await this.find({
+      _id: {
+        $in: boardRestaurants,
+      },
+    })
+    .limit(limit * 1)
+    .skip((page - 1) * limit)
+    .exec();
+
+  };
+
+  // get first review of every restaurant
+  const reviews = [];
+  for await (const restaurant of restaurants) {
+    const firstReview = await reviewModel.findOne({restaurant_id: restaurant._id});
+    if (firstReview) {
+      reviews.push(firstReview);
+    };
+  };
+
+  return [restaurants, neighborhoods, categories, reviews, day, boards, totalPages];
+
+};
+
+restaurantSchema.methods.getRestaurantInfo = async function(authUser) {
+
+  // get all categories
+  const categories = await categoryModel.find().exec();
+  
+  // get all reviews from the restaurant
+  const reviews = await reviewModel.find({restaurant_id: this._id}).exec();
+
+  let boards = null;
+  const restaurantBoards = [];
+
+  if (authUser !== null) {
+    const user = await userModel.findOne({username: authUser}).exec();
+    const user_id = user._id;
+    boards = await boardModel.find({user_id}).exec();
+
+    boards.forEach(board => {
+      if (board.restaurants.includes(this._id)) {
+        restaurantBoards.push(board);
+      };
+    });
+  };
+
+  // TODO: get map info
+  // create map
+  // const map = L.map('map').setView([restaurant.coordinates.latitude, restaurant.coordinates.longitude, ], 13);
+  // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  //   maxZoom: 19,
+  //   attribution: '© OpenStreetMap'
+  // }).addTo(map);
+
+  return [restaurantBoards, boards, categories, reviews];
+}
+
+const Restaurant = mongoose.model('Restaurant', restaurantSchema);
 
 module.exports = Restaurant;

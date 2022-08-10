@@ -37,7 +37,8 @@ app.listen(port, async () => {
   console.log('<----- listening at port 3000 ----->');
 
   try {
-    await mongoose.connect(connStr, {dbName: 'Happy-Foodie'});
+    // FIX: change DB name to foot-note
+    await mongoose.connect(connStr, {dbName: 'Food-Notes'});
     console.log('<----- connected to DB successfully ----->');
   } catch(err) {
     console.log('Failed to connect to DB');
@@ -45,13 +46,17 @@ app.listen(port, async () => {
   };
 });
 
+// seed data
+app.get('/seed-neighborhoods', seed.seedNeighborhoods.bind(seed));
+app.get('/seed-restaurants', seed.seedRestaurants.bind(seed));
+app.get('/seed-all-data', seed.init.bind(seed)); // let this run til restaurants complete
+app.get('/seed-reviews', seed.seedReviews.bind(seed)); // let this run til restaurants complete
+
 // require routers
 const restaurantsRouter = require('./routes/restaurants');
 app.use('/restaurants', restaurantsRouter);
 
 const usersRouter = require('./routes/users');
-app.use('/users', usersRouter);
+app.use('/', usersRouter);
 
-// seed data
-app.get('/seed-all-data', seed.init.bind(seed)); // let this run til restaurants complete
-app.get('/seed-reviews', seed.seedReviews.bind(seed)); // let this run til restaurants complete
+

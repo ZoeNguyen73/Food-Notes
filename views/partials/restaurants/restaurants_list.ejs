@@ -1,0 +1,142 @@
+<% if (restaurants.length === 0) { %>
+  <!-- TODO: add randomn suggestion here for when no results are returned -->
+  <p class="error-msg">Oops, nothing is found here. How about <span class="placholders">Some category here</span>?</p>
+<% } else { %>
+  <div class="list">
+    <!-- TODO: check responsiveness at width 768px, too squeezy -->
+    <div class="row row-cols-1 row-cols-md-3 gx-4 gy-5">
+      <% restaurants.forEach(restaurant => { %>
+        <div class="col">
+          <div class="card h-100">
+            <a href="/restaurants/<%= restaurant.slug %>">
+              <img src="<%= restaurant.photos[0] %>" class="card-img-top pointer-on-hover" alt="<%= restaurant.name %> image" />
+            </a>
+
+            <a class="card-body p-3" href="/restaurants/<%= restaurant.slug %>">
+              <div class="card-body p-1">
+                <h4 class="card-title pointer-on-hover">
+                  <%= restaurant.name %>
+                </h4>
+                  
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item p-1 card-subtitle">
+                    <!-- TODO: make neighborhood clickable, leading to index page with filter applied -->
+                    <span class="neighborhood-name red pointer-on-hover">
+                      <%= neighborhoods.filter(neighborhood => neighborhood._id.equals(restaurant.neighborhood))[0].name %>
+                    </span> 
+  
+                    <span>
+                      <% if (restaurant.opening_hours.length !== 0) { %>
+                        <% const todayTimings = restaurant.opening_hours.filter(timing => timing["day"] == day) %>
+  
+                        <% if (todayTimings.length === 0) { %>
+                          - Closed today
+                        <% } else { %>
+                          <% endTime = Number(todayTimings[todayTimings.length - 1].end) %>
+                          <% const session = endTime > 1200 ? "PM" : "AM" %>
+                          <% let displayTime = ''%>
+                          <% if (endTime > 1200) {endTime -= 1200} %>
+                          <% const endTimeStr = endTime.toString().padStart(4, '0') %>
+                          <% displayTime += `${endTimeStr.slice(0,2)}:${endTimeStr.slice(2,4)}` %>
+                        
+                          - Open til <%= `${displayTime} ${session}` %>
+                        <% } %>
+                      <% } %>
+                       
+                    </span>
+                  </li>
+  
+                  <li class="list-group-item p-1 card-categories">
+                    <!-- TODO: make categories clickable, leading to index page with filter applied -->
+                    <% for (let i = 0; i < restaurant.categories.length && i < 5; i++) { %>
+                      <div class="category-tag background-purple pointer-on-hover">
+                        <%= categories.filter(category => category._id.equals(restaurant.categories[i]))[0].name %>
+                      </div>
+                    <% } %>
+                  </li>
+  
+                  <li class="list-group-item p-1 snippet">
+                    <p class="bold">What others are saying:</p>
+                    <p>
+                      <% if (reviews.length > 0) { %>
+                        <% const restaurantReviews = reviews.filter(review => review.restaurant_id.equals(restaurant._id)) %>
+                        <% if (restaurantReviews.length === 0) { %>
+                          No reviews yet
+                        <% } else { %>
+                          <%= restaurantReviews[0].content %>
+                        <% } %>
+                      <% } %>
+                    </p>
+                  </li>
+  
+                  <li class="list-group-item p-1 price-reviews">
+                    <div>
+                      <%= restaurant.price %>
+                    </div>
+                    <div>
+                      <% const stars = Math.round(restaurant.rating * 2)/2 %>
+                      <% const imgUrl = `/img/rating-${stars}.png` %>
+                      <img class="stars-rating" src="/img/rating-<%= stars %>.png" />
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </a>
+
+            <div class="card-footer p-3">
+              <% if (!authUser) { %>
+                <a class="restricted" href="/login?redirect=<%= redirect %>">Log in to pin restaurant to your board 📌</a>
+              <% } else if (!boards || boards.length === 0) { %>
+                <a class="restricted" href="/<%= authUser %>/boards/create">Create a board to pin this restaurant 📌</a>
+              <% } else { %>
+                <form class="pin-form" method="POST" action="/restaurants/<%= restaurant.slug %>/<%= authUser %>/pin?_method=PUT&redirect=<%= redirect %>">
+                  <div class="boards-dropdown">
+                    <select class="custom-select" id="board_id" name="board_id")">
+                      <option value="" disabled selected>Choose a board to pin</option>
+                      <% boards.forEach(board => { %>
+                        <option value="<%= board._id %>" <%= board.restaurants.includes(restaurant._id) ? 'disabled' : '' %>>
+                          <%= board.name %> <%= board.restaurants.includes(restaurant._id) ? '📌' : '' %>
+                        </option>
+                      <% }) %>
+                      
+                    </select>
+                  </div>
+                  <button class="btn btn-danger" type="submit">Pin 📌</button>
+                </form>
+                <% if (page === 'board-show') { %>
+                  <form class="remove-form" method="POST" action="/restaurants/<%= restaurant.slug %>/<%= authUser %>/remove?_method=PUT&redirect=<%= redirect %>">
+                    <input type="hidden" name="<%= board.slug %>" value="1">
+                    <button type="submit" class="btn btn-outline-secondary edit-btn">Remove from this board</button>
+                  </form>
+                <% } %>
+              <% } %> 
+            </div>
+          </div>
+          
+        </div>
+      <% }) %>
+    </div>
+
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <% const pageNo = Number(currentPage) %>
+        <li class="page-item <%= pageNo === 1 ? 'disabled' : '' %>">
+          <a class="page-link" href="<%= pageUrl %>?page=<%= pageNo-1 %>" tabindex="-1">Previous</a>
+        </li>
+
+        <% for (let i = 1, j = totalPages + 1; i < j ; i++) { %>
+          <li class="page-item <%= pageNo === i ? 'active' : '' %>">
+            <a class="page-link" href="<%= pageUrl %>?page=<%= i %>">
+              <%= i %>
+            </a>
+          </li>
+        <% } %>
+
+        <li class="page-item <%= pageNo === totalPages ? 'disabled' : '' %>">
+          <a class="page-link" href="<%= pageUrl %>?page=<%= pageNo+1 %>">Next</a>
+        </li>
+      </ul>
+    </nav>
+
+  </div>
+<% } %>

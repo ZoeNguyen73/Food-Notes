@@ -1,16 +1,19 @@
 const bcrypt = require('bcrypt');
 
 const userModel = require('../models/users/user');
+const boardModel = require('../models/boards/board');
+const restaurantModel = require('../models/restaurants/restaurant');
 const validator = require('../validators/users');
 
 const controller = {
 
   showRegisterForm: (req, res) => {
-    res.render('users/register', {errMsg: null, redirect: req.query.redirect});
+    const redirect = res.locals.redirect || req.query.redirect || null;
+    res.render('users/register', {errMsg: null, redirect});
   },
 
   register: async (req, res) => {
-    const redirect = req.query.redirect || null;
+    const redirect = res.locals.redirect || req.query.redirect || null;
     const validationResults = validator.register.validate(req.body);
 
     if (validationResults.error) {
@@ -50,11 +53,12 @@ const controller = {
           };
 
           if (redirect) {
-            res.redirect(`/${redirect}`);
+            res.locals.redirect = null;
+            res.redirect(`${redirect}`);
             return;
           };
 
-          res.redirect(`/users/${user.username}`);
+          res.redirect(`/${user.username}/dashboard`);
           return;
         });
       });
@@ -64,16 +68,16 @@ const controller = {
   },
 
   showLoginForm: (req, res) => {
-    res.render('users/login', {errMsg: null, redirect: req.query.redirect});
+    const redirect = res.locals.redirect || req.query.redirect || null;
+    res.render('users/login', {errMsg: null, redirect});
   },
 
   login: async (req, res) => {
-
-    const redirect = req.query.redirect || null;
+    const redirect = res.locals.redirect || req.query.redirect || null;
     const validationResults = validator.login.validate(req.body);
 
     if (validationResults.error) {
-      res.render('users/login', {errMsg:`Please try again`});
+      res.render('users/login', {errMsg:`Please try again`, redirect});
       return;
     };
 
@@ -83,26 +87,26 @@ const controller = {
     try {
       user = await userModel.findOne({username: validatedResults.username});
     } catch (err) {
-      res.render('users/login', {errMsg:`User not found. Please try again!`});
+      res.render('users/login', {errMsg:`User not found. Please try again!`, redirect});
       return;
     };
 
     if (!user) {
-      res.render('users/login', {errMsg:`User not found. Please try again!`});
+      res.render('users/login', {errMsg:`User not found. Please try again!`, redirect});
       return;
     };
 
     const passwordMatches = await bcrypt.compare(validatedResults.password, user.hashed_password);
 
     if (!passwordMatches) {
-      res.render('users/login', {errMsg:`Authentication failed. Please try again!`});
+      res.render('users/login', {errMsg:`Authentication failed. Please try again!`, redirect});
       return;
     };
 
     // log the user in by creating a session
     req.session.regenerate(function (err) {
       if (err) {
-        res.render('users/login', {errMsg:`Authentication failed. Please try again!`});
+        res.render('users/login', {errMsg:`Authentication failed. Please try again!`, redirect});
         return;
       };
   
@@ -113,31 +117,51 @@ const controller = {
       // load does not happen before session is saved
       req.session.save(function (err) {
         if (err) {
-          res.render('users/login', {errMsg:`Authentication failed. Please try again!`});
+          res.render('users/login', {errMsg:`Authentication failed. Please try again!`, redirect});
           return;
         };
 
         if (redirect) {
-          res.redirect(`/${redirect}`);
+          res.locals.redirect = null;
+          res.redirect(`${redirect}`);
           return
         };
-        res.redirect(`/users/${user.username}`);
+        res.redirect(`/${user.username}/dashboard`);
       })
     });
 
   },
 
-  showProfile: async (req, res) => {
+  showDashboard: async (req, res) => {
     let user = null;
 
     try {
-      user = await userModel.findOne({username: req.session.username}).exec();
-      
+      user = await userModel.findOne({username: req.session.user}).exec();
+
+      const boards = await boardModel.find({user_id: user._id});
+
+      // get first 3 boards
+      const topBoards = boards.slice(0,3);
+
+      // get first 4 restaurants for each board
+      const restaurantsArr = [];
+      for await (const board of topBoards) {
+        const restaurantIDs = board.restaurants.slice(0,4);
+        const restaurants = await restaurantModel.find({_id: {$in: restaurantIDs}}).exec();
+        restaurantsArr.push(restaurants);
+      };
+
+      // TODO: get restaurants data based on the list of restaurants above
+
+      res.render('users/dashboard', {user, boards: topBoards, restaurantsArr});
+
+      return;
+
     } catch(err) {
       console.log(`Error getting user for show route: ${err}`);
     };
     
-    res.render('users/profile', {user});
+    res.render('users/login', {errMsg:`User not found. Please try again!`, redirect: null});
   },
 
   logout: async (req, res) => {
@@ -145,7 +169,7 @@ const controller = {
 
     req.session.save(function (err) {
       if (err) {
-        res.redirect('/users/login')
+        res.render('users/login', {errMsg:`Please try again`, redirect: null});
         return
       };
 
@@ -153,7 +177,7 @@ const controller = {
       // guard against forms of session fixation
       req.session.regenerate(function (err) {
         if (err) {
-          res.redirect('/users/login')
+          res.render('users/login', {errMsg:`Please try again`, redirect: null});
           return
         };
                 
@@ -161,6 +185,10 @@ const controller = {
       });
     });
   },
+
+  show: async (req, res) => {
+    
+  }
 };
 
 module.exports = controller;

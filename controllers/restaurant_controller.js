@@ -2,66 +2,124 @@ const restaurantModel = require('../models/restaurants/restaurant');
 const neighborhoodModel = require('../models/neighborhoods/neighborhood');
 const categoryModel = require('../models/categories/category');
 const reviewModel = require('../models/reviews/review');
+const userModel = require('../models/users/user');
+const boardModel = require('../models/boards/board');
 
 const controller = {
   list: async (req, res) => {
-    
+    res.locals.page = 'restaurants-index';
+    const authUser = req.session.user || null;
+    const redirect = req.originalUrl;
+    let restaurants = null;
+    let neighborhoods = null;
+    let categories = null;
+    let reviews = null;
+    let day = null;
+    let boards = null;
+    let totalPages = 1;
+    const { page = 1, limit = 36 } = req.query;
+
     try {
-      const restaurants = await restaurantModel.find().exec();
-
-      // get all neighborhoods
-      const neighborhoods = await neighborhoodModel.find().exec();
-
-      // get all categories
-      const categories = await categoryModel.find().exec();
-
-      // get only the first reviews of each restaurants
-      const reviews = [];
-      for await (const restaurant of restaurants) {
-        const firstReview = await reviewModel.findOne({restaurant_id: restaurant._id});
-        reviews.push(firstReview);
-      };
-
-      // get today day
-      const day = new Date().getDay().toLocaleString('sg-SG');
-
-      res.render('restaurants/index', {restaurants, neighborhoods, categories, reviews, day});
-      return;
+      [restaurants, neighborhoods, categories, reviews, day, boards, totalPages] 
+      = await restaurantModel.getDataForList(authUser, {}, page, limit);
 
     } catch(err) {
       console.log(`Error getting restaurant lists: ${err}`);
     };
     
-    res.render('restaurants/index', {restaurants:[]});
+    res.render('restaurants/index', {
+      restaurants, 
+      neighborhoods, 
+      categories, 
+      reviews, 
+      day, 
+      boards, 
+      redirect,
+      totalPages,
+      currentPage: page,
+      pageUrl: '/restaurants'
+    });
   },
 
   show: async (req, res) => {
+    const authUser = req.session.user || null;
+    const redirect = req.originalUrl;
     let restaurant = null;
+    let restaurantBoards = null;
+    let boards = null;
+    let categories = null;
+    let reviews = null;
+
     try {
       restaurant = await restaurantModel.findOne({slug: req.params.restaurant_slug}).exec();
 
-      // get all categories
-      const categories = await categoryModel.find().exec();
-
-      // get all reviews from the restaurant
-      const reviews = await reviewModel.find({restaurant_id: restaurant._id}).exec();
-
-      // create map
-      // const map = L.map('map').setView([restaurant.coordinates.latitude, restaurant.coordinates.longitude, ], 13);
-      // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      //   maxZoom: 19,
-      //   attribution: '© OpenStreetMap'
-      // }).addTo(map);
-
-      res.render('restaurants/show', {restaurant, categories, reviews});
-      return;
+      [restaurantBoards, boards, categories, reviews] 
+      = await restaurant.getRestaurantInfo(authUser);
 
     } catch(err) {
-      console.log(`Error getting restaurant lists: ${err}`);
+      console.log(`Error getting restaurant details: ${err}`);
     };
     
-    res.render('restaurants/show', {restaurant});
+    res.render('restaurants/show', {restaurant, categories, reviews, restaurantBoards, boards, redirect});
   
+  },
+
+  addToBoard: async (req, res) => {
+    let board = null;
+    const redirect = req.query.redirect || null;
+
+    try {
+      const restaurant = await restaurantModel.findOne({slug: req.params.restaurant_slug}).exec();
+      const restaurant_id = await restaurant._id;
+
+      board = await boardModel.findOne({_id: req.body.board_id}).exec();
+      const boardRestaurants = board.restaurants;
+
+      if (!boardRestaurants.includes(restaurant_id)) {
+        await boardModel.findOneAndUpdate({_id: req.body.board_id}, {$push: {restaurants: restaurant_id}});
+      };
+    } catch(err) {
+      console.log(`Error adding restaurant to board: ${err}`);
+    };
+
+    if (redirect) {
+      // TODO: figure out how to not reload restaurants page
+      res.redirect(`${redirect}`);
+      return;
+    };
+
+    res.redirect(`/${req.session.user}/boards/${board.slug}`);
+  },
+
+  removeFromBoard: async (req, res) => {
+    const boardSlugs = Object.keys(req.body);
+    let board = null;
+    const redirect = req.query.redirect || null;
+
+    try {
+      const restaurant = await restaurantModel.findOne({slug: req.params.restaurant_slug}).exec();
+      const restaurant_id = await restaurant._id;;
+
+      for await (const slug of boardSlugs) {
+        board = await boardModel.findOne({slug}).exec();
+        const boardRestaurants = board.restaurants;
+
+        if (boardRestaurants.includes(restaurant_id)) {
+          await boardModel.updateOne({slug}, {$pull: {restaurants: restaurant_id}});
+        };
+      };
+
+    } catch(err) {
+      console.log(`Error removing restaurant from board: ${err}`);
+    };
+
+    if (redirect) {
+      // TODO: figure out how to not reload restaurants page
+      res.redirect(`${redirect}`);
+      return;
+    };
+
+    res.redirect(`/${req.session.user}/boards/${board.slug}`);
   }
 };
 

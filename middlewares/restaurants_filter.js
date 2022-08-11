@@ -3,7 +3,7 @@ const filterList = require('../models/filter_list');
 const restaurantsFilters = {
   verify: (req, res, next) => {
 
-    if (!req.query) {
+    if (Object.keys(req.query).length === 0) {
       next();
       return;
     };

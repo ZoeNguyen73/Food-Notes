@@ -8,12 +8,14 @@ const validator = require('../validators/users');
 const controller = {
 
   showRegisterForm: (req, res) => {
-    const redirect = res.locals.redirect || req.query.redirect || null;
+    let redirect = res.locals.redirect || req.query.redirect || null;
+    redirect = redirect.replace(' ', '%20').replace('+', '%2B');
     res.render('users/register', {errMsg: null, redirect});
   },
 
   register: async (req, res) => {
-    const redirect = res.locals.redirect || req.query.redirect || null;
+    let redirect = res.locals.redirect || req.query.redirect || null;
+    redirect = redirect.replace(' ', '%20').replace('+', '%2B');
     const validationResults = validator.register.validate(req.body);
 
     if (validationResults.error) {
@@ -68,12 +70,14 @@ const controller = {
   },
 
   showLoginForm: (req, res) => {
-    const redirect = res.locals.redirect || req.query.redirect || null;
+    let redirect = res.locals.redirect || req.query.redirect || null;
+    redirect = redirect.replace(' ', '%20').replace('+', '%2B');
     res.render('users/login', {errMsg: null, redirect});
   },
 
   login: async (req, res) => {
-    const redirect = res.locals.redirect || req.query.redirect || null;
+    let redirect = res.locals.redirect || req.query.redirect || null;
+    redirect = redirect.replace(' ', '%20').replace('+', '%2B');
     const validationResults = validator.login.validate(req.body);
 
     if (validationResults.error) {

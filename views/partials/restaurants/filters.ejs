@@ -7,34 +7,68 @@
   <div class="neighborhoods-filter">
 
     <p class="bold">Neighborhoods:</p>
+    <% let preStr = '' %>
+    <% let endStr = '' %>
+    <% if (!redirect.includes('?')) { %>
+      <% preStr = redirect + '?neighborhoods='; %>
+    <% } else { %>
+      <% if (redirect.includes('neighborhoods=')) { %>
+        <% const idx = redirect.indexOf('neighborhoods='); %>
+        <% const endIdx = redirect.indexOf('&', idx); %>
+        <% if (endIdx > -1) { %>
+          <% preStr = redirect.substring(0, endIdx) + '%2B' %>
+          <% endStr = redirect.substring(endIdx, redirect.length) %>
+        <% } else {%>
+          <% preStr = redirect + '%2B' %>
+        <% } %>
+      <% } else { %>
+        <% preStr = redirect + '&neighborhoods=' %>
+      <% } %>
+    <% } %>
     <ul>
       <li>
-        <a class="filter-checkbox" href="<%= redirect %><%= redirect.includes('?') ? `%2BBishan` : '?neighborhoods=Bishan' %>">
-          <span class="form-check-input checkbox"></span>
+        <a class="filter-checkbox" href="<%= preStr %>Bishan<%= endStr %>">
+          <span class="form-check-input checkbox 
+            <% if (filters.neighborhoods) { %>
+              <%= filters.neighborhoods.includes('Bishan') ? 'checked' : '' %>
+            <% } %>
+          "></span>
           <span class="value">
             Bishan
           </span>
         </a>
       </li>
       <li>
-        <a class="filter-checkbox" href="<%= redirect %><%= redirect.includes('?') ? `%2BOrchard` : '?neighborhoods=Orchard' %>">
-          <span class="form-check-input checkbox checked"></span>
+        <a class="filter-checkbox" href="<%= preStr %>Orchard<%= endStr %>">
+          <span class="form-check-input checkbox 
+            <% if (filters.neighborhoods) { %>
+              <%= filters.neighborhoods.includes('Orchard') ? 'checked' : '' %>
+            <% } %>
+          "></span>
           <span class="value">
             Orchard
           </span>
         </a>
       </li>
       <li>
-        <a class="filter-checkbox" href="<%= redirect %><%= redirect.includes('?') ? `%2BToa%20Payoh` : '?neighborhoods=Toa%20Payoh' %>">
-          <span class="form-check-input checkbox"></span>
+        <a class="filter-checkbox" href="<%= preStr %>Toa%20Payoh<%= endStr %>">
+          <span class="form-check-input checkbox 
+            <% if (filters.neighborhoods) { %>
+              <%= filters.neighborhoods.includes('Toa Payoh') ? 'checked' : '' %>
+            <% } %>
+          "></span>
           <span class="value">
             Toa Payoh
           </span>
         </a>
       </li>
       <li>
-        <a class="filter-checkbox" href="<%= redirect %><%= redirect.includes('?') ? `%2BYishun` : '?neighborhoods=Yishun' %>">
-          <span class="form-check-input checkbox"></span>
+        <a class="filter-checkbox" href="<%= preStr %>Yishun<%= endStr %>">
+          <span class="form-check-input checkbox 
+            <% if (filters.neighborhoods) { %>
+              <%= filters.neighborhoods.includes('Yishun') ? 'checked' : '' %>
+            <% } %>
+          "></span>
           <span class="value">
             Yishun
           </span>

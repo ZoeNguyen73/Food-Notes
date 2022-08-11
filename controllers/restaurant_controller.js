@@ -8,8 +8,6 @@ const boardModel = require('../models/boards/board');
 const controller = {
   list: async (req, res) => {
 
-    console.log(`filter form: ${JSON.stringify(req.query)}`);
-
     //digest queries into filter data
     //note: filters need be in format {key1: [value1, value2], key2: [value3]}
     const queries = req.query;
@@ -17,11 +15,18 @@ const controller = {
     const filters = {};
 
     keys.forEach(key => {
-      const values = queries[key].split('+');
-      filters[key] = values;
+      if (key !== 'page' && key !== 'limit') {
+        const values = queries[key].split('+');
+        filters[key] = values;
+      };  
     });
 
-    console.log(`filters are ${JSON.stringify(filters)}`);
+    let originalUrl = `${req.baseUrl}${req.url.substring(1)}`;
+
+    let url = `${req.baseUrl}${ req.path !== '/' ? req.path : ''}?`;
+    Object.keys(filters).forEach((key, idx) => {
+      url += `${key}=${filters[key].join('%2B').replace(' ', '%20')}${(idx === Object.keys(filters).length - 1) ? '' : '&'}`;
+    });
 
     res.locals.page = 'restaurants-index';
     const authUser = req.session.user || null;
@@ -52,8 +57,9 @@ const controller = {
       boards, 
       redirect,
       totalPages,
+      filters,
       currentPage: page,
-      pageUrl: '/restaurants'
+      pageUrl: url
     });
   },
 

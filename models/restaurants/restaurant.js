@@ -102,12 +102,13 @@ restaurantSchema.statics.getDataForList = async function(authUser, filters, page
 
   let totalPages = null;
 
+  const neighborhoodIDs = [];
+
   // create a mongoose filter object
   // format { key1: { $in: [] }}
 
   // get neighborhoodID for each neighborhood
   if (filters.neighborhoods) {
-    const neighborhoodIDs = [];
     for await (const n of filters.neighborhoods) {
       const neighborhood = await neighborhoodModel.findOne({name: n}).exec();
       const id = await neighborhood._id;
@@ -116,13 +117,23 @@ restaurantSchema.statics.getDataForList = async function(authUser, filters, page
   };
 
   // get all restaurants if no filters
-  if (!Object.keys(filters).includes('neighborhoods')) {
-    const count = await this.countDocuments();
+  if (Object.keys(filters).includes('neighborhoods')) {
+    const count = await this.countDocuments({
+      neighborhood: {
+        $in: neighborhoodIDs,
+      }
+    });
     totalPages = Math.ceil(count / limit);
-    restaurants = await this.find()
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
-      .exec();
+
+    restaurants = await this.find({
+      neighborhood: {
+        $in: neighborhoodIDs,
+      }
+    })
+    .limit(limit * 1)
+    .skip((page - 1) * limit)
+    .exec();
+    
   } else if (filters.board_slug) {
   // TODO: make filters work - note: need to filter by objectId not string
     // restaurants = await this.find({
@@ -148,21 +159,13 @@ restaurantSchema.statics.getDataForList = async function(authUser, filters, page
     .exec();
 
   } else {
-    const count = await this.countDocuments({
-      neighborhood: {
-        $in: neighborhoodIDs,
-      }
-    });
-    totalPages = Math.ceil(count / limit);
 
-    restaurants = await this.find({
-      neighborhood: {
-        $in: neighborhoodIDs,
-      }
-    })
-    .limit(limit * 1)
-    .skip((page - 1) * limit)
-    .exec();
+    const count = await this.countDocuments();
+    totalPages = Math.ceil(count / limit);
+    restaurants = await this.find()
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .exec();
 
   };
 

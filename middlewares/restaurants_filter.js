@@ -2,7 +2,6 @@ const filterList = require('../models/filter_list');
 
 const restaurantsFilters = {
   verify: (req, res, next) => {
-
     if (Object.keys(req.query).length === 0) {
       next();
       return;
@@ -27,7 +26,7 @@ const restaurantsFilters = {
         };
         
         if (currentValues.length > 0) {
-          url += `${key}=${currentValues.join('%2B').replace(' ', '%20')}${(idx === keys.length - 1) ? '' : '&'}`;
+          url += `${key}=${currentValues.join('%2B').replace(/ /g, '%20')}${(idx === keys.length - 1) ? '' : '&'}`;
         }; 
       };
     });

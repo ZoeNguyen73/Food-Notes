@@ -660,3 +660,8 @@ a.filter-checkbox {
   color: #E25A25;
   font-weight: bold;
 }
+
+.neighborhood-options-list, .category-options-list {
+  overflow-y: scroll;
+  max-height: 300px;
+}

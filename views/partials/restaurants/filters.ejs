@@ -1,8 +1,9 @@
-<%- include('../modals/all_neighborhoods_filter'); %>
 <div class="filters">
   <div class="filters-header">
     <h3>Filters</h3>
-    <p class="align-center placeholders">Reset all</p>
+    <a href="<%= baseUrl %>">
+      <p class="align-center placeholders">Reset all</p>
+    </a>
   </div>
   <div class="neighborhoods-filter">
 
@@ -25,85 +26,61 @@
         <% preStr = redirect + '&neighborhoods=' %>
       <% } %>
     <% } %>
-    <ul>
-      <li>
-        <a class="filter-checkbox" href="<%= preStr %>Bishan<%= endStr %>">
-          <span class="form-check-input checkbox 
-            <% if (filters.neighborhoods) { %>
-              <%= filters.neighborhoods.includes('Bishan') ? 'checked' : '' %>
-            <% } %>
-          "></span>
-          <span class="value">
-            Bishan
-          </span>
-        </a>
-      </li>
-      <li>
-        <a class="filter-checkbox" href="<%= preStr %>Orchard<%= endStr %>">
-          <span class="form-check-input checkbox 
-            <% if (filters.neighborhoods) { %>
-              <%= filters.neighborhoods.includes('Orchard') ? 'checked' : '' %>
-            <% } %>
-          "></span>
-          <span class="value">
-            Orchard
-          </span>
-        </a>
-      </li>
-      <li>
-        <a class="filter-checkbox" href="<%= preStr %>Toa%20Payoh<%= endStr %>">
-          <span class="form-check-input checkbox 
-            <% if (filters.neighborhoods) { %>
-              <%= filters.neighborhoods.includes('Toa Payoh') ? 'checked' : '' %>
-            <% } %>
-          "></span>
-          <span class="value">
-            Toa Payoh
-          </span>
-        </a>
-      </li>
-      <li>
-        <a class="filter-checkbox" href="<%= preStr %>Yishun<%= endStr %>">
-          <span class="form-check-input checkbox 
-            <% if (filters.neighborhoods) { %>
-              <%= filters.neighborhoods.includes('Yishun') ? 'checked' : '' %>
-            <% } %>
-          "></span>
-          <span class="value">
-            Yishun
-          </span>
-        </a>
-      </li>
+    <ul class="neighborhood-options-list">
+      <% neighborhoods.forEach(neighborhood => { %>
+        <li>
+          <a class="filter-checkbox" href="<%= preStr %><%= neighborhood.name %><%= endStr %>">
+            <span class="form-check-input checkbox 
+              <% if (filters.neighborhoods) { %>
+                <%= filters.neighborhoods.includes(neighborhood.name) ? 'checked' : '' %>
+              <% } %>
+            "></span>
+            <span class="value">
+              <%= neighborhood.name %>
+            </span>
+          </a>
+        </li>
+      <% }) %>
     </ul>
-    <!-- <form id="neighborhood-filter" method="GET" action="/restaurants">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="Bishan" name="neighborhoods" id="Bishan" checked onchange="this.form.submit()">
-        <label class="form-check-label" for="Bishan">
-          Bishan
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="Orchard" name="neighborhoods" id="Orchard" onchange="this.form.submit()">
-        <label class="form-check-label" for="Orchard">
-          Orchard
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="Toa Payoh" name="neighborhoods" id="Toa Payoh" onchange="this.form.submit()">
-        <label class="form-check-label" for="Toa Payoh">
-          Toa Payoh
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="Yishun" name="neighborhoods" id="Yishun" onchange="this.form.submit()">
-        <label class="form-check-label" for="Yishun">
-          Yishun
-        </label>
-      </div>
-    </form> -->
-    <button type="button see-all" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#all-neighborhoods-filter-modal">
-      See All
-    </button>
+  </div>
+
+  <div class="categories-filter">
+
+    <p class="bold">Categories:</p>
+    <% preStr2 = '' %>
+    <% endStr2 = '' %>
+    <% if (!redirect.includes('?')) { %>
+      <% preStr = redirect + '?categories='; %>
+    <% } else { %>
+      <% if (redirect.includes('categories=')) { %>
+        <% const idx = redirect.indexOf('categories='); %>
+        <% const endIdx = redirect.indexOf('&', idx); %>
+        <% if (endIdx > -1) { %>
+          <% preStr = redirect.substring(0, endIdx) + '%2B' %>
+          <% endStr = redirect.substring(endIdx, redirect.length) %>
+        <% } else {%>
+          <% preStr = redirect + '%2B' %>
+        <% } %>
+      <% } else { %>
+        <% preStr = redirect + '&categories=' %>
+      <% } %>
+    <% } %>
+    <ul class="category-options-list">
+      <% categories.forEach(category => { %>
+        <li>
+          <a class="filter-checkbox" href="<%= preStr %><%= category.name.replace('&', 'and') %><%= endStr %>">
+            <span class="form-check-input checkbox 
+              <% if (filters.categories) { %>
+                <%= filters.categories.includes(category.name.replace('&', 'and')) ? 'checked' : '' %>
+              <% } %>
+            "></span>
+            <span class="value">
+              <%= category.name %>
+            </span>
+          </a>
+        </li>
+      <% }) %>
+    </ul>
   </div>
   
 </div>

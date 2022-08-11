@@ -9,13 +9,13 @@ const controller = {
 
   showRegisterForm: (req, res) => {
     let redirect = res.locals.redirect || req.query.redirect || null;
-    redirect = redirect.replace(' ', '%20').replace('+', '%2B');
+    redirect = redirect.replace(/ /g, '%20').replace(/\+/g, '%2B');
     res.render('users/register', {errMsg: null, redirect});
   },
 
   register: async (req, res) => {
     let redirect = res.locals.redirect || req.query.redirect || null;
-    redirect = redirect.replace(' ', '%20').replace('+', '%2B');
+    redirect = redirect.replace(/ /g, '%20').replace(/\+/g, '%2B');
     const validationResults = validator.register.validate(req.body);
 
     if (validationResults.error) {
@@ -71,13 +71,13 @@ const controller = {
 
   showLoginForm: (req, res) => {
     let redirect = res.locals.redirect || req.query.redirect || null;
-    redirect = redirect.replace(' ', '%20').replace('+', '%2B');
+    redirect = redirect.replace(/ /g, '%20').replace(/\+/g, '%2B');
     res.render('users/login', {errMsg: null, redirect});
   },
 
   login: async (req, res) => {
     let redirect = res.locals.redirect || req.query.redirect || null;
-    redirect = redirect.replace(' ', '%20').replace('+', '%2B');
+    redirect = redirect.replace(/ /g, '%20').replace(/\+/g, '%2B');
     const validationResults = validator.login.validate(req.body);
 
     if (validationResults.error) {

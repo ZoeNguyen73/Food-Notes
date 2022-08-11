@@ -7,7 +7,6 @@ const boardModel = require('../models/boards/board');
 
 const controller = {
   list: async (req, res) => {
-
     //digest queries into filter data
     //note: filters need be in format {key1: [value1, value2], key2: [value3]}
     const queries = req.query;
@@ -20,8 +19,6 @@ const controller = {
         filters[key] = values;
       };  
     });
-
-    let originalUrl = `${req.baseUrl}${req.url.substring(1)}`;
 
     let url = `${req.baseUrl}${ req.path !== '/' ? req.path : ''}?`;
     Object.keys(filters).forEach((key, idx) => {
@@ -59,7 +56,8 @@ const controller = {
       totalPages,
       filters,
       currentPage: page,
-      pageUrl: url
+      pageUrl: url,
+      baseUrl: `${req.baseUrl}${ req.path !== '/' ? req.path : ''}`
     });
   },
 

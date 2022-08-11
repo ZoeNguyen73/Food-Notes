@@ -7,6 +7,22 @@ const boardModel = require('../models/boards/board');
 
 const controller = {
   list: async (req, res) => {
+
+    console.log(`filter form: ${JSON.stringify(req.query)}`);
+
+    //digest queries into filter data
+    //note: filters need be in format {key1: [value1, value2], key2: [value3]}
+    const queries = req.query;
+    const keys = Object.keys(queries);
+    const filters = {};
+
+    keys.forEach(key => {
+      const values = queries[key].split('+');
+      filters[key] = values;
+    });
+
+    console.log(`filters are ${JSON.stringify(filters)}`);
+
     res.locals.page = 'restaurants-index';
     const authUser = req.session.user || null;
     const redirect = req.originalUrl;
@@ -21,7 +37,7 @@ const controller = {
 
     try {
       [restaurants, neighborhoods, categories, reviews, day, boards, totalPages] 
-      = await restaurantModel.getDataForList(authUser, {}, page, limit);
+      = await restaurantModel.getDataForList(authUser, filters, page, limit);
 
     } catch(err) {
       console.log(`Error getting restaurant lists: ${err}`);

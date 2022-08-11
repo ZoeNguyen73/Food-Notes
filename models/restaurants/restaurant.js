@@ -4,7 +4,6 @@ const categoryModel = require('../categories/category');
 const reviewModel = require('../reviews/review');
 const boardModel = require('../boards/board');
 const userModel = require('../users/user');
-const filterList = require('../filter_list');
 
 const restaurantSchema = new mongoose.Schema({
   yelp_id: {
@@ -77,6 +76,8 @@ const restaurantSchema = new mongoose.Schema({
 //filters should be an object. eg. {neighborhood:["Bishan"], category:["Dim sum", "Seafood"]}
 
 restaurantSchema.statics.getDataForList = async function(authUser, filters, page, limit) {
+
+  console.log(`passed in filters are ${JSON.stringify(filters)}`);
   
   // get today day
   const day = new Date().getDay().toLocaleString('sg-SG');
@@ -101,15 +102,28 @@ restaurantSchema.statics.getDataForList = async function(authUser, filters, page
 
   let totalPages = null;
 
+  // create a mongoose filter object
+  // format { key1: { $in: [] }}
+
+  // get neighborhoodID for each neighborhood
+  if (filters.neighborhoods) {
+    const neighborhoodIDs = [];
+    for await (const n of filters.neighborhoods) {
+      const neighborhood = await neighborhoodModel.findOne({name: n}).exec();
+      const id = await neighborhood._id;
+      neighborhoodIDs.push(id);
+    };
+  };
+
   // get all restaurants if no filters
-  if (Object.keys(filters).length === 0) {
+  if (!Object.keys(filters).includes('neighborhoods')) {
     const count = await this.countDocuments();
     totalPages = Math.ceil(count / limit);
     restaurants = await this.find()
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .exec();
-  } else {
+  } else if (filters.board_slug) {
   // TODO: make filters work - note: need to filter by objectId not string
     // restaurants = await this.find({
     //   neighborhood: {
@@ -128,6 +142,23 @@ restaurantSchema.statics.getDataForList = async function(authUser, filters, page
       _id: {
         $in: boardRestaurants,
       },
+    })
+    .limit(limit * 1)
+    .skip((page - 1) * limit)
+    .exec();
+
+  } else {
+    const count = await this.countDocuments({
+      neighborhood: {
+        $in: neighborhoodIDs,
+      }
+    });
+    totalPages = Math.ceil(count / limit);
+
+    restaurants = await this.find({
+      neighborhood: {
+        $in: neighborhoodIDs,
+      }
     })
     .limit(limit * 1)
     .skip((page - 1) * limit)

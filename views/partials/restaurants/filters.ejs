@@ -1,0 +1,75 @@
+<%- include('../modals/all_neighborhoods_filter'); %>
+<div class="filters">
+  <div class="filters-header">
+    <h3>Filters</h3>
+    <p class="align-center placeholders">Reset all</p>
+  </div>
+  <div class="neighborhoods-filter">
+
+    <p class="bold">Neighborhoods:</p>
+    <ul>
+      <li>
+        <a class="filter-checkbox" href="<%= redirect %><%= redirect.includes('?') ? `%2BBishan` : '?neighborhoods=Bishan' %>">
+          <span class="form-check-input checkbox"></span>
+          <span class="value">
+            Bishan
+          </span>
+        </a>
+      </li>
+      <li>
+        <a class="filter-checkbox" href="<%= redirect %><%= redirect.includes('?') ? `%2BOrchard` : '?neighborhoods=Orchard' %>">
+          <span class="form-check-input checkbox checked"></span>
+          <span class="value">
+            Orchard
+          </span>
+        </a>
+      </li>
+      <li>
+        <a class="filter-checkbox" href="<%= redirect %><%= redirect.includes('?') ? `%2BToa%20Payoh` : '?neighborhoods=Toa%20Payoh' %>">
+          <span class="form-check-input checkbox"></span>
+          <span class="value">
+            Toa Payoh
+          </span>
+        </a>
+      </li>
+      <li>
+        <a class="filter-checkbox" href="<%= redirect %><%= redirect.includes('?') ? `%2BYishun` : '?neighborhoods=Yishun' %>">
+          <span class="form-check-input checkbox"></span>
+          <span class="value">
+            Yishun
+          </span>
+        </a>
+      </li>
+    </ul>
+    <!-- <form id="neighborhood-filter" method="GET" action="/restaurants">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="Bishan" name="neighborhoods" id="Bishan" checked onchange="this.form.submit()">
+        <label class="form-check-label" for="Bishan">
+          Bishan
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="Orchard" name="neighborhoods" id="Orchard" onchange="this.form.submit()">
+        <label class="form-check-label" for="Orchard">
+          Orchard
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="Toa Payoh" name="neighborhoods" id="Toa Payoh" onchange="this.form.submit()">
+        <label class="form-check-label" for="Toa Payoh">
+          Toa Payoh
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="Yishun" name="neighborhoods" id="Yishun" onchange="this.form.submit()">
+        <label class="form-check-label" for="Yishun">
+          Yishun
+        </label>
+      </div>
+    </form> -->
+    <button type="button see-all" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#all-neighborhoods-filter-modal">
+      See All
+    </button>
+  </div>
+  
+</div>

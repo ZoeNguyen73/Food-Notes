@@ -7,6 +7,24 @@ const boardModel = require('../models/boards/board');
 
 const controller = {
   list: async (req, res) => {
+    //digest queries into filter data
+    //note: filters need be in format {key1: [value1, value2], key2: [value3]}
+    const queries = req.query;
+    const keys = Object.keys(queries);
+    const filters = {};
+
+    keys.forEach(key => {
+      if (key !== 'page' && key !== 'limit') {
+        const values = queries[key].split('+');
+        filters[key] = values;
+      };  
+    });
+
+    let url = `${req.baseUrl}${ req.path !== '/' ? req.path : ''}?`;
+    Object.keys(filters).forEach((key, idx) => {
+      url += `${key}=${filters[key].join('%2B').replace(' ', '%20')}${(idx === Object.keys(filters).length - 1) ? '' : '&'}`;
+    });
+
     res.locals.page = 'restaurants-index';
     const authUser = req.session.user || null;
     const redirect = req.originalUrl;
@@ -21,7 +39,7 @@ const controller = {
 
     try {
       [restaurants, neighborhoods, categories, reviews, day, boards, totalPages] 
-      = await restaurantModel.getDataForList(authUser, {}, page, limit);
+      = await restaurantModel.getDataForList(authUser, filters, page, limit);
 
     } catch(err) {
       console.log(`Error getting restaurant lists: ${err}`);
@@ -36,8 +54,10 @@ const controller = {
       boards, 
       redirect,
       totalPages,
+      filters,
       currentPage: page,
-      pageUrl: '/restaurants'
+      pageUrl: url,
+      baseUrl: `${req.baseUrl}${ req.path !== '/' ? req.path : ''}`
     });
   },
 

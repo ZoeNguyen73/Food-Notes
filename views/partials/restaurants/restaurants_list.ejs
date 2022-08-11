@@ -121,19 +121,19 @@
       <ul class="pagination justify-content-center">
         <% const pageNo = Number(currentPage) %>
         <li class="page-item <%= pageNo === 1 ? 'disabled' : '' %>">
-          <a class="page-link" href="<%= pageUrl %>?page=<%= pageNo-1 %>" tabindex="-1">Previous</a>
+          <a class="page-link" href="<%= pageUrl %><%= pageUrl.includes('?') ?  '&' : '?' %>page=<%= pageNo-1 %>" tabindex="-1">Previous</a>
         </li>
 
         <% for (let i = 1, j = totalPages + 1; i < j ; i++) { %>
           <li class="page-item <%= pageNo === i ? 'active' : '' %>">
-            <a class="page-link" href="<%= pageUrl %>?page=<%= i %>">
+            <a class="page-link" href="<%= pageUrl %><%= pageUrl.includes('?') ?  '&' : '?' %>page=<%= i %>">
               <%= i %>
             </a>
           </li>
         <% } %>
 
         <li class="page-item <%= pageNo === totalPages ? 'disabled' : '' %>">
-          <a class="page-link" href="<%= pageUrl %>?page=<%= pageNo+1 %>">Next</a>
+          <a class="page-link" href="<%= pageUrl %><%= pageUrl.includes('?') ?  '&' : '?' %>page=<%= pageNo+1 %>">Next</a>
         </li>
       </ul>
     </nav>

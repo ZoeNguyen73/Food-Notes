@@ -1,9 +1,9 @@
 const list = {
   restaurants: [
-    "neighborhood",
-    "categories",
-    "price",
-    "rating",
+    'neighborhoods',
+    'categories',
+    'page',
+    'limit'
   ],
 }
 

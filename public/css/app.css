@@ -34,11 +34,12 @@ body {
   width: 100%;
 }
 
-.restaurant-page .btn-outline-secondary, .remove-form .btn-outline-secondary {
+.restaurant-page .btn-outline-secondary, .remove-form .btn-outline-secondary, .neighborhoods-filter .btn-outline-secondary {
   border: none;
+  padding: 0;
 }
 
-.restaurant-page .btn-outline-secondary:hover, .remove-form .btn-outline-secondary:hover {
+.restaurant-page .btn-outline-secondary:hover, .remove-form .btn-outline-secondary:hover, .neighborhoods-filter .btn-outline-secondary:hover {
   background: none;
   color: #6c757d;
   text-decoration: underline;
@@ -607,4 +608,60 @@ header {
 .active > .page-link {
   background-color:#F7B501;
   border-color: #F7B501;
+}
+
+.filters {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1em;
+}
+
+.filters label {
+  font-size: 0.8em;
+}
+
+.all-neighborhoods {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.all-neighborhoods > div {
+  width: 20%;
+}
+
+#all-neighborhoods-filter-modal {
+  --bs-modal-width: 800px;
+}
+
+.filters ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+a.filter-checkbox {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 0.5em;
+  text-decoration: none;
+  color: black;
+}
+
+.checkbox {
+  background-image: url(/img/checkbox-unchecked.png);
+  background-size: 1.2em 1.2em;
+}
+
+.checkbox.checked {
+  background-image: url(/img/checkbox-checked.png);
+  background-size: 1.2em 1.2em;
+}
+
+.filter-checkbox .value:hover {
+  color: #E25A25;
+  font-weight: bold;
+}
+
+.neighborhood-options-list, .category-options-list {
+  overflow-y: scroll;
+  max-height: 300px;
 }

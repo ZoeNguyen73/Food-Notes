@@ -4,7 +4,6 @@ const categoryModel = require('../categories/category');
 const reviewModel = require('../reviews/review');
 const boardModel = require('../boards/board');
 const userModel = require('../users/user');
-const filterList = require('../filter_list');
 
 const restaurantSchema = new mongoose.Schema({
   yelp_id: {
@@ -80,7 +79,6 @@ restaurantSchema.statics.getDataForList = async function(authUser, filters, page
   
   // get today day
   const day = new Date().getDay().toLocaleString('sg-SG');
-  // const validFilters = filterList.restaurants;
 
   // get all neighborhoods
   const neighborhoods = await neighborhoodModel.find().exec();
@@ -101,15 +99,88 @@ restaurantSchema.statics.getDataForList = async function(authUser, filters, page
 
   let totalPages = null;
 
+  const neighborhoodIDs = [];
+  const categoryIDs= [];
+
+  // get neighborhoodID for each neighborhood
+  if (filters.neighborhoods) {
+    for await (const n of filters.neighborhoods) {
+      const neighborhood = await neighborhoodModel.findOne({name: n}).exec();
+      const id = await neighborhood._id;
+      neighborhoodIDs.push(id);
+    };
+  };
+
+  if (filters.categories) {
+    for await (const c of filters.categories) {
+      const name = c.replace('and', '&');
+      const category = await categoryModel.findOne({name}).exec();
+      const id = await category._id;
+      categoryIDs.push(id);
+    };
+  };
+
   // get all restaurants if no filters
-  if (Object.keys(filters).length === 0) {
-    const count = await this.countDocuments();
-    totalPages = Math.ceil(count / limit);
-    restaurants = await this.find()
+  if (filters.neighborhoods) {
+    if (filters.categories) {
+      const count = await this.countDocuments({
+        neighborhood: {
+          $in: neighborhoodIDs,
+        },
+        categories: {
+          $in: categoryIDs,
+        }
+      });
+      totalPages = Math.ceil(count / limit);
+  
+      restaurants = await this.find({
+        neighborhood: {
+          $in: neighborhoodIDs,
+        },
+        categories: {
+          $in: categoryIDs,
+        }
+      })
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .exec();
-  } else {
+
+    } else {
+      const count = await this.countDocuments({
+        neighborhood: {
+          $in: neighborhoodIDs,
+        }
+      });
+      totalPages = Math.ceil(count / limit);
+  
+      restaurants = await this.find({
+        neighborhood: {
+          $in: neighborhoodIDs,
+        }
+      })
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .exec();
+    };
+    
+  } else if (filters.categories) {
+    const count = await this.countDocuments({
+      categories: {
+        $in: categoryIDs,
+      }
+    });
+    totalPages = Math.ceil(count / limit);
+
+    restaurants = await this.find({
+      categories: {
+        $in: categoryIDs,
+      }
+    })
+    .limit(limit * 1)
+    .skip((page - 1) * limit)
+    .exec();
+
+  } else if (filters.board_slug) {
   // TODO: make filters work - note: need to filter by objectId not string
     // restaurants = await this.find({
     //   neighborhood: {
@@ -132,6 +203,15 @@ restaurantSchema.statics.getDataForList = async function(authUser, filters, page
     .limit(limit * 1)
     .skip((page - 1) * limit)
     .exec();
+
+  } else {
+
+    const count = await this.countDocuments();
+    totalPages = Math.ceil(count / limit);
+    restaurants = await this.find()
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .exec();
 
   };
 

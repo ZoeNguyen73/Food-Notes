@@ -1,0 +1,86 @@
+<div class="filters">
+  <div class="filters-header">
+    <h3>Filters</h3>
+    <a href="<%= baseUrl %>">
+      <p class="align-center placeholders">Reset all</p>
+    </a>
+  </div>
+  <div class="neighborhoods-filter">
+
+    <p class="bold">Neighborhoods:</p>
+    <% let preStr = '' %>
+    <% let endStr = '' %>
+    <% if (!redirect.includes('?')) { %>
+      <% preStr = redirect + '?neighborhoods='; %>
+    <% } else { %>
+      <% if (redirect.includes('neighborhoods=')) { %>
+        <% const idx = redirect.indexOf('neighborhoods='); %>
+        <% const endIdx = redirect.indexOf('&', idx); %>
+        <% if (endIdx > -1) { %>
+          <% preStr = redirect.substring(0, endIdx) + '%2B' %>
+          <% endStr = redirect.substring(endIdx, redirect.length) %>
+        <% } else {%>
+          <% preStr = redirect + '%2B' %>
+        <% } %>
+      <% } else { %>
+        <% preStr = redirect + '&neighborhoods=' %>
+      <% } %>
+    <% } %>
+    <ul class="neighborhood-options-list">
+      <% neighborhoods.forEach(neighborhood => { %>
+        <li>
+          <a class="filter-checkbox" href="<%= preStr %><%= neighborhood.name %><%= endStr %>">
+            <span class="form-check-input checkbox 
+              <% if (filters.neighborhoods) { %>
+                <%= filters.neighborhoods.includes(neighborhood.name) ? 'checked' : '' %>
+              <% } %>
+            "></span>
+            <span class="value">
+              <%= neighborhood.name %>
+            </span>
+          </a>
+        </li>
+      <% }) %>
+    </ul>
+  </div>
+
+  <div class="categories-filter">
+
+    <p class="bold">Categories:</p>
+    <% preStr2 = '' %>
+    <% endStr2 = '' %>
+    <% if (!redirect.includes('?')) { %>
+      <% preStr = redirect + '?categories='; %>
+    <% } else { %>
+      <% if (redirect.includes('categories=')) { %>
+        <% const idx = redirect.indexOf('categories='); %>
+        <% const endIdx = redirect.indexOf('&', idx); %>
+        <% if (endIdx > -1) { %>
+          <% preStr = redirect.substring(0, endIdx) + '%2B' %>
+          <% endStr = redirect.substring(endIdx, redirect.length) %>
+        <% } else {%>
+          <% preStr = redirect + '%2B' %>
+        <% } %>
+      <% } else { %>
+        <% preStr = redirect + '&categories=' %>
+      <% } %>
+    <% } %>
+    <ul class="category-options-list">
+      <% categories.forEach(category => { %>
+        <li>
+          <a class="filter-checkbox" href="<%= preStr %><%= category.name.replace('&', 'and') %><%= endStr %>">
+            <span class="form-check-input checkbox 
+              <% if (filters.categories) { %>
+                <%= filters.categories.includes(category.name.replace('&', 'and')) ? 'checked' : '' %>
+              <% } %>
+            "></span>
+            <span class="value">
+              <%= category.name %>
+            </span>
+          </a>
+        </li>
+      <% }) %>
+    </ul>
+  </div>
+  
+</div>

@@ -7,7 +7,7 @@
     <p class="error-message red align-center"><%= errMsg %></p>
   <% } %>
   
-  <form method="POST" action="/<%= authUser %>/boards/create">
+  <form method="POST" action="/<%= authUser %>/boards/create?redirect=<%= redirect %>">
     <div class="form-group">
       <label for="name">Name</label>
       <input type="text" class="form-control" id="name" name="name" placeholder="To try">

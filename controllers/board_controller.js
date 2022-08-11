@@ -94,15 +94,17 @@ const controller = {
   },
 
   showCreateForm: (req, res) => {
-    res.render('boards/create', {errMsg: null});
+    const redirect = res.locals.redirect || req.query.redirect || null;
+    res.render('boards/create', {errMsg: null, redirect});
   },
 
   create: async (req, res) => {
+    const redirect = res.locals.redirect || req.query.redirect || null;
     const username = req.params.username;
     const validationResults = validator.create.validate(req.body);
 
     if (validationResults.error) {
-      res.render('boards/create', {errMsg: `Please follow our requirements while filing in the form`, username});
+      res.render('boards/create', {errMsg: `Please follow our requirements while filing in the form`, username, redirect});
       return;
     };
 
@@ -113,7 +115,7 @@ const controller = {
     const existingBoard = await boardModel.findOne({user_id: user._id, name: validatedResults.name}).exec();
 
     if (existingBoard) {
-      res.render('boards/create', {errMsg: `There is already a board with the same name`, username});
+      res.render('boards/create', {errMsg: `There is already a board with the same name`, username, redirect});
       return;
     };
 
@@ -126,12 +128,18 @@ const controller = {
         slug: getSlug(validatedResults.name)
       });
 
+      if (redirect) {
+        res.locals.redirect = null;
+        res.redirect(`${redirect}`);
+        return;
+      };
+
       res.redirect(`/${username}/boards/${board.slug}`);
       return;
 
     } catch(err) {
       console.log(`Error creating new board: ${err}`);
-      res.render('boards/create', {errMsg: 'Sorry, please try again', username});
+      res.render('boards/create', {errMsg: 'Sorry, please try again', username, redirect});
       return;
     };
   },

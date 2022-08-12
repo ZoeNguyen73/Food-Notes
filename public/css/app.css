@@ -1,8 +1,9 @@
 body {
-  font-family: "Quattrocento Sans", sans-serif;
+  font-family: "Poppins", sans-serif;
   background-color: F9F5EB;
   width: 100%;
   position: absolute;
+  line-height: 1.7;
 }
 
 .red {
@@ -25,6 +26,38 @@ body {
   background-color: #D3C1f8;
 }
 
+.space {
+  height: 4em;
+}
+
+.main-banner {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  height: 400px;
+  width: 100vw;
+  background: black;
+  overflow: hidden;
+}
+
+.main-banner img {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  filter: brightness(.4);
+}
+
+.hero-header-text {
+  position: absolute;
+  top: 300px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1em;
+}
+
 .placeholders {
   color: lightgrey;
   font-style: italic;
@@ -34,6 +67,31 @@ body {
   height: 1px;
   border-bottom: 3px solid lightgrey;
   width: 100%;
+}
+
+.homepage {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 2em;
+}
+
+.suggested-categories {
+  width: 100%;
+  list-style: none;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  gap: 3em;
+}
+
+.homepage a {
+  text-decoration: none;
+  color: black;
+}
+
+.suggested-categories a:hover {
+  font-weight: bold;
+  color: #E25A25;
 }
 
 .restaurant-page .btn-outline-secondary, .remove-form .btn-outline-secondary, .neighborhoods-filter .btn-outline-secondary {
@@ -48,9 +106,13 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Quattrocento", serif;
+  font-family: "Quicksand", sans-serif;
   text-align: center;
   margin: 0;
+}
+
+.extra-bold {
+  font-weight: 600;
 }
 
 p {
@@ -109,7 +171,6 @@ footer p {
 }
 
 header {
-  padding-bottom: 4em;
   position: sticky;
   top: 0;
   z-index: 99;
@@ -680,6 +741,10 @@ a.filter-checkbox {
   background-size: 1.2em 1.2em;
 }
 
+.filter-checkbox .value {
+  font-size: 0.9em;
+}
+
 .filter-checkbox .value:hover {
   color: #E25A25;
   font-weight: bold;
@@ -744,7 +809,7 @@ a.filter-checkbox {
     height: 120px;
   }
 
-  header {
-    padding-bottom: 2em;
+  #logout-btn {
+    padding-left: 0;
   }
 }

@@ -1,9 +1,126 @@
 <%- include('../partials/header'); %>
+<div class="main-banner">
+  <img src="/img/main-banner.jpg" alt="main banner"/>
+  <section class='hero-header-text'>
+    <h1 class="extra-bold">Welcome to <span class="yellow">Food Notes 🍜</span></h1>
+    <h3>Browse, Pin and Tag your favourite food places.<br/>Personalise the way you'd like it!</h3>
+    <div class="buttons">
+      <a href="/restaurants" type="button" class="btn btn-danger">Get Started</a>
+    </div>
+  </section>
+</div>
+<div class="space"></div>
+<div class="container homepage">
+  
+  <h2>Trending Recommendations</h2>
+  <ul class="suggested-categories">
+    <a href="/restaurants?categories=Coffee%20and%20Tea">
+      <li>Coffee & Tea</li>
+    </a>
+    <a href="/restaurants?categories=Dim%20Sum">
+      <li>Dim Sum</li>
+    </a>
+    <a href="/restaurants?categories=Halal">
+      <li>Halal</li>
+    </a>
+    <a href="/restaurants?categories=Vegetarian">
+      <li>Vegetarian</li>
+    </a>
+    <a href="/restaurants?categories=Seafood">
+      <li>Seafood</li>
+    </a>
+    <a href="/restaurants?categories=Bars">
+      <li>Bars</li>
+    </a>
+  </ul>
 
-<div class="container">
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 gx-4 gy-5 card-columns">
+    <% restaurants.forEach(restaurant => { %>
+      <div class="col">
+        <div class="card h-100" id="<%= restaurant.slug %>-card">
+          <a href="/restaurants/<%= restaurant.slug %>">
+            <img src="<%= restaurant.photos[0] %>" class="card-img-top pointer-on-hover" alt="<%= restaurant.name %> image" />
+          </a>
 
-  <h2>Homepage - in progress...</h2>
+          <div class="card-body p-3">
+            <a href="/restaurants/<%= restaurant.slug %>">
+              <h4 class="card-title pointer-on-hover">
+                <%= restaurant.name %>
+              </h4>
+            </a>
 
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item p-1 card-subtitle">
+                <% const neighborhood = neighborhoods.filter(neighborhood => neighborhood._id.equals(restaurant.neighborhood))[0] %>
+                <a href="<%= baseUrl %>?neighborhoods=<%= neighborhood.name %>">
+                  <span class="neighborhood-name red pointer-on-hover">
+                    <%= neighborhood.name %>
+                  </span>
+                </a>  
+
+                <span>
+                  <% if (restaurant.opening_hours.length !== 0) { %>
+                    <% const todayTimings = restaurant.opening_hours.filter(timing => timing["day"] == day) %>
+
+                    <% if (todayTimings.length === 0) { %>
+                      - Closed today
+                    <% } else { %>
+                      <% endTime = Number(todayTimings[todayTimings.length - 1].end) %>
+                      <% const session = endTime > 1200 ? "PM" : "AM" %>
+                      <% let displayTime = ''%>
+                      <% if (endTime > 1200) {endTime -= 1200} %>
+                      <% const endTimeStr = endTime.toString().padStart(4, '0') %>
+                      <% displayTime += `${endTimeStr.slice(0,2)}:${endTimeStr.slice(2,4)}` %>
+                      
+                      - Open til <%= `${displayTime} ${session}` %>
+                    <% } %>
+                  <% } %>
+                     
+                </span>
+              </li>
+
+              <li class="list-group-item p-1 card-categories">
+                <% for (let i = 0; i < restaurant.categories.length && i < 5; i++) { %>
+                  <% const category = categories.filter(category => category._id.equals(restaurant.categories[i]))[0] %>
+                  <a href="<%= baseUrl %>?categories=<%= category.name.replace('&', 'and') %>">
+                    <div class="category-tag background-purple pointer-on-hover">
+                      <%= category.name %>
+                    </div>
+                  </a>
+                <% } %>
+              </li>
+
+              <li class="list-group-item p-1 snippet">
+                <p class="bold">What others are saying:</p>
+                <p>
+                  <% if (reviews.length > 0) { %>
+                    <% const restaurantReviews = reviews.filter(review => review.restaurant_id.equals(restaurant._id)) %>
+                    <% if (restaurantReviews.length === 0) { %>
+                      No reviews yet
+                    <% } else { %>
+                      <%= restaurantReviews[0].content %>
+                    <% } %>
+                  <% } %>
+                </p>
+              </li>
+
+              <li class="list-group-item p-1 price-reviews">
+                <div>
+                  <%= restaurant.price %>
+                </div>
+                <div>
+                  <% const stars = Math.round(restaurant.rating * 2)/2 %>
+                  <% const imgUrl = `/img/rating-${stars}.png` %>
+                  <img class="stars-rating" src="/img/rating-<%= stars %>.png" />
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+      </div>
+    <% }) %>
+  </div>
   
 </div>
 <%- include('../partials/footer'); %>

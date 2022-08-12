@@ -89,14 +89,14 @@
 
             <div class="card-footer p-3">
               <% if (!authUser) { %>
-                <a class="restricted" href="/login?redirect=<%= redirect %>%23<%= restaurant.slug %>-card">Log in to pin restaurant to your board 📌</a>
+                <a class="restricted" href="/login?redirect=<%= redirect %>%23<%= restaurant.slug %>-card">Log in to pin this restaurant 📌</a>
               <% } else if (!boards || boards.length === 0) { %>
                 <a class="restricted" href="/<%= authUser %>/boards/create?redirect=<%= redirect %>%23<%= restaurant.slug %>-card">Create a board to pin this restaurant 📌</a>
               <% } else { %>
                 <form class="pin-form" method="POST" action="/restaurants/<%= restaurant.slug %>/<%= authUser %>/pin?_method=PUT&redirect=<%= redirect %>%23<%= restaurant.slug %>-card">
                   <div class="boards-dropdown">
                     <select class="custom-select" id="board_id" name="board_id")">
-                      <option value="" disabled selected>Choose a board to pin</option>
+                      <option value="" disabled selected>Choose a board</option>
                       <% boards.forEach(board => { %>
                         <option value="<%= board._id %>" <%= board.restaurants.includes(restaurant._id) ? 'disabled' : '' %>>
                           <%= board.name %> <%= board.restaurants.includes(restaurant._id) ? '📌' : '' %>

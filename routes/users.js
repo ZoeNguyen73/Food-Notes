@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const controller = require('../controllers/user_controller');
+const pageController = require('../controllers/page_controller');
 const userAuth = require('../middlewares/user_auth');
 const boardRouter = require('./boards');
-
 
 
 // register
@@ -28,5 +28,9 @@ router.get('/:username/dashboard', userAuth.isAuthenticated, userAuth.isAuthoris
 
 // use board router
 router.use('/:username/boards', boardRouter);
+
+// homepage
+router.get('/', pageController.loadHomePage);
+
 
 module.exports = router;

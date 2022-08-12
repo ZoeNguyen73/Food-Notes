@@ -1,19 +1,15 @@
 <%- include('../partials/header'); %>
-
+<div class="space"></div>
 <div class="container user-dashboard">
-  <div class="row user-profile">
-    <div class="col-2 user-pic">
-      <img src="<%= user.pic_url %>" />
-    </div>
-    <div class="col user-info">
-      <h2 class="align-left"><%= user.username %></h2>
-      <p>info here</p>
-      <!-- TODO: add edit profile route -->
-      <a href="">
-        <button type="button" class="btn btn-outline-secondary">
-          Edit Profile
-        </button>
-      </a>
+  <div class="user-profile">
+
+    <div class="user-info">
+      <h2 class="align-left">Welcome back <span class="red"><%= user.username %></span>!</h2>
+      <p>
+        You have pinned <span class="yellow bold"><%= restaurantsCount %> restaurants</span>
+         and created <span class="yellow bold"><%= boardsCount %> boards</span> so far :)
+      </p>
+      
     </div>
   </div>
 
@@ -23,27 +19,32 @@
     <!-- TODO: add suggestions for boards when users do not have anyboards -->
     <% if (boards.length === 0) { %>
       <div class="header">
-        <p>Some board ideas to get you started: ...</p>
+        <p>It feels empty in here. How about</p>
         <!-- TODO: to add quick create functions here for the suggested boards -->
         <a href="/<%= user.username %>/boards/create">
           <button type="button" class="btn btn-danger">Create a New Board</button>
         </a>
-        
+        <a href="/<%= user.username %>/tags/create">
+          <button type="button" class="btn btn-outline-danger">Create a New Tag</button>
+        </a>
         <p>or browse <a href="/restaurants">restaurants</a> for inspirations</p>
       </div>
     <% } else { %>
       <div class="header">
         <h3 class="align-left red">Let's get <strike>cooking</strike> eating</h3>
-        <!-- TODO: add routes for these board buttons -->
         <a href="/<%= user.username %>/boards">
           <button type="button" class="btn btn-outline-danger">View All Boards</button>
         </a>
         <a href="/<%= user.username %>/boards/create">
           <button type="button" class="btn btn-danger">Create a New Board</button>
         </a>
+        <a href="/<%= user.username %>/tags/create">
+          <button type="button" class="btn btn-outline-danger">Create a New Tag</button>
+        </a>
       </div>
   
       <div class="boards-list">
+        <h3 class="align-left red">Or check out your favourite boards below</h3>
         <% boards.forEach(board => { %>
           <div>
             <a href="/<%= authUser %>/boards/<%= board.slug %>">
@@ -52,7 +53,6 @@
               </h1>
             </a>
             
-            <!-- TODO: add icon to indicate if board is public or private -->
             <p><%= board.description %></p>
             <div>
               <% if (!board.is_public) { %>
@@ -68,9 +68,7 @@
             </div>
           </div>
   
-          
         <% }) %>
-        
   
       </div>
     <% } %>

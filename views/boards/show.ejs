@@ -1,18 +1,19 @@
 <%- include('../partials/header'); %>
-
+<div class="space"></div>
 
 <div class="container board-page">
   <% if (errMsg) { %>
     <p class="error-message red align-center"><%= errMsg %></p>
   <% } else { %>
     <%- include('../partials/modals/confirm_delete'); %>
+
     <div class="row">
 
-      <div class="col filter-sidebar">
-        Filters here
+      <div class="col filter-sidebar non-mobile">
+        <%- include('../partials/restaurants/filters.ejs'); %>
       </div>
 
-      <div class="col-10 restaurants-list">
+      <div class="col-8 restaurants-list">
         <div class="title">
           <h1 class="red"><%= board.name %></h1>
           <h5>Created by <span class="yellow"><%= username %></span></h5>

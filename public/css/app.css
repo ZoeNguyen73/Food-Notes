@@ -1,6 +1,9 @@
 body {
-  font-family: "Quattrocento Sans", sans-serif;
+  font-family: "Poppins", sans-serif;
   background-color: F9F5EB;
+  width: 100%;
+  position: absolute;
+  line-height: 1.7;
 }
 
 .red {
@@ -23,6 +26,42 @@ body {
   background-color: #D3C1f8;
 }
 
+.space {
+  height: 4em;
+}
+
+.small-spacing {
+  height: 1em;
+}
+
+.main-banner {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  height: 400px;
+  width: 100vw;
+  background: black;
+  overflow: hidden;
+}
+
+.main-banner img {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  filter: brightness(.4);
+}
+
+.hero-header-text {
+  position: absolute;
+  top: 300px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1em;
+}
+
 .placeholders {
   color: lightgrey;
   font-style: italic;
@@ -32,6 +71,31 @@ body {
   height: 1px;
   border-bottom: 3px solid lightgrey;
   width: 100%;
+}
+
+.homepage {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 2em;
+}
+
+.suggested-categories {
+  width: 100%;
+  list-style: none;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  gap: 3em;
+}
+
+.homepage a {
+  text-decoration: none;
+  color: black;
+}
+
+.suggested-categories a:hover {
+  font-weight: bold;
+  color: #E25A25;
 }
 
 .restaurant-page .btn-outline-secondary, .remove-form .btn-outline-secondary, .neighborhoods-filter .btn-outline-secondary {
@@ -46,9 +110,13 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Quattrocento", serif;
+  font-family: "Quicksand", sans-serif;
   text-align: center;
   margin: 0;
+}
+
+.extra-bold {
+  font-weight: 600;
 }
 
 p {
@@ -68,13 +136,19 @@ p {
   color: black;
 }
 
+.restaurants-list a.red {
+  color: #E25A25;
+}
+
 .bold {
   font-weight: bold;
 }
 
 .navbar {
-  padding-left: 5%;
-  padding-right: 5%;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  padding-left: 10%;
+  padding-right: 10%;
 }
 
 .nav-bar-logo {
@@ -100,12 +174,10 @@ footer p {
   margin: 0;
 }
 
-/* .col, .col-10 {
-  border: solid red 1px;
-} */
-
 header {
-  padding-bottom: 3em;
+  position: sticky;
+  top: 0;
+  z-index: 99;
 }
 
 .breadcrumb {
@@ -171,6 +243,10 @@ header {
   transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
 }
 
+.restaurant-index .row {
+  gap: 1em;
+}
+
 .card-img-top {
   height: 180px;
   vertical-align: middle;
@@ -184,8 +260,9 @@ header {
 
 .restaurants-list, .boards-list {
   display: flex;
+  flex-grow: 1;
   flex-flow: column nowrap;
-  gap: 2em;
+  gap: 3em;
 }
 
 .card-title {
@@ -198,6 +275,7 @@ header {
 
 .card-subtitle {
   text-align: center;
+  font-size: 0.9em;
 }
 
 .card-title:hover {
@@ -210,6 +288,11 @@ header {
   gap: 0.2em
 }
 
+.categories a {
+  text-decoration: none;
+  color: black;
+}
+
 .category-tag {
   border-radius: 0.5em;
   padding: 0.4em 0.4em 0.2em 0.4em;
@@ -217,7 +300,7 @@ header {
 }
 
 .restaurants-list .category-tag {
-  font-size: 0.9em;
+  font-size: 0.8em;
   padding: 0.4em 0.4em 0.1em 0.4em;
 }
 
@@ -316,6 +399,7 @@ header {
   border: 1px solid lightgrey;
   border-radius: 1em;
   padding: 2em;
+  flex-grow: 1;
 }
 
 .business-info {
@@ -348,6 +432,8 @@ header {
   display: flex;
   flex-flow: column nowrap;
   gap: 2em;
+  flex-grow: 1;
+  max-width: 850px;
 }
 
 .restaurant-page .require-auth {
@@ -356,8 +442,9 @@ header {
   gap: 2em;
 }
 
-.restaurant-page .require-auth button {
-  width: 6em;
+.require-auth a {
+  text-decoration: none;
+  color: black;
 }
 
 .current-pins {
@@ -486,14 +573,14 @@ header {
   height: 200px
 }
 
-.register-page, .login-page, .board-create-page, .board-edit-page {
+.register-page, .login-page, .board-create-page, .board-edit-page, .tag-create-page {
   max-width: 600px;
   display: flex;
   flex-flow: column nowrap;
   gap: 2em;
 }
 
-.register-page form, .login-page form, .board-create-page form, .board-edit-page form {
+.register-page form, .login-page form, .board-create-page form, .board-edit-page form, .tag-create-page form {
   display: flex;
   flex-flow: column nowrap;
   gap: 1em;
@@ -524,9 +611,15 @@ header {
   gap: 2em;
 }
 
+.user-dashboard .user-profile {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 2em;
+}
+
 .user-dashboard .user-pic img {
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   object-fit: cover;
   border-radius: 50%;
 }
@@ -594,6 +687,12 @@ header {
   gap: 0.8em;
 }
 
+.board-page .card-footer {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.8em;
+}
+
 .private-icon {
   height: 1em;
   width: auto;
@@ -602,7 +701,7 @@ header {
 .restaurants-index .list, .board-page .list {
   display: flex;
   flex-flow: column nowrap;
-  gap: 1em;
+  gap: 3em;
 }
 
 .active > .page-link {
@@ -656,6 +755,10 @@ a.filter-checkbox {
   background-size: 1.2em 1.2em;
 }
 
+.filter-checkbox .value {
+  font-size: 0.9em;
+}
+
 .filter-checkbox .value:hover {
   color: #E25A25;
   font-weight: bold;
@@ -664,4 +767,67 @@ a.filter-checkbox {
 .neighborhood-options-list, .category-options-list {
   overflow-y: scroll;
   max-height: 300px;
+}
+
+.filters-header a {
+ text-decoration: none;
+}
+
+.filters-header a:hover {
+  text-decoration: underline;
+}
+
+.mobile {
+  display: none;
+}
+
+@media (max-width: 1199px) { 
+  .container.board-page, .container.restaurants-index {
+    max-width: 1200px;
+  }
+}
+
+@media (max-width: 500px) { 
+  .space {
+    height: 1em;
+  }
+
+  .navbar {
+    width: 100%;
+  }
+
+  .navbar .container-fluid {
+    gap: 1em;
+  }
+
+  .non-mobile {
+    display: none;
+  }
+
+  .mobile {
+    display: block;
+  }
+
+  .register-page, .login-page, .board-create-page, .board-edit-page, .tag-create-page {
+    max-width: 90%;
+  }
+
+  .container.board-page, .container.restaurants-index, .container.restaurant-page {
+    max-width: 90%;
+  }
+
+  .user-dashboard .content .header {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+  }
+
+  .user-dashboard .user-pic img {
+    width: 120px;
+    height: 120px;
+  }
+
+  #logout-btn {
+    padding-left: 0;
+  }
 }

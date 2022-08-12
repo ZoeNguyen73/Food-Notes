@@ -70,6 +70,8 @@ const controller = {
       });
     } catch(err) {
       console.log(`Error creating a new users (register flow): ${err}`);
+      res.render('users/register', {errMsg:`Something went wrong. Please try again!`, redirect});
+      return;
     };
   },
 
@@ -147,26 +149,32 @@ const controller = {
 
   showDashboard: async (req, res) => {
     let user = null;
+    let boardsCount  = null;
+    let restaurantsCount = null;
 
     try {
       user = await userModel.findOne({username: req.session.user}).exec();
 
       const boards = await boardModel.find({user_id: user._id});
+      boardsCount = boards.length;
 
       // get first 3 boards
       const topBoards = boards.slice(0,3);
 
       // get first 4 restaurants for each board
       const restaurantsArr = [];
-      for await (const board of topBoards) {
-        const restaurantIDs = board.restaurants.slice(0,4);
-        const restaurants = await restaurantModel.find({_id: {$in: restaurantIDs}}).exec();
-        restaurantsArr.push(restaurants);
+      for await (const board of boards) {
+        const restaurantIDs = board.restaurants;
+        restaurantIDs.forEach(id => {
+          if (!restaurantsArr.includes(id)) {
+            restaurantsArr.push(id);
+          };
+        });
       };
 
-      // TODO: get restaurants data based on the list of restaurants above
+      restaurantsCount = restaurantsArr.length;
 
-      res.render('users/dashboard', {user, boards: topBoards, restaurantsArr});
+      res.render('users/dashboard', {user, boards: topBoards, boardsCount, restaurantsCount});
 
       return;
 

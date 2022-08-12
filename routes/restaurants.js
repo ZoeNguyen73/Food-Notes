@@ -3,6 +3,10 @@ const restaurantController = require('../controllers/restaurant_controller');
 
 const userAuth = require('../middlewares/user_auth');
 const filtersValidator = require('../middlewares/restaurants_filter');
+const reviewRouter = require('../routes/reviews');
+
+// use review router
+router.use('/:restaurant_slug/reviews', reviewRouter);
 
 // index action
 router.get('/', filtersValidator.verify, restaurantController.list);

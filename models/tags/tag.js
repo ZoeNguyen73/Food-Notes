@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slug = require('mongoose-slug-generator');
 
 const tagSchema = new mongoose.Schema({
   user_id: {
@@ -13,7 +14,12 @@ const tagSchema = new mongoose.Schema({
 
   restaurants: {
     type: [mongoose.ObjectId]
-  }
+  },
+
+  slug: {
+    type: String,
+    requried: true
+  },
   
 });
 

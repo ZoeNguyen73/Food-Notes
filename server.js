@@ -24,7 +24,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  //TODO: change maxAge to longer duration before publishingb
+  //TODO: change maxAge to longer duration before publishing
   cookie: { secure: false, httpOnly: false, maxAge: 2*60*60*1000 } // 2 hours
 }));
 app.use(authMiddleware.setAuthUser);

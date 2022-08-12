@@ -69,24 +69,29 @@ const controller = {
     let boards = null;
     let categories = null;
     let reviews = null;
+    let tags = null;
+    let usernames = null;
 
     try {
       restaurant = await restaurantModel.findOne({slug: req.params.restaurant_slug}).exec();
 
-      [restaurantBoards, boards, categories, reviews] 
+      [restaurantBoards, boards, categories, reviews, tags, usernames] 
       = await restaurant.getRestaurantInfo(authUser);
 
     } catch(err) {
       console.log(`Error getting restaurant details: ${err}`);
     };
     
-    res.render('restaurants/show', {restaurant, categories, reviews, restaurantBoards, boards, redirect});
+    res.render('restaurants/show', {restaurant, categories, reviews, restaurantBoards, boards, redirect, tags, usernames});
   
   },
 
   addToBoard: async (req, res) => {
     let board = null;
-    const redirect = req.query.redirect || null;
+    let redirect = req.query.redirect || null;
+    if (redirect) {
+      redirect = redirect.replace(/ /g, '%20').replace(/\+/g, '%2B');
+    };
 
     try {
       const restaurant = await restaurantModel.findOne({slug: req.params.restaurant_slug}).exec();
@@ -114,7 +119,10 @@ const controller = {
   removeFromBoard: async (req, res) => {
     const boardSlugs = Object.keys(req.body);
     let board = null;
-    const redirect = req.query.redirect || null;
+    let redirect = req.query.redirect || null;
+    if (redirect) {
+      redirect = redirect.replace(/ /g, '%20').replace(/\+/g, '%2B');
+    };
 
     try {
       const restaurant = await restaurantModel.findOne({slug: req.params.restaurant_slug}).exec();

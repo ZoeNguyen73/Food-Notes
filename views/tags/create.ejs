@@ -1,0 +1,22 @@
+<%- include('../partials/header'); %>
+<div class="space"></div>
+<div class="container tag-create-page">
+
+  <h1>Create a new personal tag</h1>
+  <% if (errMsg) { %>
+    <p class="error-message red align-center"><%= errMsg %></p>
+  <% } %>
+  
+  <form method="POST" action="/<%= authUser %>/tags/create?redirect=<%= redirect %>">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" name="name" placeholder="Big Portion, Mom's Favs, ...">
+    </div>
+    <div class="buttons">
+      <button type="submit" class="btn btn-danger">Create</button>
+    </div>
+    <a class="placeholders align-center" href="javascript:history.go(-1)">Go Back</a>
+  </form>
+</div>
+
+<%- include('../partials/footer'); %>

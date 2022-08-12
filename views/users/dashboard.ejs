@@ -24,18 +24,22 @@
         <a href="/<%= user.username %>/boards/create">
           <button type="button" class="btn btn-danger">Create a New Board</button>
         </a>
-        
+        <a href="/<%= user.username %>/tags/create">
+          <button type="button" class="btn btn-outline-danger">Create a New Tag</button>
+        </a>
         <p>or browse <a href="/restaurants">restaurants</a> for inspirations</p>
       </div>
     <% } else { %>
       <div class="header">
         <h3 class="align-left red">Let's get <strike>cooking</strike> eating</h3>
-        <!-- TODO: add routes for these board buttons -->
         <a href="/<%= user.username %>/boards">
           <button type="button" class="btn btn-outline-danger">View All Boards</button>
         </a>
         <a href="/<%= user.username %>/boards/create">
           <button type="button" class="btn btn-danger">Create a New Board</button>
+        </a>
+        <a href="/<%= user.username %>/tags/create">
+          <button type="button" class="btn btn-outline-danger">Create a New Tag</button>
         </a>
       </div>
   

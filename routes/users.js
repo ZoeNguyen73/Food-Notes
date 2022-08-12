@@ -3,7 +3,7 @@ const controller = require('../controllers/user_controller');
 const pageController = require('../controllers/page_controller');
 const userAuth = require('../middlewares/user_auth');
 const boardRouter = require('./boards');
-
+const tagRouter = require('./tags')
 
 // register
 router.get('/register', controller.showRegisterForm);
@@ -28,6 +28,9 @@ router.get('/:username/dashboard', userAuth.isAuthenticated, userAuth.isAuthoris
 
 // use board router
 router.use('/:username/boards', boardRouter);
+
+// use board router
+router.use('/:username/tags', tagRouter);
 
 // homepage
 router.get('/', pageController.loadHomePage);

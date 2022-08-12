@@ -4,9 +4,13 @@ const restaurantController = require('../controllers/restaurant_controller');
 const userAuth = require('../middlewares/user_auth');
 const filtersValidator = require('../middlewares/restaurants_filter');
 const reviewRouter = require('../routes/reviews');
-
-// use board router
+const tagRouter = require('../routes/tags')
+;
+// use review router
 router.use('/:restaurant_slug/reviews', reviewRouter);
+
+// use tag router
+router.use('/:restaurant_slug/tags', tagRouter);
 
 // index action
 router.get('/', filtersValidator.verify, restaurantController.list);

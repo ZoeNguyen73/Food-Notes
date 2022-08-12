@@ -107,7 +107,10 @@ const controller = {
   },
 
   showCreateForm: (req, res) => {
-    const redirect = res.locals.redirect || req.query.redirect || null;
+    let redirect = res.locals.redirect || req.query.redirect || null;
+    if (redirect) {
+      redirect = redirect.replace(/ /g, '%20').replace(/\+/g, '%2B');
+    };
     res.render('boards/create', {errMsg: null, redirect});
   },
 

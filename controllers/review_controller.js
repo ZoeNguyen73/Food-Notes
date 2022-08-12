@@ -5,12 +5,8 @@ const reviewModel = require('../models/reviews/review');
 
 const controller = {
   create: async (req, res) => {
-    let redirect = res.locals.redirect || req.query.redirect || null;
     const endIdx = req.originalUrl.indexOf('/', 13); 
     const restaurant_slug = req.originalUrl.substring(13, endIdx);
-    if (redirect) {
-      redirect = redirect.replace(/ /g, '%20').replace(/\+/g, '%2B');
-    };
     
     const validationResults = validator.create.validate(req.body);
 

@@ -1,5 +1,5 @@
 <div class="filters">
-  <div class="filters-header">
+  <div class="filters-header ">
     <h3>Filters</h3>
     <a href="<%= baseUrl %>">
       <p class="align-center placeholders">Reset all</p>
@@ -47,8 +47,8 @@
   <div class="categories-filter">
 
     <p class="bold">Categories:</p>
-    <% preStr2 = '' %>
-    <% endStr2 = '' %>
+    <% preStr = '' %>
+    <% endStr = '' %>
     <% if (!redirect.includes('?')) { %>
       <% preStr = redirect + '?categories='; %>
     <% } else { %>

@@ -1,6 +1,8 @@
 body {
   font-family: "Quattrocento Sans", sans-serif;
   background-color: F9F5EB;
+  width: 100%;
+  position: absolute;
 }
 
 .red {
@@ -68,6 +70,10 @@ p {
   color: black;
 }
 
+.restaurants-list a.red {
+  color: #E25A25;
+}
+
 .bold {
   font-weight: bold;
 }
@@ -102,12 +108,11 @@ footer p {
   margin: 0;
 }
 
-/* .col, .col-10 {
-  border: solid red 1px;
-} */
-
 header {
   padding-bottom: 4em;
+  position: sticky;
+  top: 0;
+  z-index: 99;
 }
 
 .breadcrumb {
@@ -607,10 +612,6 @@ header {
   gap: 0.8em;
 }
 
-.board-page .row {
-  justify-content: space-around;
-}
-
 .board-page .card-footer {
   display: flex;
   flex-flow: column nowrap;
@@ -697,6 +698,10 @@ a.filter-checkbox {
   text-decoration: underline;
 }
 
+.mobile {
+  display: none;
+}
+
 @media (max-width: 1199px) { 
   .container.board-page, .container.restaurants-index {
     max-width: 1200px;
@@ -704,12 +709,28 @@ a.filter-checkbox {
 }
 
 @media (max-width: 500px) { 
+  .navbar {
+    width: 100%;
+  }
+
   .navbar .container-fluid {
     gap: 1em;
   }
 
+  .non-mobile {
+    display: none;
+  }
+
+  .mobile {
+    display: block;
+  }
+
   .register-page, .login-page, .board-create-page, .board-edit-page {
-    max-width: 400px;
+    max-width: 90%;
+  }
+
+  .container.board-page, .container.restaurants-index {
+    max-width: 90%;
   }
 
   .user-dashboard .content .header {
@@ -721,5 +742,9 @@ a.filter-checkbox {
   .user-dashboard .user-pic img {
     width: 120px;
     height: 120px;
+  }
+
+  header {
+    padding-bottom: 2em;
   }
 }

@@ -7,7 +7,9 @@ const restaurantsFilters = {
       return;
     };
 
-    const originalUrl = `${req.baseUrl}${req.url.substring(1)}`;
+    const path = req.url.startsWith('/?') ? req.url.substring(1) : req.url;
+
+    const originalUrl = `${req.baseUrl}${path}`;
     let url = `${req.baseUrl}${ req.path !== '/' ? req.path : ''}?`;
 
     const queries = req.query;

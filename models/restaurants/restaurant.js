@@ -100,7 +100,8 @@ restaurantSchema.statics.getDataForList = async function(authUser, filters, page
   let totalPages = null;
 
   const neighborhoodIDs = [];
-  const categoryIDs= [];
+  const categoryIDs = [];
+  const restaurantIDs = [];
 
   // get neighborhoodID for each neighborhood
   if (filters.neighborhoods) {
@@ -109,8 +110,14 @@ restaurantSchema.statics.getDataForList = async function(authUser, filters, page
       const id = await neighborhood._id;
       neighborhoodIDs.push(id);
     };
+  } else {
+    const ids = await neighborhoodModel.find({}, '_id').exec();
+    for await (const id of ids) {
+      neighborhoodIDs.push(id);
+    };
   };
 
+  // get categoryID for each category
   if (filters.categories) {
     for await (const c of filters.categories) {
       const name = c.replace('and', '&');
@@ -118,102 +125,151 @@ restaurantSchema.statics.getDataForList = async function(authUser, filters, page
       const id = await category._id;
       categoryIDs.push(id);
     };
+  } else {
+    const ids = await categoryModel.find({}, '_id').exec();
+    for await (const id of ids) {
+      categoryIDs.push(id);
+    };
   };
+
+  // get restaurantIDs for board restaurants
+  if (filters.board_slug) {
+    const board = await boardModel.findOne({slug: filters.board_slug}).exec();
+    const bRestaurants = board.restaurants;
+    for await (const id of bRestaurants) {
+      restaurantIDs.push(id);
+    };
+  } else {
+    const ids = await this.find({}, '_id').exec();
+    for await (const id of ids) {
+      restaurantIDs.push(id);
+    };
+  };
+
+  // get restaurants
+  const count = await this.countDocuments({
+    neighborhood: {
+      $in: neighborhoodIDs
+    },
+    categories: {
+      $in: categoryIDs
+    },
+    _id: {
+      $in: restaurantIDs
+    } 
+  }).exec();
+
+  totalPages = Math.ceil(count / limit);
+
+  restaurants = await this.find({
+    neighborhood: {
+      $in: neighborhoodIDs
+    },
+    categories: {
+      $in: categoryIDs
+    },
+    _id: {
+      $in: restaurantIDs
+    } 
+  })
+  .limit(limit * 1)
+  .skip((page - 1) * limit)
+  .exec();;
 
   // get all restaurants if no filters
-  if (filters.neighborhoods) {
-    if (filters.categories) {
-      const count = await this.countDocuments({
-        neighborhood: {
-          $in: neighborhoodIDs,
-        },
-        categories: {
-          $in: categoryIDs,
-        }
-      });
-      totalPages = Math.ceil(count / limit);
+  // if (filters.neighborhoods) {
+  //   if (filters.categories) {
+  //     const count = await this.countDocuments({
+  //       neighborhood: {
+  //         $in: [],
+  //       },
+  //       categories: {
+  //         $in: categoryIDs,
+  //       }
+  //     });
+  //     totalPages = Math.ceil(count / limit);
   
-      restaurants = await this.find({
-        neighborhood: {
-          $in: neighborhoodIDs,
-        },
-        categories: {
-          $in: categoryIDs,
-        }
-      })
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
-      .exec();
+  //     restaurants = await this.find({
+  //       neighborhood: {
+  //         $in: [],
+  //       },
+  //       categories: {
+  //         $in: categoryIDs,
+  //       }
+  //     })
+  //     .limit(limit * 1)
+  //     .skip((page - 1) * limit)
+  //     .exec();
 
-    } else {
-      const count = await this.countDocuments({
-        neighborhood: {
-          $in: neighborhoodIDs,
-        }
-      });
-      totalPages = Math.ceil(count / limit);
+  //   } else {
+  //     const count = await this.countDocuments({
+  //       neighborhood: {
+  //         $in: neighborhoodIDs,
+  //       }
+  //     });
+  //     totalPages = Math.ceil(count / limit);
   
-      restaurants = await this.find({
-        neighborhood: {
-          $in: neighborhoodIDs,
-        }
-      })
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
-      .exec();
-    };
+  //     restaurants = await this.find({
+  //       neighborhood: {
+  //         $in: neighborhoodIDs,
+  //       }
+  //     })
+  //     .limit(limit * 1)
+  //     .skip((page - 1) * limit)
+  //     .exec();
+  //   };
     
-  } else if (filters.categories) {
-    const count = await this.countDocuments({
-      categories: {
-        $in: categoryIDs,
-      }
-    });
-    totalPages = Math.ceil(count / limit);
+  // } else if (filters.categories) {
+  //   const count = await this.countDocuments({
+  //     categories: {
+  //       $in: categoryIDs,
+  //     }
+  //   });
+  //   totalPages = Math.ceil(count / limit);
 
-    restaurants = await this.find({
-      categories: {
-        $in: categoryIDs,
-      }
-    })
-    .limit(limit * 1)
-    .skip((page - 1) * limit)
-    .exec();
+  //   restaurants = await this.find({
+  //     categories: {
+  //       $in: categoryIDs,
+  //     }
+  //   })
+  //   .limit(limit * 1)
+  //   .skip((page - 1) * limit)
+  //   .exec();
 
-  } else if (filters.board_slug) {
-  // TODO: make filters work - note: need to filter by objectId not string
-    // restaurants = await this.find({
-    //   neighborhood: {
-    //     $in: filters.neighborhood
-    //   },
-    //   categories: {
-    //     $in: filters.categories
-    //   }
-    // }).exec();
+  // } else if (filters.board_slug) {
+  // // TODO: make filters work - note: need to filter by objectId not string
+  //   // restaurants = await this.find({
+  //   //   neighborhood: {
+  //   //     $in: filters.neighborhood
+  //   //   },
+  //   //   categories: {
+  //   //     $in: filters.categories
+  //   //   }
+  //   // }).exec();
 
-    // get restaurants based on board slug
-    const board = await boardModel.findOne({slug: filters.board_slug}).exec();
-    const boardRestaurants = board.restaurants;
-    totalPages = Math.ceil(boardRestaurants.length / limit);
-    restaurants = await this.find({
-      _id: {
-        $in: boardRestaurants,
-      },
-    })
-    .limit(limit * 1)
-    .skip((page - 1) * limit)
-    .exec();
+  //   // get restaurants based on board slug
+  //   const board = await boardModel.findOne({slug: filters.board_slug}).exec();
+  //   const boardRestaurants = board.restaurants;
+  //   totalPages = Math.ceil(boardRestaurants.length / limit);
+  //   restaurants = await this.find({
+  //     _id: {
+  //       $in: boardRestaurants,
+  //     },
+  //   })
+  //   .limit(limit * 1)
+  //   .skip((page - 1) * limit)
+  //   .exec();
 
-  } else {
+  // } else {
 
-    const count = await this.countDocuments();
-    totalPages = Math.ceil(count / limit);
-    restaurants = await this.find()
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
-      .exec();
+  //   const count = await this.countDocuments();
+  //   totalPages = Math.ceil(count / limit);
+  //   restaurants = await this.find()
+  //     .limit(limit * 1)
+  //     .skip((page - 1) * limit)
+  //     .exec();
 
-  };
+  // };
 
   // get first review of every restaurant
   const reviews = [];

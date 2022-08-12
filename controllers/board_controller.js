@@ -48,10 +48,13 @@ const controller = {
 
   show: async (req, res) => {
     res.locals.page = 'board-show';
-    const slug = req.params.board_slug;
+    const queries = req.query;
+    const keys = Object.keys(queries);
+    const filters = {};
     const username = req.params.username;
     const redirect = req.originalUrl;
     const currentUser = req.session.user || null;
+    const slug = req.params.board_slug;
     let board = null;
     let errMsg = null;
     let restaurants = null;
@@ -61,6 +64,14 @@ const controller = {
     let day = null;
     const { page = 1, limit = 36 } = req.query;
     let totalPages = 1;
+
+    filters['board_slug'] = [slug];
+    keys.forEach(key => {
+      if (key !== 'page' && key !== 'limit') {
+        const values = queries[key].split('+');
+        filters[key] = values;
+      };  
+    });
  
     try {
       board = await boardModel.findOne({username, slug}).exec();
@@ -70,7 +81,7 @@ const controller = {
       };
 
       [restaurants, neighborhoods, categories, reviews, day, boards, totalPages] 
-      = await restaurantModel.getDataForList(currentUser, {board_slug: [slug]}, page, limit);
+      = await restaurantModel.getDataForList(currentUser, filters, page, limit);
 
     } catch(err) {
       console.log(`Error finding board: ${err}`);
@@ -85,11 +96,13 @@ const controller = {
       neighborhoods, 
       categories, 
       reviews, 
-      day, 
+      day,
+      filters, 
       redirect,
       totalPages,
       currentPage: page,
-      pageUrl: `${req.baseUrl}${req.path}`
+      pageUrl: `${req.baseUrl}${req.path}`,
+      baseUrl: `${req.baseUrl}${ req.path !== '/' ? req.path : ''}`
     });
   },
 

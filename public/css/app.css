@@ -73,8 +73,10 @@ p {
 }
 
 .navbar {
-  padding-left: 5%;
-  padding-right: 5%;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  padding-left: 10%;
+  padding-right: 10%;
 }
 
 .nav-bar-logo {
@@ -105,7 +107,7 @@ footer p {
 } */
 
 header {
-  padding-bottom: 3em;
+  padding-bottom: 4em;
 }
 
 .breadcrumb {
@@ -171,6 +173,10 @@ header {
   transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
 }
 
+.restaurant-index .row {
+  gap: 1em;
+}
+
 .card-img-top {
   height: 180px;
   vertical-align: middle;
@@ -184,8 +190,9 @@ header {
 
 .restaurants-list, .boards-list {
   display: flex;
+  flex-grow: 1;
   flex-flow: column nowrap;
-  gap: 2em;
+  gap: 3em;
 }
 
 .card-title {
@@ -524,9 +531,15 @@ header {
   gap: 2em;
 }
 
+.user-dashboard .user-profile {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 2em;
+}
+
 .user-dashboard .user-pic img {
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   object-fit: cover;
   border-radius: 50%;
 }
@@ -594,6 +607,16 @@ header {
   gap: 0.8em;
 }
 
+.board-page .row {
+  justify-content: space-around;
+}
+
+.board-page .card-footer {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.8em;
+}
+
 .private-icon {
   height: 1em;
   width: auto;
@@ -602,7 +625,7 @@ header {
 .restaurants-index .list, .board-page .list {
   display: flex;
   flex-flow: column nowrap;
-  gap: 1em;
+  gap: 3em;
 }
 
 .active > .page-link {
@@ -664,4 +687,39 @@ a.filter-checkbox {
 .neighborhood-options-list, .category-options-list {
   overflow-y: scroll;
   max-height: 300px;
+}
+
+.filters-header a {
+ text-decoration: none;
+}
+
+.filters-header a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 1199px) { 
+  .container.board-page, .container.restaurants-index {
+    max-width: 1200px;
+  }
+}
+
+@media (max-width: 500px) { 
+  .navbar .container-fluid {
+    gap: 1em;
+  }
+
+  .register-page, .login-page, .board-create-page, .board-edit-page {
+    max-width: 400px;
+  }
+
+  .user-dashboard .content .header {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+  }
+
+  .user-dashboard .user-pic img {
+    width: 120px;
+    height: 120px;
+  }
 }

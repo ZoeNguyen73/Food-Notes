@@ -395,6 +395,7 @@ header {
   border: 1px solid lightgrey;
   border-radius: 1em;
   padding: 2em;
+  flex-grow: 1;
 }
 
 .business-info {
@@ -427,6 +428,8 @@ header {
   display: flex;
   flex-flow: column nowrap;
   gap: 2em;
+  flex-grow: 1;
+  max-width: 850px;
 }
 
 .restaurant-page .require-auth {
@@ -781,6 +784,10 @@ a.filter-checkbox {
 }
 
 @media (max-width: 500px) { 
+  .space {
+    height: 1em;
+  }
+
   .navbar {
     width: 100%;
   }
@@ -801,7 +808,7 @@ a.filter-checkbox {
     max-width: 90%;
   }
 
-  .container.board-page, .container.restaurants-index {
+  .container.board-page, .container.restaurants-index, .container.restaurant-page {
     max-width: 90%;
   }
 

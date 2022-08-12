@@ -83,11 +83,11 @@
                 
               <% } else { %>
                 <form class="pin-form" method="POST" action="/restaurants/<%= restaurant.slug %>/<%= authUser %>/pin?_method=PUT&redirect=<%= redirect %>">
-                  <p>Pin in another board:</p>
+                  <p class="non-mobile">Pin in another board:</p>
                   
                   <div class="boards-dropdown">
                     <select class="custom-select" id="board_id" name="board_id")">
-                      <option value="" disabled selected>Choose a board to pin</option>
+                      <option value="" disabled selected>Choose a board</option>
                       <% boards.forEach(board => { %>
                         <option value="<%= board._id %>" <%= board.restaurants.includes(restaurant._id) ? 'disabled' : '' %>>
                           <%= board.name %> <%= board.restaurants.includes(restaurant._id) ? '📌' : '' %>

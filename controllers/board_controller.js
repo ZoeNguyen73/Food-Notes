@@ -77,7 +77,7 @@ const controller = {
       board = await boardModel.findOne({username, slug}).exec();
 
       if (!board.is_public && currentUser !== username) {
-        errMsg = `Opps, this board is private`;
+        errMsg = `Oops, this board is private`;
       };
 
       [restaurants, neighborhoods, categories, reviews, day, boards, totalPages] 
@@ -112,7 +112,10 @@ const controller = {
   },
 
   create: async (req, res) => {
-    const redirect = res.locals.redirect || req.query.redirect || null;
+    let redirect = res.locals.redirect || req.query.redirect || null;
+    if (redirect) {
+      redirect = redirect.replace(/ /g, '%20').replace(/\+/g, '%2B');
+    };
     const username = req.params.username;
     const validationResults = validator.create.validate(req.body);
 

@@ -86,7 +86,10 @@ const controller = {
 
   addToBoard: async (req, res) => {
     let board = null;
-    const redirect = req.query.redirect || null;
+    let redirect = req.query.redirect || null;
+    if (redirect) {
+      redirect = redirect.replace(/ /g, '%20').replace(/\+/g, '%2B');
+    };
 
     try {
       const restaurant = await restaurantModel.findOne({slug: req.params.restaurant_slug}).exec();
@@ -114,7 +117,10 @@ const controller = {
   removeFromBoard: async (req, res) => {
     const boardSlugs = Object.keys(req.body);
     let board = null;
-    const redirect = req.query.redirect || null;
+    let redirect = req.query.redirect || null;
+    if (redirect) {
+      redirect = redirect.replace(/ /g, '%20').replace(/\+/g, '%2B');
+    };
 
     try {
       const restaurant = await restaurantModel.findOne({slug: req.params.restaurant_slug}).exec();

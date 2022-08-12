@@ -34,10 +34,12 @@
 
         <div class="categories">
           <% for (let i = 0; i < restaurant.categories.length && i < 5; i++) { %>
-            <div class="category-tag pointer-on-hover background-purple">
-              <%= categories.filter(category => category._id.equals(restaurant.categories[i]))[0].name %>
-            </div>
-
+            <% const category = categories.filter(category => category._id.equals(restaurant.categories[i]))[0] %>
+            <a href="/restaurants?categories=<%= category.name.replace('&', 'and') %>">
+              <div class="category-tag pointer-on-hover background-purple">
+                <%= category.name %>
+              </div>
+            </a>
           <% } %>
         </div>
 
@@ -68,31 +70,37 @@
                     <% }) %>
                   </p>
 
-                  <!-- //TODO: add something to trigger a modal allow users to edit the board -->
                   <button class="btn btn-outline-secondary edit-btn" type="button" data-bs-toggle="modal" data-bs-target="#remove-from-board-modal">
                     Edit
                   </button>
                 <% } %>
               </div>
               
-              <!-- TODO: button to create a board if users do not have any boards -->
-              <form class="pin-form" method="POST" action="/restaurants/<%= restaurant.slug %>/<%= authUser %>/pin?_method=PUT&redirect=<%= redirect %>">
-                <p>Pin in another board:</p>
+              <% if (boards.length === 0) { %>
+                <a href="/<%= authUser %>/boards/create">
+                  <button type="button" class="create-board btn btn-danger">Create a New Board</button> to pin this restaurant
+                </a>
                 
-                <div class="boards-dropdown">
-                  <select class="custom-select" id="board_id" name="board_id")">
-                    <option value="" disabled selected>Choose a board to pin</option>
-                    <% boards.forEach(board => { %>
-                      <option value="<%= board._id %>" <%= board.restaurants.includes(restaurant._id) ? 'disabled' : '' %>>
-                        <%= board.name %> <%= board.restaurants.includes(restaurant._id) ? '📌' : '' %>
-                      </option>
-                    <% }) %>
-                      
-                  </select>
-                </div>
-                <button class="btn btn-danger" type="submit">Pin 📌</button>
+              <% } else { %>
+                <form class="pin-form" method="POST" action="/restaurants/<%= restaurant.slug %>/<%= authUser %>/pin?_method=PUT&redirect=<%= redirect %>">
+                  <p>Pin in another board:</p>
+                  
+                  <div class="boards-dropdown">
+                    <select class="custom-select" id="board_id" name="board_id")">
+                      <option value="" disabled selected>Choose a board to pin</option>
+                      <% boards.forEach(board => { %>
+                        <option value="<%= board._id %>" <%= board.restaurants.includes(restaurant._id) ? 'disabled' : '' %>>
+                          <%= board.name %> <%= board.restaurants.includes(restaurant._id) ? '📌' : '' %>
+                        </option>
+                      <% }) %>
                         
-              </form>
+                    </select>
+                  </div>
+                  <button class="btn btn-danger" type="submit">Pin 📌</button>
+                          
+                </form>
+              <% } %>
+              
             </div>
   
             <div class="private-tag-section">
@@ -111,7 +119,6 @@
             </div>
   
             <div class="private-note-section">
-              <!-- TODO: add logic to list boards that restaurant is currently pinned in with hyperlink to board -->
               <div class="header">
                 <p class="bold emphasis">Your private notes:</p>
               <button class="btn btn-outline-secondary edit-btn" type="submit">Edit</button>
@@ -180,8 +187,7 @@
       <div class="row write-review">
         <div>
           <h5 class="align-left">Write a review</h5>
-          <!-- TODO: add post review action -->
-          <form method="POST" action="">
+          <form method="POST" action="/restaurants/<%= restaurant.slug %>/reviews/<%= authUser %>/create">
             <div class="review-rating">
               <div>Your rating (out of 5):</div>
               <div class="rating-options">
@@ -207,7 +213,7 @@
                 </div>
               </div>
             </div> 
-            <input type="text" class="review-text">
+            <input type="text" name="content" class="review-text">
             <button type="submit" class="btn btn-warning">Submit</button>
           </form>
         </div>
@@ -226,8 +232,7 @@
         <% reviews.forEach(review => { %>
           <div class="review">
             <div class="user-profile">
-              <!-- TODO: add fallback logic for when there is no pic url -->
-              <img src="<%= review.yelp_pic %>" />
+              <img src="<%= review.yelp_pic ? review.yelp_pic : '/img/user-pic.png' %>" />
             </div>
   
             <div class="content">

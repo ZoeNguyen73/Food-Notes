@@ -271,6 +271,7 @@ header {
 
 .card-subtitle {
   text-align: center;
+  font-size: 0.9em;
 }
 
 .card-title:hover {
@@ -281,6 +282,11 @@ header {
   display: flex;
   flex-flow: row wrap;
   gap: 0.2em
+}
+
+.categories a {
+  text-decoration: none;
+  color: black;
 }
 
 .category-tag {
@@ -429,8 +435,9 @@ header {
   gap: 2em;
 }
 
-.restaurant-page .require-auth button {
-  width: 6em;
+.require-auth a {
+  text-decoration: none;
+  color: black;
 }
 
 .current-pins {

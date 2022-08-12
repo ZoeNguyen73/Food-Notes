@@ -30,6 +30,10 @@ body {
   height: 4em;
 }
 
+.small-spacing {
+  height: 1em;
+}
+
 .main-banner {
   display: flex;
   flex-flow: row nowrap;

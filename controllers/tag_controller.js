@@ -5,6 +5,7 @@ const tagModel = require('../models/tags/tag');
 
 // for tag slug
 const getSlug = require('speakingurl');
+const { createIndexes } = require('../models/users/user');
 
 const controller = {
   showCreateForm: (req, res) => {
@@ -45,7 +46,8 @@ const controller = {
       const tag = await tagModel.create({
         user_id,
         name: tagName,
-        restaurants: []
+        restaurants: [],
+        slug: getSlug(tagName)
       });
 
       if (redirect) {
@@ -62,6 +64,50 @@ const controller = {
       res.render('pages/error', {errMsg: `An error occurred. Please try again`});
     };
 
+  },
+
+  update: async (req, res) => {
+    let redirect = req.query.redirect || null;
+    if (redirect) {
+      redirect = redirect.replace(/ /g, '%20').replace(/\+/g, '%2B');
+    };
+    const queries = req.body;
+    const tagSlugs = Object.keys(queries);
+
+    const username = req.session.user;
+    const restaurantSlug = req.params.restaurant_slug;
+
+    try {
+      const user = await userModel.findOne({username}).exec();
+      const user_id = user._id;
+      const restaurant = await restaurantModel.findOne({slug: restaurantSlug}).exec();
+      const restaurantID = restaurant._id;
+      const userTags = await tagModel.find({user_id}).exec();
+
+      if (tagSlugs.length === 0) {
+        for await (const tag of userTags) {
+          const slug = tag.slug;
+          if (tag.restaurants.includes(restaurantID)) {
+            await tagModel.updateOne({user_id, slug}, {$pull: {restaurants: restaurantID}});
+          };
+        };
+      } else {
+        for await (const tag of userTags) {
+          const slug = tag.slug;
+          if (tagSlugs.includes(slug) && (!tag.restaurants.includes(restaurantID))) {
+            await tagModel.findOneAndUpdate({user_id, slug}, {$push: {restaurants: restaurantID}});
+          } else if ((!tagSlugs.includes(slug)) && tag.restaurants.includes(restaurantID)) {
+            await tagModel.updateOne({user_id, slug}, {$pull: {restaurants: restaurantID}});
+          };
+        };
+      };
+
+    } catch(err) {
+      console.log(`Error updating tags: ${err}`);
+      res.render('pages/error', {errMsg: `An error occurred. Please try again`});
+    }
+
+    res.redirect(redirect);
   }
 };
 

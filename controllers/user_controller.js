@@ -70,6 +70,8 @@ const controller = {
       });
     } catch(err) {
       console.log(`Error creating a new users (register flow): ${err}`);
+      res.render('users/register', {errMsg:`Something went wrong. Please try again!`, redirect});
+      return;
     };
   },
 

@@ -4,6 +4,7 @@ const categoryModel = require('../categories/category');
 const reviewModel = require('../reviews/review');
 const boardModel = require('../boards/board');
 const userModel = require('../users/user');
+const tagModel = require('../tags/tag');
 
 const restaurantSchema = new mongoose.Schema({
   yelp_id: {
@@ -196,8 +197,20 @@ restaurantSchema.methods.getRestaurantInfo = async function(authUser) {
   
   // get all reviews from the restaurant
   const reviews = await reviewModel.find({restaurant_id: this._id}).exec();
+  const usernames = {};
+
+  for await (const review of reviews) {
+    const user_id = review.user_id;
+    if (!user_id.includes('yelp')) {
+      const user = await userModel.findOne({_id: user_id}).exec();
+      const username = user.username;
+      usernames[review._id] = username;
+    };
+    
+  };
 
   let boards = null;
+  let tags = [];
   const restaurantBoards = [];
 
   if (authUser !== null) {
@@ -210,6 +223,8 @@ restaurantSchema.methods.getRestaurantInfo = async function(authUser) {
         restaurantBoards.push(board);
       };
     });
+
+    tags = await tagModel.find({user_id}).exec();
   };
 
   // TODO: get map info
@@ -220,7 +235,7 @@ restaurantSchema.methods.getRestaurantInfo = async function(authUser) {
   //   attribution: '© OpenStreetMap'
   // }).addTo(map);
 
-  return [restaurantBoards, boards, categories, reviews];
+  return [restaurantBoards, boards, categories, reviews, tags, usernames];
 }
 
 const Restaurant = mongoose.model('Restaurant', restaurantSchema);

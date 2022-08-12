@@ -15,6 +15,11 @@ const tagSchema = new mongoose.Schema({
   restaurants: {
     type: [mongoose.ObjectId]
   },
+
+  slug: {
+    type: String,
+    requried: true
+  },
   
 });
 

@@ -1,5 +1,6 @@
 <%- include('../partials/header'); %>
 <%- include('../partials/modals/remove_from_board'); %>
+<%- include('../partials/modals/edit_tags'); %>
 <div class="space"></div>
 <div class="container restaurant-page">
   <% if (!restaurant) { %>
@@ -77,7 +78,7 @@
               </div>
               
               <% if (boards.length === 0) { %>
-                <a href="/<%= authUser %>/boards/create">
+                <a href="/<%= authUser %>/boards/create?redirect=<%= redirect %>">
                   <button type="button" class="create-board btn btn-danger">Create a New Board</button> to pin this restaurant
                 </a>
                 
@@ -104,21 +105,23 @@
             </div>
   
             <div class="private-tag-section">
-              <!-- TODO: add logic to list privat tags that restaurant currently has -->
-              <p class="bold emphasis">Your private tags:</p>
-              <div class="private-tag pointer-on-hover background-yellow">
-                Mom's fav
-              </div>
-              <div class="private-tag pointer-on-hover background-yellow">
-                Big portion
-              </div>
-              <div class="private-tag pointer-on-hover background-yellow">
-                Go before 6pm
-              </div>
-              <button class="btn btn-outline-secondary edit-btn" type="submit">Edit</button>
+              <% const restaurantTags = tags.filter(tag => tag.restaurants.includes(restaurant._id)) %>
+              <% if (restaurantTags.length === 0) { %>
+                <p class="bold emphasis">No private tags added</p>
+              <% } else { %>
+                <p class="bold emphasis">Your private tags:</p>
+                <% restaurantTags.forEach(tag => { %>
+                  <div class="private-tag pointer-on-hover background-yellow">
+                    <%= tag.name %>
+                  </div>
+                <% }) %>
+              <% } %>
+              <button class="btn btn-outline-secondary edit-btn" type="button" data-bs-toggle="modal" data-bs-target="#edit-tags-modal">
+                Edit
+              </button>
             </div>
   
-            <div class="private-note-section">
+            <!-- <div class="private-note-section">
               <div class="header">
                 <p class="bold emphasis">Your private notes:</p>
               <button class="btn btn-outline-secondary edit-btn" type="submit">Edit</button>
@@ -129,7 +132,7 @@
                 Promotions: can use ShopBack <br/>
                 Other: not so good for date night... <br/>
               </div>
-            </div>
+            </div> -->
           </div>
         <% } %>
         
@@ -229,14 +232,14 @@
       <% if (reviews.length === 0) { %>
         <p>No reviews yet</p>
       <% } else { %>
-        <% reviews.forEach(review => { %>
+        <% reviews.forEach((review, idx) => { %>
           <div class="review">
             <div class="user-profile">
               <img src="<%= review.yelp_pic ? review.yelp_pic : '/img/user-pic.png' %>" />
             </div>
   
             <div class="content">
-              <p><%= review.yelp_name %></p>
+              <p><%= review.yelp_name ? review.yelp_name : usernames[review._id] %></p>
               <div class="stars-rating">
                 <% const stars = Math.round(review.rating * 2)/2 %>
                 <% const imgUrl = `/img/rating-${stars}.png` %>

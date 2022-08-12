@@ -69,18 +69,20 @@ const controller = {
     let boards = null;
     let categories = null;
     let reviews = null;
+    let tags = null;
+    let usernames = null;
 
     try {
       restaurant = await restaurantModel.findOne({slug: req.params.restaurant_slug}).exec();
 
-      [restaurantBoards, boards, categories, reviews] 
+      [restaurantBoards, boards, categories, reviews, tags, usernames] 
       = await restaurant.getRestaurantInfo(authUser);
 
     } catch(err) {
       console.log(`Error getting restaurant details: ${err}`);
     };
     
-    res.render('restaurants/show', {restaurant, categories, reviews, restaurantBoards, boards, redirect});
+    res.render('restaurants/show', {restaurant, categories, reviews, restaurantBoards, boards, redirect, tags, usernames});
   
   },
 

@@ -16,7 +16,7 @@ A tool to help you keep track of your favourite eateries, but with a bunch of **
 * Search and filter pinned restaurants in your profile
 
 ### Link
-[https://food-notes-sg.herokuapp.com/](https://food-notes-sg.herokuapp.com/)
+[https://food-notes.cyclic.app/](https://food-notes.cyclic.app/)
 
 ### Technologies
 * HTML
@@ -44,7 +44,7 @@ A tool to help you keep track of your favourite eateries, but with a bunch of **
   2. Non-relational database management through MongoDB
   3. Building server & routing system through Express
   4. User authentication and sessions
-  5. Deploying to Heroku  
+  5. Deploying to Heroku & Cyclic
 
 
 * My workflow:

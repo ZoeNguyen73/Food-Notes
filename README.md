@@ -16,7 +16,7 @@ A tool to help you keep track of your favourite eateries, but with a bunch of **
 * Search and filter pinned restaurants in your profile
 
 ### Link
-[https://food-notes.cyclic.app/](https://food-notes.cyclic.app/)
+[https://food-notes-sg.herokuapp.com/](https://food-notes-sg.herokuapp.com/)
 
 ### Technologies
 * HTML

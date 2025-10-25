@@ -134,10 +134,13 @@ restaurantSchema.statics.getDataForList = async function(authUser, filters, page
   };
 
   // get restaurantIDs for board restaurants
+  console.log('filters received are', JSON.stringify(filters));
   if (filters.board_slug) {
     const board = await boardModel.findOne({slug: filters.board_slug}).exec();
+    console.log('board slug', filters.board_slug);
     const bRestaurants = board.restaurants;
     for await (const id of bRestaurants) {
+      console.log('restaurant ID', id);
       restaurantIDs.push(id);
     };
   } else {

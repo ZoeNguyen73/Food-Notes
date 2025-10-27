@@ -91,10 +91,11 @@ restaurantSchema.statics.getDataForList = async function(authUser, filters, page
 
   // return current users' boards
   let boards = null;
+  let user_id = null;
 
   if (authUser !== null) {
     const user = await userModel.findOne({username: authUser}).exec();
-    const user_id = user._id;
+    user_id = user._id;
     boards = await boardModel.find({user_id}).exec();
   };
 
@@ -123,7 +124,7 @@ restaurantSchema.statics.getDataForList = async function(authUser, filters, page
     for await (const c of filters.categories) {
       const name = c.replace('and', '&');
       const category = await categoryModel.findOne({name}).exec();
-      const id = await category._id;
+      const id = category._id;
       categoryIDs.push(id);
     };
   } else {
@@ -136,11 +137,17 @@ restaurantSchema.statics.getDataForList = async function(authUser, filters, page
   // get restaurantIDs for board restaurants
   console.log('filters received are', JSON.stringify(filters));
   if (filters.board_slug) {
-    const board = await boardModel.findOne({slug: filters.board_slug}).exec();
+    let board;
+    if (user_id) {
+      board = await boardModel.findOne({ slug: filters.board_slug, user_id }).exec();
+    } else {
+      board = await boardModel.findOne({slug: filters.board_slug}).exec();
+    }
     console.log('board slug', filters.board_slug);
+    console.log('board found: ', board._id);
     const bRestaurants = board.restaurants;
     for await (const id of bRestaurants) {
-      console.log('restaurant ID', id);
+      console.log('restaurant ID in board: ', id);
       restaurantIDs.push(id);
     };
   } else {

@@ -46,7 +46,7 @@ Food Notes was designed as a **practical full-stack project** to reinforce core 
 - Utilise **MVC** file structure
 - Designing a clean **REST API** with predictable data flow
 - Building server & routing system through Express
-- Implemementing a basic user authentication and sessions management with **express-session**
+- Implementing a basic user authentication and sessions management with **express-session**
 - Implementing a simple filter system without leveraging React
 
 ---

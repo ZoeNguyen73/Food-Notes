@@ -7,7 +7,7 @@
 
 ## 🧭 Overview
 
-**Food Notes** is a lightweight web application that helps users **find, organize, and record their food experiences** at Singapore eatiries. Want to take _notes_ if a restaurant is great of for night, pet-friendly, generous with their portions, or simply mom's favourite? You can do so easily through boards, pins, tags and notes features.
+**Food Notes** is a lightweight web application that helps users **find, organize, and record their food experiences** at Singapore eateries. Want to take _notes_ if a restaurant is great of for night, pet-friendly, generous with their portions, or simply mom's favourite? You can do so easily through boards, pins, tags and notes features.
 
 The app was built to practise **full-stack fundamentals**, focusing on CRUD flows, clean UI, and real-world data handling.
 

@@ -1,72 +1,110 @@
-# Food-Notes
+# 🍽️ Food Notes — Your Personal Dining Notepad
 
-## About **Food-Notes** 🍜
-
-**Note** 
-* _Yes, it's supposed to be a pun on "footnotes"_ 😸
-* _This project is for educational purposes only. Not meant for commercial usage._
-
-### Project description
-A tool to help you keep track of your favourite eateries, but with a bunch of **personalisation** functionalities. Want to take _note_ if a restaurant is great for date night, is pet-friend, gives generous portion, or is simply your mom's favourite? You can easily record all these meaningful, and truly _personal_ information through **boards**, **tags** and **notes** (_coming soon_) features.
-
-### Key functionalities
-* Filter restaurants with specific price, neighborhood, categories, rating filters
-* Create personal boards to "pin" (or save) restaurants
-* Create personal tags to apply on your pinned restaurants
-* Search and filter pinned restaurants in your profile
-
-### Link
-[https://food-notes-sg.herokuapp.com/](https://food-notes-sg.herokuapp.com/)
-
-### Technologies
-* HTML
-* CSS
-* Javascript
-* Node / Express
-
-### APIs used
-* [Yelp API](https://www.yelp.com/developers/documentation/v3)
-
-### Additional features for future development
-* Search
-* Personal Notes
-* Filtering by tags
-* Sharing
-* Group boards
+💻 **Live Demo:** https://food-notes.onrender.com/  
+📦 **Repository:** https://github.com/ZoeNguyen73/Food-Notes
 
 ---
 
-## About my process
+## 🧭 Overview
 
-### Approach
-* As **Food-Notes** was meant to be a learning experience for Node.js, Express, EJS and MongoDB, my focus was on applying my new knowledge in building a functional full-stack application
-  1. Utilsing **MVC** file structure
-  2. Non-relational database management through MongoDB
-  3. Building server & routing system through Express
-  4. User authentication and sessions
-  5. Deploying to Heroku & Cyclic
+**Food Notes** is a lightweight web application that helps users **find, organize, and record their food experiences** at Singapore eatiries. Want to take _notes_ if a restaurant is great of for night, pet-friendly, generous with their portions, or simply mom's favourite? You can do so easily through boards, pins, tags and notes features.
 
+The app was built to practise **full-stack fundamentals**, focusing on CRUD flows, clean UI, and real-world data handling.
 
-* My workflow:
-  1. Design data models and relationship between them
-  2. Map out userflows & sort them into "must-haves" and "good-to-haves"
-  3. Design wireframes for key pages
-  4. Create MVC structure and start buildling
+---
 
-### Accomplishments
-* **Database**:
-  * Despite the many relationships between different collections (user < - restaurant -> board/tag), the app is able to recognize the linkage and pull data accordingly and accurately
+## 🚀 Features
 
-* **Multiple RESTful routes and full CRUD**:
-  * User is able to creat an account
-  * User can create, edit, delete, and update boards
-  * User can pin / remove a restaurant from their boards
-  * User can create a tag and add/remove their tag from a restaurant
-  * User can submit reviews
+- 📝 **Filter restaurants** with specific price, neighborhood, categories, rating
+- 🗂️ **Create personal boards** to "pin" (or save) restaurants
+- 💛 **Share your public boards** or make them private
+- ✏️ **Create and apply personal tags** to better organize your boards
+- 💯 **Read and write reviews** for restaurants you have visited
 
-* **Filter system**:
-  * While admittedly not 100% robust, I managed to implement a simple Filter system based on restaurants' Categories and Neighborhoods
+---
 
-### Challenges
-* Time was definitely the biggest challenge - buidling a working full-stack application within 2 weeks, with a full-time job, was a hell of a task. I did not manage to achieve all that I have set out to do in the end.
-* Some implementation are not the best way. Due to shortage of time, I did not have enough time to to deepdive into problems encountered along to find the best / most scalable solution for them. A lot of fixes are quite like 'brute forces'...
+## 🧰 Tech Stack
+
+| Category         | Tools / Libraries                                                          |
+| ---------------- | -------------------------------------------------------------------------- |
+| **Frontend**     | JavaScript, HTML/CSS                                                       |
+| **Backend**      | Node.js, Express                                                           |
+| **Database**     | MongoDB                                                                    |
+| **API**          | RESTful API (CRUD endpoints)                                               |
+| **Hosting**      | Render                                                                     |
+| **External API** | [YelpAPI](https://www.yelp.com/developers/documentation/v3) (for database) |
+
+---
+
+## 🧠 Development Process & Key Learnings
+
+Food Notes was designed as a **practical full-stack project** to reinforce core concepts needed for real-world applications.
+
+**Key areas of focus:**
+
+- Designing **data models** and defining relationship between them
+- Utilise **MVC** file structure
+- Designing a clean **REST API** with predictable data flow
+- Building server & routing system through Express
+- Implemementing a basic user authentication and sessions management with **express-session**
+- Implementing a simple filter system without leveraging React
+
+---
+
+## 🧩 Technical Highlights & Challenges
+
+| Area                | Approach / Solution                                                           |
+| ------------------- | ----------------------------------------------------------------------------- |
+| **CRUD operations** | Implemented full Create / Read / Update / Delete flow using Express + MongoDB |
+| **Frontend state**  | Synced UI state with backend responses for consistency                        |
+| **Form handling**   | Controlled inputs with validation-friendly structure                          |
+| **Deployment**      | Deployed both frontend and backend together on Render                         |
+| **Error handling**  | Basic error feedback for failed requests and empty states                     |
+
+---
+
+## 💡 Lessons Learned
+
+- Full-stack apps are about **data flow clarity**, not just features
+- Designing API responses early makes frontend logic simpler
+- Small UX details (empty states, spacing, responsiveness) matter a lot
+- Deployment surfaces real issues that local development hides
+- Clean README + deployment = portfolio-ready project
+
+---
+
+## 🧪 Future Improvements
+
+- ⭐ Admin system to update database easily
+- 🔍 Search functionality
+- 🖼️ Image/Video uploads for reviews
+- 📱 Mobile application
+
+---
+
+## 🧑‍💻 Author
+
+**Zoe Nguyen** — Aspiring Full-Stack Developer  
+🌐 Portfolio _(coming soon)_  
+💼 [LinkedIn](https://www.linkedin.com/in/zoe-nguyen-ndnn/)  
+📫 nganguyen0703@gmail.com
+
+---
+
+## 📸 Screenshots
+
+| List & Filter                                  | Board, Pin and Tag                                   |     |
+| ---------------------------------------------- | ---------------------------------------------------- | --- |
+| ![Filter](./screenshots/Food-Notes-filter.gif) | ![Board](./screenshots/Food-Notes-board-pin-tag.gif) |
+
+---
+
+### 📈 Summary
+
+Food Notes showcases my ability to:
+
+- Build and deploy a **complete full-stack application**
+- Implement real-world CRUD functionality
+- Connect frontend UI with backend APIs cleanly
+- Plan and implement coherent data models
+- Ship a usable and production-ready app
